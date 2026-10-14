@@ -1,0 +1,2383 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crack CGPSC Admin Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Firebase App & Firestore SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --bg: #030712;
+      --card: rgba(17, 24, 39, 0.85);
+      --card-inner: rgba(13, 17, 28, 0.95);
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: rgba(255, 255, 255, 0.08);
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --purple: #8b5cf6;
+      --glow-blue: 0 0 25px rgba(59, 130, 246, 0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Noto Sans Devanagari', system-ui, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; min-height: 100vh; text-align: left; }
+    
+    #topProgressBar {
+      position: fixed; top: 0; left: 0; height: 3px;
+      background: linear-gradient(90deg, #38bdf8, #8b5cf6, #10b981);
+      width: 0%; z-index: 9999;
+      transition: width 0.4s ease-out, opacity 0.3s ease-in;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    header { background: rgba(3, 7, 18, 0.95); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+    .brand-title { font-size: 1.15rem; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
+    .brand-sub { font-size: 0.78rem; font-weight: 600; color: #a78bfa; letter-spacing: 0.8px; text-transform: uppercase; }
+    
+    .floating-header { position: sticky; top: 65px; z-index: 90; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(12px); padding: 10px 0; margin-bottom: 15px; border-bottom: 1px solid var(--border); }
+
+    .container { max-width: 900px; margin: 15px auto; padding: 0 15px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); position: relative; z-index: 1; text-align: left; }
+    h2, h3, h4 { color: #f3f4f6; margin-bottom: 10px; text-align: left; }
+    label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-weight: 500; text-align: left; }
+    input, select, textarea { width: 100%; padding: 10px 14px; background: var(--card-inner); border: 1px solid var(--border); color: #fff; border-radius: 10px; margin-bottom: 12px; font-size: 0.9rem; outline: none; position: relative; z-index: 2; text-align: left; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    
+    .password-wrapper { position: relative; width: 100%; }
+    .password-wrapper input { margin-bottom: 12px; padding-right: 42px; }
+    .toggle-password { position: absolute; right: 14px; top: 40%; transform: translateY(-50%); cursor: pointer; color: var(--muted); font-size: 1.1rem; user-select: none; }
+
+    .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; box-shadow: var(--glow-blue); }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-danger { background: var(--danger); }
+    .btn-success { background: var(--success); }
+    .btn-secondary { background: #334155; padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; color: #fff; }
+    
+    .nav-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; justify-content: center; }
+    .nav-tab-btn { background: var(--card-inner); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; white-space: nowrap; font-size: 0.88rem; }
+    .nav-tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: var(--glow-blue); }
+
+    .selector-grid {
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+      padding-bottom: 10px; margin-bottom: 15px; scrollbar-width: none;
+    }
+    .selector-grid::-webkit-scrollbar { display: none; }
+    .selector-card {
+      flex: 0 0 82%; scroll-snap-align: start; background: var(--card-inner);
+      border: 1px solid var(--border); border-radius: 14px; padding: 14px; cursor: pointer; transition: 0.25s; text-align: left;
+    }
+    @media(min-width: 768px) {
+      .selector-grid { display: grid; grid-template-columns: repeat(3, 1fr); overflow-x: visible; scroll-snap-type: none; }
+      .selector-card { flex: unset; }
+    }
+    .selector-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .selector-card.active { border-color: var(--primary); background: rgba(59, 130, 246, 0.15); box-shadow: var(--glow-blue); }
+
+    .swipe-indicator-bar { display: flex; justify-content: center; gap: 6px; margin-top: -8px; margin-bottom: 14px; }
+    @media(min-width: 768px) { .swipe-indicator-bar { display: none; } }
+    .swipe-dot { width: 22px; height: 3px; background: rgba(255,255,255,0.2); border-radius: 2px; transition: 0.3s; }
+    .swipe-dot.active { background: var(--primary); width: 34px; box-shadow: var(--glow-blue); }
+    
+    .formatted-text { white-space: pre-wrap; word-wrap: break-word; line-height: 1.5; font-size: 1.02rem; color: #f1f5f9; margin-bottom: 8px; text-align: left; }
+    .q-header-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+    .q-header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .q-header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .badge-exam-tag { background: rgba(131, 24, 67, 0.6); border: 1px solid rgba(244, 114, 182, 0.3); color: #fbcfe8; padding: 4px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 600; }
+
+    .ar-block { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; margin-bottom: 8px; text-align: left; }
+    .ar-item { display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; text-align: left; }
+    .ar-label { font-weight: 700; color: #38bdf8; min-width: 110px; flex-shrink: 0; text-align: left; }
+
+    .test-opt { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; background: rgba(13, 20, 36, 0.7); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; cursor: pointer; text-align: left; width: 100%; transition: 0.2s; }
+    .test-opt-label { font-size: 0.95rem; color: var(--text); line-height: 1.45; flex: 1; text-align: left; display: flex; gap: 6px; }
+    .test-opt-label .opt-letter { font-weight: 700; color: #60a5fa; min-width: 24px; flex-shrink: 0; text-align: left; }
+    .test-opt-label .opt-text { flex: 1; word-break: break-word; text-align: left; }
+    .test-opt.opt-correct { background: rgba(16, 185, 129, 0.2); border-color: var(--success); }
+    .test-opt.opt-wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); }
+
+    .match-table-wrapper { width: 100%; overflow-x: auto; margin: 8px 0; }
+    .match-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; background: var(--card-inner); border-radius: 12px; overflow: hidden; text-align: left; }
+    .match-table th, .match-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+    .match-table th { background: rgba(17, 26, 46, 0.9); color: #93c5fd; font-weight: 600; text-align: center; }
+
+    .statement-preview-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; line-height: 1.5; text-align: left; }
+    .statement-preview-item .st-num { font-weight: 700; color: #38bdf8; min-width: 32px; flex-shrink: 0; text-align: left; }
+    .statement-preview-item .st-text { flex: 1; word-break: break-word; text-align: left; }
+    
+    .expl-box { background: rgba(37, 99, 235, 0.15); border-left: 4px solid var(--primary); padding: 12px; margin-top: 8px; border-radius: 8px; font-size: 0.92rem; line-height: 1.5; white-space: pre-wrap; text-align: left; }
+    .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; text-align: left; }
+    .modal-content { max-width: 750px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: left; }
+  </style>
+</head>
+<body>
+
+<div id="topProgressBar"></div>
+
+<header>
+  <div>
+    <div class="brand-title">Crack CGPSC</div>
+    <div class="brand-sub">Admin Studio 🛠</div>
+  </div>
+  <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:none;">
+    <span>@Adminsaket</span> | <a href="javascript:void(0)" onclick="adminLogout()" style="color:#f87171; text-decoration:none;">Logout</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ADMIN LOGIN SCREEN -->
+  <div id="adminAuthCard" class="card" style="max-width: 400px; margin: 60px auto;">
+    <h3>Admin Studio Login</h3>
+    <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">Manage questions and database directly.</p>
+    
+    <label>Admin ID</label>
+    <input type="text" id="logAdminUser" placeholder="Enter Admin ID" value="Adminsaket">
+    
+    <label>Password</label>
+    <div class="password-wrapper">
+      <input type="password" id="logAdminPass" placeholder="Enter Password" value="qwertypad">
+      <span class="toggle-password" onclick="togglePasswordVisibility('logAdminPass', this)">👁</span>
+    </div>
+    
+    <button class="btn" style="width:100%; justify-content:center;" onclick="verifyAdminLogin()">Login to Studio</button>
+  </div>
+
+  <!-- ADMIN STUDIO PORTAL -->
+  <div id="adminPortalPanel" style="display:none;">
+    
+    <!-- MIGRATION PANEL -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(16,185,129,0.15)); border: 1px solid var(--primary);">
+      <h3 style="color: #38bdf8;">🔥 Firebase Migration Panel</h3>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Aapka purana data Google Sheets se Firebase Firestore me transfer karne ke liye niche wale button par click karein.</p>
+      <button class="btn btn-success" onclick="migrateDataToFirebaseUI()">🚀 Migrate Data from Google Sheets to Firebase</button>
+    </div>
+
+    <!-- Floating Header Navigation -->
+    <div class="floating-header">
+      <div class="nav-tabs" style="max-width: 340px; margin: 0 auto;">
+        <button class="nav-tab-btn active" onclick="switchAdminTab('feed')" style="flex:1;">📝 Feed Questions</button>
+        <button class="nav-tab-btn" onclick="switchAdminTab('quiz')" style="flex:1;">⚡ Quiz Practice & Edit</button>
+      </div>
+    </div>
+
+    <!-- TAB 1: FEED QUESTIONS -->
+    <div id="adminTabFeed" class="admin-tab-view">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <h3>Feed New Question to Firebase</h3>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="btn btn-secondary btn-sm" onclick="openLivePreviewModal()" title="Preview Question">👁️ Preview</button>
+            <span id="dbTotalCountBadge" style="background:rgba(59,130,246,0.2); border:1px solid var(--primary); color:#38bdf8; padding:4px 10px; border-radius:8px; font-size:0.8rem; font-weight:bold;">Total Qs: 0</span>
+          </div>
+        </div>
+
+        <form id="unifiedQForm" onsubmit="handleAdminQuestionSubmit(event)">
+          <label>GS Category</label>
+          <select id="feedGsCategory" onchange="updateFeedSubjectOptions()">
+            <option value="indian">🇮🇳 Indian GS</option>
+            <option value="cg">🏛️ Chhattisgarh GS</option>
+            <option value="other">📚 Other Subjects</option>
+          </select>
+
+          <label>Subject</label>
+          <select id="feedSub" onchange="checkNewSubjectSelection(this); updateAdminDatalists(); toggleHistoryFieldsForFeed();"></select>
+          
+          <div id="feedHistoryEraContainer" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; border:1px solid var(--border); margin-bottom:12px;">
+            <label style="color:#facc15; font-weight:bold; margin-bottom:4px;">⏳ Historical Era</label>
+            <select id="feedEra" onchange="updateAdminDatalists()">
+              <option value="Ancient">Ancient History</option>
+              <option value="Medieval">Medieval History</option>
+              <option value="Modern">Modern History</option>
+            </select>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:flex-end; margin-bottom:12px;">
+            <div>
+              <label>Topic / Chapter</label>
+              <input type="text" id="feedTop" list="datalistTopics" placeholder="Select or type topic..." oninput="onFeedTopicInput()" required style="margin-bottom:0;">
+              <datalist id="datalistTopics"></datalist>
+            </div>
+            <div id="feedTimelineWrap" style="display:none;">
+              <label>Timeline Year</label>
+              <input type="text" id="feedTimelineYear" placeholder="e.g. -322" style="margin-bottom:0;">
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:flex-end; margin-bottom:12px;">
+            <div>
+              <label>Sub-Topic</label>
+              <input type="text" id="feedSubtop" list="datalistSubtopics" placeholder="Select or type sub-topic..." oninput="onFeedSubtopicInput()" required style="margin-bottom:0;">
+              <datalist id="datalistSubtopics"></datalist>
+            </div>
+            <div id="feedSubTimelineWrap" style="display:none;">
+              <label>Sub-Timeline (Opt)</label>
+              <input type="text" id="feedSubTimelineYear" placeholder="e.g. 261" style="margin-bottom:0;">
+            </div>
+          </div>
+          
+          <label>PYQ Exam Tag</label>
+          <input type="text" id="feedExam" list="datalistExams" placeholder="e.g. CGPSC 2024">
+          <datalist id="datalistExams"></datalist>
+
+          <!-- NCERT / SCERT Tagging Section -->
+          <div style="margin: 12px 0; background: var(--card-inner); padding: 12px; border-radius: 10px; border: 1px solid var(--border);">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #38bdf8; font-weight: bold;">
+              <input type="checkbox" id="feedNcertCheck" onchange="toggleNcertContainer()" style="width: 16px; height: 16px; accent-color: var(--primary);">
+              Choose NCERT or SCERT Tag (Optional)
+            </label>
+            <div id="feedNcertContainer" style="display: none; margin-top: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;">
+              <div>
+                <label>Book Name</label>
+                <input type="text" id="feedNcertBook" list="datalistNcertBooks" placeholder="Book..." oninput="updateNcertClassesForFeed();" style="margin-bottom:0;">
+                <datalist id="datalistNcertBooks">
+                  <option value="NCERT">
+                  <option value="CG SCERT">
+                </datalist>
+              </div>
+              <div>
+                <label>Class</label>
+                <input type="text" id="feedNcertClass" list="datalistNcertClasses" placeholder="Class..." oninput="updateNcertSubjectsForFeed();" style="margin-bottom:0;">
+                <datalist id="datalistNcertClasses"></datalist>
+              </div>
+              <div>
+                <label>Subject/Part</label>
+                <input type="text" id="feedNcertPart" list="datalistNcertParts" placeholder="Subject..." oninput="updateNcertChaptersForFeed();" style="margin-bottom:0;">
+                <datalist id="datalistNcertParts"></datalist>
+              </div>
+              <div>
+                <label>Chapter</label>
+                <input type="text" id="feedNcertChapter" list="datalistNcertChapters" placeholder="Chapter..." style="margin-bottom:0;">
+                <datalist id="datalistNcertChapters"></datalist>
+              </div>
+            </div>
+          </div>
+
+          <label>Question Type</label>
+          <select id="feedType" onchange="toggleQTypeFields(this.value)">
+            <option value="standard">Standard MCQ</option>
+            <option value="ar">Type 1: Assertion & Reasoning</option>
+            <option value="match">Type 2: Match the Following (Table)</option>
+            <option value="statement">Type 3: Statement Questions</option>
+            <option value="passage">Type 4: Passage / Comprehension</option>
+          </select>
+
+          <div id="feed-ar-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;">
+            <label>Direction Text:</label><textarea id="feedArText" rows="2" placeholder="Direction..."></textarea>
+            <label>Assertion (A):</label><textarea id="feedAssert" rows="2"></textarea>
+            <label>Reason (R):</label><textarea id="feedReason" rows="2"></textarea>
+          </div>
+
+          <div id="feed-match-fields" style="display:none; background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);">
+            <h4 style="color:#38bdf8; margin-bottom:10px;">📋 Match List Table Builder</h4>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+              <div><label>Heading 1</label><input type="text" id="feedMatchHead1" value="List I"></div>
+              <div><label>Heading 2</label><input type="text" id="feedMatchHead2" value="List II"></div>
+            </div>
+            <label style="margin-top:8px;">Table Rows (Add items for List I and List II):</label>
+            <div id="matchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addMatchRowInput()">+ Add Table Row</button>
+          </div>
+
+          <div id="feed-statement-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;">
+            <label>Intro Text:</label><textarea id="feedStIntro" rows="2" placeholder="Consider the following statements:"></textarea>
+            <label>Statements (One per line with labels like (J), (K)...):</label><textarea id="feedStList" rows="3" placeholder="(J) Using specific keywords...&#10;(K) Applying filters..."></textarea>
+            <label>Conclusion Text (Optional):</label><textarea id="feedStConclusion" rows="2" placeholder="Leave blank if no conclusion text needed..."></textarea>
+          </div>
+
+          <div id="feed-passage-fields" style="display:none; background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);">
+            <h4 style="color:#38bdf8; margin-bottom:6px;">📖 Passage / Comprehension & Questions Builder</h4>
+            <label>Passage Paragraph Text:</label>
+            <textarea id="feedPassageText" rows="4" placeholder="Enter passage text..."></textarea>
+            
+            <label style="margin-top:10px;">Passage Sub-Questions (Add questions based on above passage):</label>
+            <div id="passageSubQuestionsList" style="display:flex; flex-direction:column; gap:12px; margin-bottom:10px;"></div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addPassageSubQuestionInput()">+ Add Question to Passage</button>
+          </div>
+
+          <div id="feed-standard-body-wrap">
+            <label>Question Body / Instruction Text:</label>
+            <textarea id="feedText" rows="3" placeholder="Enter question text or instruction..."></textarea>
+          </div>
+
+          <div id="feed-standard-options-wrap">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+              <div><label>Option (A)</label><input type="text" id="feedA" placeholder="e.g. Both 1 and 2"></div>
+              <div><label>Option (B)</label><input type="text" id="feedB" placeholder="e.g. Only 1"></div>
+              <div><label>Option (C)</label><input type="text" id="feedC" placeholder="e.g. Only 2"></div>
+              <div><label>Option (D)</label><input type="text" id="feedD" placeholder="e.g. Neither 1 nor 2"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 140px 1fr; gap:10px;">
+              <div>
+                <label>Correct Ans</label>
+                <select id="feedAns">
+                  <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                </select>
+              </div>
+              <div>
+                <label>Explanation</label>
+                <textarea id="feedExpl" rows="2" placeholder="Explanation..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success" style="width:100%; justify-content:center; margin-top:10px;">💾 Save Question to Database</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- TAB 2: QUIZ PRACTICE & EDIT MODE -->
+    <div id="adminTabQuiz" class="admin-tab-view" style="display:none;">
+      
+      <!-- Selector Cards with Swipe Container -->
+      <div class="card" id="adminQuizConfigCard">
+        <h3>⚡ Select Practice Mode</h3>
+        
+        <div class="selector-grid" id="adminPracSelectorGrid" onscroll="updateSwipeIndicator('adminPracSelectorGrid', 'adminPracSwipeDots')">
+          <div class="selector-card active" id="btnAdminPracTopic" onclick="switchAdminQuizSubMode('topic')">
+            <h4 style="color:#10b981; margin-bottom:4px;">Instant Practice & Quiz</h4>
+            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Immediate feedback & verification</p>
+          </div>
+          <div class="selector-card" id="btnAdminPracNcert" onclick="switchAdminQuizSubMode('ncert')">
+            <h4 style="color:#38bdf8; margin-bottom:4px;">NCERT Based PYQ</h4>
+            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Book & chapter wise practice</p>
+          </div>
+          <div class="selector-card" id="btnAdminPracExam" onclick="switchAdminQuizSubMode('exam')">
+            <h4 style="color:#facc15; margin-bottom:4px;">Exam Based PYQ</h4>
+            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Test according to exam patterns</p>
+          </div>
+        </div>
+        <div class="swipe-indicator-bar" id="adminPracSwipeDots">
+          <div class="swipe-dot active" onclick="scrollToCard('adminPracSelectorGrid', 0)"></div>
+          <div class="swipe-dot" onclick="scrollToCard('adminPracSelectorGrid', 1)"></div>
+          <div class="swipe-dot" onclick="scrollToCard('adminPracSelectorGrid', 2)"></div>
+        </div>
+
+        <!-- Topic Wise Filter Panel -->
+        <div id="panelAdminPracTopic">
+          <label>GS Category</label>
+          <select id="quizGsCategory" onchange="updateQuizSubjectOptions()">
+            <option value="indian">🇮🇳 Indian GS</option>
+            <option value="cg">🏛️ Chhattisgarh GS</option>
+            <option value="other">📚 Other Subjects</option>
+          </select>
+
+          <label>Subject</label>
+          <select id="quizSub" onchange="cascadeAdminTopics('quizSub', 'quizTop', 'quizSubtop'); toggleHistoryFieldsForQuiz();"></select>
+          
+          <!-- PRACTICE MODE ERA FILTER -->
+          <div id="quizHistoryEraContainer" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; border:1px solid var(--border); margin-bottom:12px;">
+            <label style="color:#facc15; font-weight:bold; margin-bottom:4px;">⏳ Filter by Historical Era</label>
+            <select id="quizEraFilter" onchange="cascadeAdminTopics('quizSub', 'quizTop', 'quizSubtop')">
+              <option value="ALL">All Eras</option>
+              <option value="Ancient">Ancient History</option>
+              <option value="Medieval">Medieval History</option>
+              <option value="Modern">Modern History</option>
+            </select>
+          </div>
+
+          <label>Topic / Chapter</label>
+          <select id="quizTop" onchange="cascadeAdminSubtopics('quizSub', 'quizTop', 'quizSubtop')"><option value="ALL">All Topics</option></select>
+          <label>Sub-Topic</label>
+          <select id="quizSubtop"><option value="ALL">All Sub-Topics</option></select>
+          <button class="btn btn-success" style="margin-top: 10px;" onclick="startAdminPracticeQuiz('topic')">Start Practice</button>
+        </div>
+
+        <!-- NCERT Filter Panel -->
+        <div id="panelAdminPracNcert" style="display:none;">
+          <label>Book Name</label>
+          <select id="quizNcertBook" onchange="cascadeAdminNcertClasses()"></select>
+          <label>Class</label>
+          <select id="quizNcertClass" onchange="cascadeAdminNcertSubs()"></select>
+          <label>Subject</label>
+          <select id="quizNcertSub" onchange="cascadeAdminNcertChaps()"><option value="ALL">All Subjects</option></select>
+          <label>Chapter Name</label>
+          <select id="quizNcertChap"><option value="ALL">All Chapters</option></select>
+          <button class="btn btn-success" style="margin-top: 10px;" onclick="startAdminPracticeQuiz('ncert')">Start NCERT Practice</button>
+        </div>
+
+        <!-- Exam Filter Panel -->
+        <div id="panelAdminPracExam" style="display:none;">
+          <label>Exam Category</label>
+          <select id="quizExamCat" onchange="cascadeAdminExamNames()">
+            <option value="ALL">All Exams</option>
+            <option value="CGPSC">CGPSC</option>
+            <option value="CGVyapam">CGVyapam</option>
+            <option value="CGSSB">CGSSB</option>
+            <option value="Other CG Exam">Other CG Exam</option>
+            <option value="Teaching Exams">Teaching Exams</option>
+            <option value="SSC">SSC</option>
+            <option value="UPSC">UPSC</option>
+            <option value="Police/SI">Police/SI</option>
+            <option value="Other Exams">Other Exams</option>
+          </select>
+
+          <label>Exam Name</label>
+          <select id="quizExamName" onchange="cascadeAdminExamYears()"><option value="ALL">All Exams</option></select>
+          
+          <label>Year</label>
+          <select id="quizExamYear" onchange="cascadeAdminExamSubs()"><option value="ALL">All Years</option></select>
+          
+          <label>Subject</label>
+          <select id="quizExamSub" onchange="cascadeAdminExamTopics()"><option value="ALL">All Subjects</option></select>
+          
+          <label>Topic / Chapter</label>
+          <select id="quizExamTop" onchange="cascadeAdminExamSubtopics()"><option value="ALL">All Topics</option></select>
+          
+          <label>Sub-Topic</label>
+          <select id="quizExamSubtop"><option value="ALL">All Sub-Topics</option></select>
+
+          <button class="btn btn-warning" style="margin-top: 10px; background:#facc15; color:#000;" onclick="startAdminPracticeQuiz('exam')">Start Exam Practice</button>
+        </div>
+
+      </div>
+
+      <div id="adminQuizPlayer" class="card" style="display:none;">
+        <div class="q-header-bar">
+          <div class="q-header-left">
+            <button class="btn btn-secondary btn-sm" onclick="backToQuizConfig()" title="Back">⬅️ Back</button>
+            <span id="aqCounter" style="color:#60a5fa; font-weight:bold; font-size:1.02rem;">Q 1</span>
+            <span class="badge-exam-tag" id="aqExamBadge">PYQ</span>
+          </div>
+          <div class="q-header-right">
+            <button class="btn btn-secondary btn-sm" onclick="openEditModalForCurrentQ()" title="Edit Question">✏️ Edit</button>
+          </div>
+        </div>
+
+        <div class="formatted-text" id="aqBody"></div>
+        <div id="aqMatchWrap"></div>
+        <div id="aqOpts"></div>
+        <div id="aqExpl" class="expl-box" style="display:none;"></div>
+        
+        <div style="display:flex; justify-content:space-between; margin-top:15px;">
+          <button class="btn btn-secondary" onclick="moveAdminQuizQ(-1)">Previous</button>
+          <button class="btn" id="aqNextBtn" onclick="moveAdminQuizQ(1)">Next</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- EDIT QUESTION MODAL -->
+<div class="modal-backdrop" id="editQuestionModal">
+  <div class="modal-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3>✏️ Edit Question</h3>
+      <button class="btn btn-secondary" onclick="closeEditModal()" style="padding:4px 10px;">✕</button>
+    </div>
+    <form id="editQForm" onsubmit="handleEditQuestionSubmit(event)">
+      <input type="hidden" id="editQId">
+      <label>Subject</label><select id="editSub" onchange="toggleHistoryFieldsForEdit()"></select>
+      
+      <div id="editHistoryEraContainer" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; border:1px solid var(--border); margin-bottom:12px;">
+        <label style="color:#facc15; font-weight:bold; margin-bottom:4px;">⏳ Historical Era</label>
+        <select id="editEra">
+          <option value="Ancient">Ancient History</option>
+          <option value="Medieval">Medieval History</option>
+          <option value="Modern">Modern History</option>
+        </select>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:flex-end; margin-bottom:12px;">
+        <div>
+          <label>Topic</label><input type="text" id="editTop" required style="margin-bottom:0;">
+        </div>
+        <div id="editTimelineWrap" style="display:none;">
+          <label>Timeline Year</label><input type="text" id="editTimelineYear" placeholder="Year" style="margin-bottom:0;">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:flex-end; margin-bottom:12px;">
+        <div>
+          <label>Sub-Topic</label><input type="text" id="editSubtop" required style="margin-bottom:0;">
+        </div>
+        <div id="editSubTimelineWrap" style="display:none;">
+          <label>Sub-Timeline</label><input type="text" id="editSubTimelineYear" placeholder="Year" style="margin-bottom:0;">
+        </div>
+      </div>
+
+      <label>Exam Name Tag</label><input type="text" id="editExam" placeholder="e.g. CGPSC 2024">
+
+      <!-- NCERT / SCERT Tagging Section in Edit Modal -->
+      <div style="margin: 12px 0; background: var(--card-inner); padding: 12px; border-radius: 10px; border: 1px solid var(--border);">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #38bdf8; font-weight: bold;">
+          <input type="checkbox" id="editNcertCheck" onchange="toggleEditNcertContainer()" style="width: 16px; height: 16px; accent-color: var(--primary);">
+          Choose NCERT or SCERT Tag (Optional)
+        </label>
+        <div id="editNcertContainer" style="display: none; margin-top: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;">
+          <div>
+            <label>Book Name</label>
+            <input type="text" id="editNcertBook" list="datalistNcertBooks" placeholder="Book..." oninput="updateNcertClassesForEdit();" style="margin-bottom:0;">
+          </div>
+          <div>
+            <label>Class</label>
+            <input type="text" id="editNcertClass" list="datalistNcertClasses" placeholder="Class..." oninput="updateNcertSubjectsForEdit();" style="margin-bottom:0;">
+          </div>
+          <div>
+            <label>Subject/Part</label>
+            <input type="text" id="editNcertPart" list="datalistNcertParts" placeholder="Subject..." oninput="updateNcertChaptersForEdit();" style="margin-bottom:0;">
+          </div>
+          <div>
+            <label>Chapter</label>
+            <input type="text" id="editNcertChapter" list="datalistNcertChapters" placeholder="Chapter..." style="margin-bottom:0;">
+          </div>
+        </div>
+      </div>
+
+      <label>Question Type</label>
+      <select id="editType" onchange="toggleEditQTypeFields(this.value)">
+        <option value="standard">Standard MCQ</option>
+        <option value="ar">Assertion & Reasoning</option>
+        <option value="match">Match the Following</option>
+        <option value="statement">Statement Question</option>
+        <option value="passage">Passage / Comprehension</option>
+      </select>
+
+      <div id="edit-ar-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;">
+        <label>Direction Text:</label><textarea id="editArText" rows="2"></textarea>
+        <label>Assertion (A):</label><textarea id="editAssert" rows="2"></textarea>
+        <label>Reason (R):</label><textarea id="editReason" rows="2"></textarea>
+      </div>
+
+      <div id="edit-match-fields" style="display:none; background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);">
+        <h4 style="color:#38bdf8; margin-bottom:10px;">📋 Match List Table Builder</h4>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+          <div><label>Heading 1</label><input type="text" id="editMatchHead1" value="List I"></div>
+          <div><label>Heading 2</label><input type="text" id="editMatchHead2" value="List II"></div>
+        </div>
+        <label style="margin-top:8px;">Table Rows:</label>
+        <div id="editMatchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="addEditMatchRowInput()">+ Add Table Row</button>
+      </div>
+
+      <div id="edit-statement-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;">
+        <label>Intro Text:</label><textarea id="editStIntro" rows="2"></textarea>
+        <label>Statements (One per line with labels):</label><textarea id="editStList" rows="3"></textarea>
+        <label>Conclusion Text (Optional):</label><textarea id="editStConclusion" rows="2"></textarea>
+      </div>
+
+      <div id="edit-passage-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px; border:1px solid var(--border);">
+        <h4 style="color:#38bdf8; margin-bottom:6px;">📖 Passage / Comprehension Text</h4>
+        <textarea id="editPassageText" rows="4"></textarea>
+      </div>
+
+      <div id="edit-standard-body-wrap">
+        <label>Question Text / Body / Instruction Text</label><textarea id="editText" rows="3"></textarea>
+      </div>
+
+      <div id="edit-standard-options-wrap">
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+          <div><label>Opt A</label><input type="text" id="editA"></div>
+          <div><label>Opt B</label><input type="text" id="editB"></div>
+          <div><label>Opt C</label><input type="text" id="editC"></div>
+          <div><label>Opt D</label><input type="text" id="editD"></div>
+        </div>
+        <label>Correct Answer</label>
+        <select id="editAns"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+        <label>Explanation</label><textarea id="editExpl" rows="2"></textarea>
+      </div>
+      
+      <div style="display:flex; justify-content:space-between; margin-top:15px;">
+        <button type="button" class="btn btn-danger" onclick="deleteCurrentQuestion()">🗑️ Delete</button>
+        <button type="submit" class="btn btn-success">💾 Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- LIVE PREVIEW MODAL -->
+<div class="modal-backdrop" id="livePreviewModal">
+  <div class="modal-content">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <h3>👁️ Question Live Preview</h3>
+      <button class="btn btn-secondary" onclick="closeLivePreviewModal()" style="padding:4px 10px;">✕</button>
+    </div>
+    <div id="livePreviewBox" style="background:var(--card-inner); padding:15px; border-radius:12px; border:1px solid var(--border);"></div>
+  </div>
+</div>
+
+<datalist id="datalistTopics"></datalist>
+<datalist id="datalistSubtopics"></datalist>
+<datalist id="datalistExams"></datalist>
+<datalist id="datalistNcertBooks">
+  <option value="NCERT">
+  <option value="CG SCERT">
+</datalist>
+<datalist id="datalistNcertClasses"></datalist>
+<datalist id="datalistNcertParts"></datalist>
+<datalist id="datalistNcertChapters"></datalist>
+
+<script>
+  // Initialize Firebase safely
+  let db = null;
+  try {
+    const firebaseConfig = {
+      apiKey: "AIzaSyAozn3dx9h874oCBX120p7MYye6dyjPkME",
+      authDomain: "crackcgpsc-2ca60.firebaseapp.com",
+      projectId: "crackcgpsc-2ca60",
+      storageBucket: "crackcgpsc-2ca60.firebasestorage.app",
+      messagingSenderId: "421965977544",
+      appId: "1:421965977544:web:9265149dd667f205d892fd"
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    db = firebase.firestore();
+  } catch(e) {
+    console.error("Firebase Init Error:", e);
+  }
+
+  function setProgress(percent) {
+    const bar = document.getElementById('topProgressBar');
+    if(!bar) return;
+    bar.style.opacity = '1';
+    bar.style.width = percent + '%';
+    if(percent >= 100) {
+      setTimeout(() => {
+        bar.style.opacity = '0';
+        setTimeout(() => { bar.style.width = '0%'; }, 300);
+      }, 400);
+    }
+  }
+
+  function updateSwipeIndicator(gridId, dotsBarId) {
+    const grid = document.getElementById(gridId);
+    if(!grid) return;
+    const scrollLeft = grid.scrollLeft;
+    const cardWidth = grid.querySelector('.selector-card').offsetWidth + 12;
+    const activeIdx = Math.round(scrollLeft / cardWidth);
+    const dots = document.querySelectorAll(`#${dotsBarId} .swipe-dot`);
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIdx);
+    });
+  }
+
+  function scrollToCard(gridId, idx) {
+    const grid = document.getElementById(gridId);
+    if(!grid) return;
+    const cardWidth = grid.querySelector('.selector-card').offsetWidth + 12;
+    grid.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
+  }
+
+  let indianGsSubs = ["Indian History", "Polity", "Economy", "General Science", "Indian Geography", "Computer", "Hindi", "English"];
+  let cgGsSubs = ["CG History", "CG Geography", "CG Tribes", "CG Art & Culture", "CG Language", "CG Administration", "CG Panchayati Raj", "CG Economy", "CG General Knowledge"];
+  let otherSubs = ["CDP", "General Mental Ability", "Maths", "Current Affairs"];
+  
+  let subjects = JSON.parse(localStorage.getItem('cg_subs')) || [...indianGsSubs, ...cgGsSubs, ...otherSubs];
+  let questions = [];
+  let adminQuizList = [];
+  let adminQuizIdx = 0;
+  let userResponses = {};
+
+  function togglePasswordVisibility(fieldId, iconEl) {
+    const field = document.getElementById(fieldId);
+    if (field.type === "password") {
+      field.type = "text";
+      iconEl.innerText = "🔒";
+    } else {
+      field.type = "password";
+      iconEl.innerText = "👁️";
+    }
+  }
+
+  function verifyAdminLogin() {
+    const u = document.getElementById('logAdminUser').value.trim();
+    const p = document.getElementById('logAdminPass').value.trim();
+    
+    if(u === 'Adminsaket' && p === 'qwertypad') {
+      localStorage.setItem('cg_admin_logged', 'true');
+      document.getElementById('adminAuthCard').style.display = 'none';
+      document.getElementById('adminPortalPanel').style.display = 'block';
+      document.getElementById('adminHeaderUser').style.display = 'inline-block';
+      initAdminStudio();
+    } else {
+      alert('Invalid ID or Password! (Use Adminsaket / qwertypad)');
+    }
+  }
+
+  function adminLogout() {
+    localStorage.removeItem('cg_admin_logged');
+    document.getElementById('adminAuthCard').style.display = 'block';
+    document.getElementById('adminPortalPanel').style.display = 'none';
+    document.getElementById('adminHeaderUser').style.display = 'none';
+  }
+
+  async function initAdminStudio() {
+    setProgress(30);
+    await fetchQuestions();
+    setProgress(70);
+    populateDropdowns();
+    updateAdminDatalists();
+    populateAdminNcertDropdowns();
+    populateAdminExamDropdowns();
+    if(document.getElementById('matchRowsInputsList').children.length === 0) {
+      addMatchRowInput();
+      addMatchRowInput();
+      addMatchRowInput();
+      addMatchRowInput();
+    }
+    if(document.getElementById('passageSubQuestionsList').children.length === 0) {
+      addPassageSubQuestionInput();
+    }
+    setProgress(100);
+  }
+
+  async function fetchQuestions() {
+    try {
+      if (!db) return;
+      let snapshot = await db.collection("questions").get();
+      let data = [];
+      snapshot.forEach(doc => {
+        data.push({ id: doc.id, ...doc.data() });
+      });
+
+      if(Array.isArray(data)) {
+        let flatList = [];
+        data.forEach(q => {
+          let opts = q.options;
+          if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+          if(!opts || typeof opts !== 'object') {
+            opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+          }
+          q.options = opts;
+
+          let st = q.statements;
+          if(typeof st === 'string' && st.trim() !== '') {
+            try { st = JSON.parse(st); } catch(e){ st = []; }
+          }
+          q.statements = Array.isArray(st) ? st : [];
+
+          let mr = q.matchRows;
+          if(typeof mr === 'string' && mr.trim() !== '') {
+            try { mr = JSON.parse(mr); } catch(e){ mr = []; }
+          }
+          q.matchRows = Array.isArray(mr) ? mr : [];
+
+          let pq = q.passageQuestions;
+          if(typeof pq === 'string' && pq.trim() !== '') {
+            try { pq = JSON.parse(pq); } catch(e){ pq = []; }
+          }
+          q.passageQuestions = Array.isArray(pq) ? pq : [];
+
+          if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
+            pq.forEach((subQ, pIdx) => {
+              let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
+              flatList.push({
+                ...q,
+                id: `${q.id}_p${pIdx+1}`,
+                originalId: q.id,
+                isPassageSubQ: true,
+                passageSubIdx: pIdx + 1,
+                passageTotal: pq.length,
+                passageText: q.passageText || q.text,
+                text: subQ.qText,
+                options: subOpts,
+                ans: subQ.ans,
+                expl: subQ.expl
+              });
+            });
+          } else {
+            flatList.push(q);
+          }
+        });
+
+        questions = flatList;
+
+        let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
+        sheetSubs.forEach(s => {
+          if (!subjects.includes(s)) {
+            subjects.push(s);
+          }
+        });
+        localStorage.setItem('cg_subs', JSON.stringify(subjects));
+
+        document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+        populateDropdowns();
+        updateAdminDatalists();
+        populateAdminNcertDropdowns();
+        populateAdminExamDropdowns();
+      }
+    } catch(e) { console.error("Fetch Error:", e); }
+  }
+
+  async function migrateDataToFirebaseUI() {
+    if (!confirm("Kya aap apna saara data Google Sheets se Firebase me migrate karna chahte hain?")) return;
+    if (!db) { alert("Firebase connected nahi hai!"); return; }
+    setProgress(15);
+    try {
+      const QUESTIONS_API_URL = "https://script.google.com/macros/s/AKfycbx7QhvQi1_Am1I6nRT9mH9dPdU1q3pTN9-nvM0Cg9flFxQrtFHOd4OCI9gcjNenKI8C/exec";
+      const USERS_API_URL = "https://script.google.com/macros/s/AKfycbzuPQnDdlaeutLZvuQpqMMQDOjY-u_xH0e9CtOmmQKE-dV7IAuhqG0dDgXryO-VpdK_/exec";
+
+      setProgress(35);
+      const qResponse = await fetch(QUESTIONS_API_URL + "?action=getQuestions");
+      const questionsList = await qResponse.json();
+      
+      let countQ = 0;
+      if(Array.isArray(questionsList)) {
+        for (let q of questionsList) {
+          let qId = q.id ? q.id.toString() : 'q_' + Math.random().toString(36.substr(2, 9));
+          await db.collection("questions").doc(qId).set(q, { merge: true });
+          countQ++;
+        }
+      }
+
+      setProgress(75);
+      const uResponse = await fetch(USERS_API_URL + "?action=getUsers");
+      const usersList = await uResponse.json();
+      
+      let countU = 0;
+      if(Array.isArray(usersList)) {
+        for (let u of usersList) {
+          let username = u.username ? u.username.toString().toLowerCase() : 'user_' + Math.random();
+          await db.collection("users").doc(username).set(u, { merge: true });
+          countU++;
+        }
+      }
+
+      setProgress(100);
+      alert(`🎉 Migration Successful!\nTotal Questions migrated: ${countQ}\nTotal Users migrated: ${countU}`);
+      await fetchQuestions();
+    } catch(error) {
+      console.error(error);
+      alert("Migration Error: " + error.message);
+    }
+  }
+
+  function updateFeedSubjectOptions() {
+    const cat = document.getElementById('feedGsCategory').value;
+    const subEl = document.getElementById('feedSub');
+    let list = (cat === 'indian') ? indianGsSubs : ((cat === 'cg') ? cgGsSubs : otherSubs);
+    
+    subEl.innerHTML = list.map(s => {
+      let count = questions.filter(q => q.subject === s).length;
+      return `<option value="${s}">${s} (${count} Qs)</option>`;
+    }).join('') + `<option value="ADD_NEW" style="color:#60a5fa; font-weight:bold;">+ Add New Subject...</option>`;
+    
+    toggleHistoryFieldsForFeed();
+  }
+
+  function updateQuizSubjectOptions() {
+    const cat = document.getElementById('quizGsCategory').value;
+    const subEl = document.getElementById('quizSub');
+    let list = (cat === 'indian') ? indianGsSubs : ((cat === 'cg') ? cgGsSubs : otherSubs);
+    
+    subEl.innerHTML = '<option value="ALL">All Subjects</option>' + list.map(s => {
+      let count = questions.filter(q => q.subject === s).length;
+      return `<option value="${s}">${s} (${count} Qs)</option>`;
+    }).join('');
+    
+    cascadeAdminTopics('quizSub', 'quizTop', 'quizSubtop');
+    toggleHistoryFieldsForQuiz();
+  }
+
+  function populateDropdowns() {
+    updateFeedSubjectOptions();
+    updateQuizSubjectOptions();
+    
+    const fill = (id) => {
+      const el = document.getElementById(id);
+      if(el) {
+        el.innerHTML = subjects.map(s => {
+          let count = questions.filter(q => q.subject === s).length;
+          return `<option value="${s}">${s} (${count} Qs)</option>`;
+        }).join('') + `<option value="ADD_NEW" style="color:#60a5fa; font-weight:bold;">+ Add New Subject...</option>`;
+      }
+    };
+    fill('editSub');
+  }
+
+  function toggleHistoryFieldsForFeed() {
+    const sub = document.getElementById('feedSub').value;
+    const isHistory = sub.toLowerCase().includes('history');
+    document.getElementById('feedHistoryEraContainer').style.display = isHistory ? 'block' : 'none';
+    document.getElementById('feedTimelineWrap').style.display = isHistory ? 'block' : 'none';
+    document.getElementById('feedSubTimelineWrap').style.display = isHistory ? 'block' : 'none';
+    updateAdminDatalists();
+  }
+
+  function toggleHistoryFieldsForQuiz() {
+    const sub = document.getElementById('quizSub').value;
+    const isHistory = sub.toLowerCase().includes('history');
+    let eraContainer = document.getElementById('quizHistoryEraContainer');
+    if(eraContainer) {
+      eraContainer.style.display = isHistory ? 'block' : 'none';
+    }
+  }
+
+  function toggleHistoryFieldsForEdit() {
+    const sub = document.getElementById('editSub').value;
+    const isHistory = sub.toLowerCase().includes('history');
+    document.getElementById('editHistoryEraContainer').style.display = isHistory ? 'block' : 'none';
+    document.getElementById('editTimelineWrap').style.display = isHistory ? 'block' : 'none';
+    document.getElementById('editSubTimelineWrap').style.display = isHistory ? 'block' : 'none';
+  }
+
+  function onFeedTopicInput() {
+    updateAdminSubtopicDatalist();
+    const topVal = document.getElementById('feedTop').value.trim();
+    if(!topVal) return;
+    let found = questions.find(q => q.topic && q.topic.toLowerCase() === topVal.toLowerCase() && q.timeline_year);
+    if(found) {
+      if(found.era) document.getElementById('feedEra').value = found.era;
+      if(found.timeline_year) document.getElementById('feedTimelineYear').value = found.timeline_year;
+      if(found.sub_timeline_year) document.getElementById('feedSubTimelineYear').value = found.sub_timeline_year;
+    }
+  }
+
+  function onFeedSubtopicInput() {
+    const subtopVal = document.getElementById('feedSubtop').value.trim();
+    const selectedSub = document.getElementById('feedSub').value;
+    const selectedTopic = document.getElementById('feedTop').value.trim();
+    if(!subtopVal) return;
+    
+    let found = questions.find(q => 
+      q.subject === selectedSub && 
+      q.topic && q.topic.toLowerCase() === selectedTopic.toLowerCase() &&
+      q.subtopic && q.subtopic.toLowerCase() === subtopVal.toLowerCase() && 
+      q.sub_timeline_year
+    );
+    
+    if(found && found.sub_timeline_year) {
+      document.getElementById('feedSubTimelineYear').value = found.sub_timeline_year;
+    }
+  }
+
+  function checkNewSubjectSelection(selectEl) {
+    if(selectEl.value === 'ADD_NEW') {
+      let newSub = prompt('Enter new Subject name:');
+      if(newSub && newSub.trim() !== '') {
+        let cleanName = newSub.trim();
+        if(!subjects.includes(cleanName)) {
+          subjects.push(cleanName);
+          otherSubs.push(cleanName);
+          localStorage.setItem('cg_subs', JSON.stringify(subjects));
+          populateDropdowns();
+          selectEl.value = cleanName;
+          updateAdminDatalists();
+        } else {
+          alert('Subject already exists!');
+          selectEl.value = subjects[0];
+        }
+      } else {
+        selectEl.value = subjects[0];
+      }
+    } else {
+      updateAdminDatalists();
+      toggleHistoryFieldsForFeed();
+    }
+  }
+
+  function addMatchRowInput(leftVal = '', rightVal = '') {
+    const container = document.getElementById('matchRowsInputsList');
+    const idx = container.children.length;
+    const romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+    const romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+    let lPlaceholder = romanLabels[idx] || `Item ${idx+1}`;
+    let rPlaceholder = romanVals[idx] || `Desc ${idx+1}`;
+
+    const div = document.createElement('div');
+    div.className = 'match-row-item';
+    div.style.cssText = 'display: flex; gap: 8px; align-items: center; margin-bottom: 6px;';
+    div.innerHTML = `
+      <input type="text" class="match-left-input" value="${leftVal}" placeholder="${lPlaceholder}" style="margin-bottom:0; flex:1;">
+      <span style="color:var(--muted); font-weight:bold;">|</span>
+      <input type="text" class="match-right-input" value="${rightVal}" placeholder="${rPlaceholder}" style="margin-bottom:0; flex:1;">
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" style="padding: 10px 12px;">✕</button>
+    `;
+    container.appendChild(div);
+  }
+
+  function addEditMatchRowInput(leftVal = '', rightVal = '') {
+    const container = document.getElementById('editMatchRowsInputsList');
+    if(!container) return;
+    const idx = container.children.length;
+    const romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+    const romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+    let lPlaceholder = romanLabels[idx] || `Item ${idx+1}`;
+    let rPlaceholder = romanVals[idx] || `Desc ${idx+1}`;
+
+    const div = document.createElement('div');
+    div.className = 'match-row-item';
+    div.style.cssText = 'display: flex; gap: 8px; align-items: center; margin-bottom: 6px;';
+    div.innerHTML = `
+      <input type="text" class="match-left-input" value="${leftVal}" placeholder="${lPlaceholder}" style="margin-bottom:0; flex:1;">
+      <span style="color:var(--muted); font-weight:bold;">|</span>
+      <input type="text" class="match-right-input" value="${rightVal}" placeholder="${rPlaceholder}" style="margin-bottom:0; flex:1;">
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" style="padding: 10px 12px;">✕</button>
+    `;
+    container.appendChild(div);
+  }
+
+  function addPassageSubQuestionInput(qText = '', optA = '', optB = '', optC = '', optD = '', ans = 'A', expl = '') {
+    const container = document.getElementById('passageSubQuestionsList');
+    if(!container) return;
+    const idx = container.children.length + 1;
+
+    const div = document.createElement('div');
+    div.className = 'passage-subq-item';
+    div.style.cssText = 'background:rgba(17, 24, 39, 0.9); border:1px solid var(--border); border-radius:10px; padding:12px; margin-bottom:10px;';
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <strong style="color:#60a5fa; font-size:0.88rem;">Question #${idx}</strong>
+        <button type="button" class="btn btn-danger btn-sm" onclick="this.closest('.passage-subq-item').remove()" style="padding:4px 8px;">✕ Remove</button>
+      </div>
+      <label>Question Text</label>
+      <textarea class="pq-text" rows="2" placeholder="Enter sub-question..." style="margin-bottom:8px;">${qText}</textarea>
+      
+      <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:8px; margin-bottom:8px;">
+        <div><label>Opt A</label><input type="text" class="pq-optA" value="${optA}" placeholder="Option A" style="margin-bottom:0;"></div>
+        <div><label>Opt B</label><input type="text" class="pq-optB" value="${optB}" placeholder="Option B" style="margin-bottom:0;"></div>
+        <div><label>Opt C</label><input type="text" class="pq-optC" value="${optC}" placeholder="Option C" style="margin-bottom:0;"></div>
+        <div><label>Opt D</label><input type="text" class="pq-optD" value="${optD}" placeholder="Option D" style="margin-bottom:0;"></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 120px 1fr; gap:8px;">
+        <div>
+          <label>Correct Ans</label>
+          <select class="pq-ans" style="margin-bottom:0;">
+            <option value="A" ${ans==='A'?'selected':''}>A</option>
+            <option value="B" ${ans==='B'?'selected':''}>B</option>
+            <option value="C" ${ans==='C'?'selected':''}>C</option>
+            <option value="D" ${ans==='D'?'selected':''}>D</option>
+          </select>
+        </div>
+        <div>
+          <label>Explanation</label>
+          <textarea class="pq-expl" rows="1" placeholder="Explanation..." style="margin-bottom:0;">${expl}</textarea>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+
+  function cascadeAdminTopics(subId, topId, subtopId) {
+    const sub = document.getElementById(subId).value;
+    const topEl = document.getElementById(topId);
+    const subtopEl = document.getElementById(subtopId);
+
+    if(!sub || sub === 'ALL') {
+      if(topEl) topEl.innerHTML = '<option value="ALL">All Topics</option>';
+      if(subtopEl) subtopEl.innerHTML = '<option value="ALL">All Sub-Topics</option>';
+      return;
+    }
+
+    let subPool = questions.filter(q => q.subject === sub);
+    const subLower = sub.toLowerCase();
+    if(subLower.includes('history')) {
+      const eraEl = document.getElementById('quizEraFilter');
+      if(eraEl && eraEl.value && eraEl.value !== 'ALL') {
+        subPool = subPool.filter(q => q.era && q.era.toLowerCase() === eraEl.value.toLowerCase());
+      }
+    }
+
+    let relatedTopics = [...new Set(subPool.map(q => q.topic).filter(Boolean))];
+    if(subLower.includes('history')) {
+      relatedTopics.sort((a, b) => {
+        let qA = subPool.find(q => q.topic === a);
+        let qB = subPool.find(q => q.topic === b);
+        let tA = qA ? (parseFloat(qA.timeline_year) || 0) : 0;
+        let tB = qB ? (parseFloat(qB.timeline_year) || 0) : 0;
+        if(tA !== tB) return tA - tB;
+        return a.localeCompare(b);
+      });
+    } else {
+      relatedTopics.sort((a, b) => a.localeCompare(b));
+    }
+
+    if(topEl) {
+      let allCount = subPool.length;
+      topEl.innerHTML = `<option value="ALL">All Topics (${allCount} Qs)</option>` + relatedTopics.map(t => {
+        let tCount = subPool.filter(q => q.topic === t).length;
+        return `<option value="${t}">${t} (${tCount} Qs)</option>`;
+      }).join('');
+      cascadeAdminSubtopics(subId, topId, subtopId);
+    }
+  }
+
+  function cascadeAdminSubtopics(subId, topId, subtopId) {
+    const sub = document.getElementById(subId).value;
+    const top = document.getElementById(topId).value;
+    const subtopEl = document.getElementById(subtopId);
+    
+    if(!sub || sub === 'ALL' || !top || top === 'ALL') {
+      if(subtopEl) subtopEl.innerHTML = '<option value="ALL">All Sub-Topics</option>';
+      return;
+    }
+
+    let pool = questions.filter(q => q.subject === sub);
+    const subLower = sub.toLowerCase();
+    if(subLower.includes('history')) {
+      const eraEl = document.getElementById('quizEraFilter');
+      if(eraEl && eraEl.value && eraEl.value !== 'ALL') {
+        pool = pool.filter(q => q.era && q.era.toLowerCase() === eraEl.value.toLowerCase());
+      }
+    }
+
+    pool = pool.filter(q => q.topic === top);
+    const relatedSubtopics = [...new Set(pool.map(q => q.subtopic).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+    if(subtopEl) {
+      subtopEl.innerHTML = `<option value="ALL">All Sub-Topics (${pool.length} Qs)</option>` + relatedSubtopics.map(st => {
+        let stCount = pool.filter(q => q.subtopic === st).length;
+        return `<option value="${st}">${st} (${stCount} Qs)</option>`;
+      }).join('');
+    }
+  }
+
+  function getClassesForBook(bookName) {
+    let list = [];
+    let maxCls = (bookName === "CG SCERT") ? 10 : 12;
+    for(let i = 6; i <= maxCls; i++) {
+      list.push(`Class ${i}th`);
+    }
+    return list;
+  }
+
+  function updateNcertClassesForFeed() {
+    let book = document.getElementById('feedNcertBook').value.trim();
+    let classDl = document.getElementById('datalistNcertClasses');
+    let classes = getClassesForBook(book);
+    
+    let countsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      if(isNcert && bName === book && q.ncert_class) {
+        let c = q.ncert_class.trim();
+        countsMap[c] = (countsMap[c] || 0) + 1;
+      }
+    });
+
+    classDl.innerHTML = classes.map(c => `<option value="${c}">${countsMap[c] ? '('+countsMap[c]+' Qs)' : ''}</option>`).join('');
+    updateNcertSubjectsForFeed();
+  }
+
+  function updateNcertSubjectsForFeed() {
+    let book = document.getElementById('feedNcertBook').value.trim();
+    let cls = document.getElementById('feedNcertClass').value.trim();
+    let partDl = document.getElementById('datalistNcertParts');
+    
+    let subsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      let cName = q.ncert_class ? q.ncert_class.trim() : "";
+      if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+        let p = q.ncert_chapter.split('-')[0];
+        if(p && p.trim() !== "") {
+          let sName = p.trim();
+          subsMap[sName] = (subsMap[sName] || 0) + 1;
+        }
+      }
+    });
+
+    partDl.innerHTML = Object.keys(subsMap).map(s => `<option value="${s}">(${subsMap[s]} Qs)</option>`).join('');
+    updateNcertChaptersForFeed();
+  }
+
+  function updateNcertChaptersForFeed() {
+    let book = document.getElementById('feedNcertBook').value.trim();
+    let cls = document.getElementById('feedNcertClass').value.trim();
+    let part = document.getElementById('feedNcertPart').value.trim();
+    let chapDl = document.getElementById('datalistNcertChapters');
+    
+    if(!part) {
+      chapDl.innerHTML = '';
+      return;
+    }
+
+    let chapsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      let cName = q.ncert_class ? q.ncert_class.trim() : "";
+      if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+        let parts = q.ncert_chapter.split('-');
+        let subPart = parts[0] ? parts[0].trim() : '';
+        let chapPart = parts[1] ? parts[1].trim() : q.ncert_chapter;
+        if(subPart === part) {
+          if(chapPart) chapsMap[chapPart] = (chapsMap[chapPart] || 0) + 1;
+        }
+      }
+    });
+
+    chapDl.innerHTML = Object.keys(chapsMap).map(c => `<option value="${c}">(${chapsMap[c]} Qs)</option>`).join('');
+  }
+
+  function updateNcertClassesForEdit() {
+    let book = document.getElementById('editNcertBook').value.trim();
+    let classDl = document.getElementById('datalistNcertClasses');
+    let classes = getClassesForBook(book);
+    
+    let countsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      if(isNcert && bName === book && q.ncert_class) {
+        let c = q.ncert_class.trim();
+        countsMap[c] = (countsMap[c] || 0) + 1;
+      }
+    });
+
+    classDl.innerHTML = classes.map(c => `<option value="${c}">${countsMap[c] ? '('+countsMap[c]+' Qs)' : ''}</option>`).join('');
+    updateNcertSubjectsForEdit();
+  }
+
+  function updateNcertSubjectsForEdit() {
+    let book = document.getElementById('editNcertBook').value.trim();
+    let cls = document.getElementById('editNcertClass').value.trim();
+    let partDl = document.getElementById('datalistNcertParts');
+    
+    let subsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      let cName = q.ncert_class ? q.ncert_class.trim() : "";
+      if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+        let p = q.ncert_chapter.split('-')[0];
+        if(p && p.trim() !== "") {
+          let sName = p.trim();
+          subsMap[sName] = (subsMap[sName] || 0) + 1;
+        }
+      }
+    });
+
+    partDl.innerHTML = Object.keys(subsMap).map(s => `<option value="${s}">(${subsMap[s]} Qs)</option>`).join('');
+    updateNcertChaptersForEdit();
+  }
+
+  function updateNcertChaptersForEdit() {
+    let book = document.getElementById('editNcertBook').value.trim();
+    let cls = document.getElementById('editNcertClass').value.trim();
+    let part = document.getElementById('editNcertPart').value.trim();
+    let chapDl = document.getElementById('datalistNcertChapters');
+    
+    if(!part) {
+      chapDl.innerHTML = '';
+      return;
+    }
+
+    let chapsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      let cName = q.ncert_class ? q.ncert_class.trim() : "";
+      if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+        let parts = q.ncert_chapter.split('-');
+        let subPart = parts[0] ? parts[0].trim() : '';
+        let chapPart = parts[1] ? parts[1].trim() : q.ncert_chapter;
+        if(subPart === part) {
+          if(chapPart) chapsMap[chapPart] = (chapsMap[chapPart] || 0) + 1;
+        }
+      }
+    });
+
+    chapDl.innerHTML = Object.keys(chapsMap).map(c => `<option value="${c}">(${chapsMap[c]} Qs)</option>`).join('');
+  }
+
+  function updateAdminDatalists() {
+    const selectedSub = document.getElementById('feedSub').value;
+    const isHistory = selectedSub.toLowerCase().includes('history');
+    const selectedEra = isHistory ? document.getElementById('feedEra').value : '';
+
+    let subPool = questions.filter(q => q.subject === selectedSub);
+    if(isHistory && selectedEra) {
+      subPool = subPool.filter(q => q.era && q.era.toLowerCase() === selectedEra.toLowerCase());
+    }
+
+    let topicCounts = {};
+    let partCounts = {};
+    let chapterCounts = {};
+
+    subPool.forEach(q => {
+      if(q.topic) topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
+      if(q.ncert_chapter) {
+        let parts = q.ncert_chapter.split('-');
+        let p = parts[0] ? parts[0].trim() : '';
+        let c = parts[1] ? parts[1].trim() : '';
+        if(p) partCounts[p] = (partCounts[p] || 0) + 1;
+        if(c) chapterCounts[c] = (chapterCounts[c] || 0) + 1;
+      }
+    });
+
+    const fillDatalist = (listId, countsObj) => {
+      const dl = document.getElementById(listId);
+      if(!dl) return;
+      dl.innerHTML = Object.keys(countsObj).sort((a,b)=>a.localeCompare(b)).map(item => `<option value="${item}">(${countsObj[item]} Qs)</option>`).join('');
+    };
+
+    fillDatalist('datalistTopics', topicCounts);
+    document.getElementById('datalistSubtopics').innerHTML = '';
+
+    let allExamCounts = {};
+    questions.forEach(q => { if(q.exam) allExamCounts[q.exam] = (allExamCounts[q.exam] || 0) + 1; });
+    fillDatalist('datalistExams', allExamCounts);
+  }
+
+  function updateAdminSubtopicDatalist() {
+    const selectedSub = document.getElementById('feedSub').value;
+    const selectedTopic = document.getElementById('feedTop').value.trim();
+    const isHistory = selectedSub.toLowerCase().includes('history');
+    const selectedEra = isHistory ? document.getElementById('feedEra').value : '';
+
+    let subPool = questions.filter(q => q.subject === selectedSub && q.topic === selectedTopic);
+    if(isHistory && selectedEra) {
+      subPool = subPool.filter(q => q.era && q.era.toLowerCase() === selectedEra.toLowerCase());
+    }
+
+    let subtopicCounts = {};
+    subPool.forEach(q => {
+      if(q.subtopic) subtopicCounts[q.subtopic] = (subtopicCounts[q.subtopic] || 0) + 1;
+    });
+
+    const dl = document.getElementById('datalistSubtopics');
+    if(!dl) return;
+    dl.innerHTML = Object.keys(subtopicCounts).sort((a,b)=>a.localeCompare(b)).map(item => `<option value="${item}">(${subtopicCounts[item]} Qs)</option>`).join('');
+  }
+
+  function populateAdminNcertDropdowns() {
+    let booksMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      if(isNcert) {
+        let b = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+        booksMap[b] = (booksMap[b] || 0) + 1;
+      }
+    });
+    if(Object.keys(booksMap).length === 0) {
+      booksMap = { "NCERT": 0, "CG SCERT": 0 };
+    }
+    const bookEl = document.getElementById('quizNcertBook');
+    if(bookEl) {
+      bookEl.innerHTML = Object.keys(booksMap).map(b => `<option value="${b}">${b} (${booksMap[b]} Qs)</option>`).join('');
+      cascadeAdminNcertClasses();
+    }
+  }
+
+  function cascadeAdminNcertClasses() {
+    const book = document.getElementById('quizNcertBook').value;
+    let classesMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      if(isNcert && bName === book && q.ncert_class && q.ncert_class.trim() !== "") {
+        let c = q.ncert_class.trim();
+        classesMap[c] = (classesMap[c] || 0) + 1;
+      }
+    });
+    if(Object.keys(classesMap).length === 0) {
+      classesMap = { "Class 6th": 0, "Class 7th": 0, "Class 8th": 0, "Class 9th": 0, "Class 10th": 0 };
+    }
+    const classEl = document.getElementById('quizNcertClass');
+    if(classEl) {
+      classEl.innerHTML = Object.keys(classesMap).map(c => `<option value="${c}">${c} (${classesMap[c]} Qs)</option>`).join('');
+      cascadeAdminNcertSubs();
+    }
+  }
+
+  function cascadeAdminNcertSubs() {
+    const book = document.getElementById('quizNcertBook').value;
+    const cls = document.getElementById('quizNcertClass').value;
+    let subsMap = {};
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      let cName = q.ncert_class ? q.ncert_class.trim() : "";
+      if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+        let p = q.ncert_chapter.split('-')[0];
+        if(p && p.trim() !== "") {
+          let subName = p.trim();
+          subsMap[subName] = (subsMap[subName] || 0) + 1;
+        }
+      }
+    });
+    const subEl = document.getElementById('quizNcertSub');
+    if(subEl) {
+      subEl.innerHTML = '<option value="ALL">All Subjects</option>' + Object.keys(subsMap).map(s => `<option value="${s}">${s} (${subsMap[s]} Qs)</option>`).join('');
+      cascadeAdminNcertChaps();
+    }
+  }
+
+  function cascadeAdminNcertChaps() {
+    const book = document.getElementById('quizNcertBook').value;
+    const cls = document.getElementById('quizNcertClass').value;
+    const sub = document.getElementById('quizNcertSub').value;
+    let chapsMap = {};
+    
+    if(sub && sub !== 'ALL') {
+      questions.forEach(q => {
+        let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+        let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+        let cName = q.ncert_class ? q.ncert_class.trim() : "";
+        if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+          let parts = q.ncert_chapter.split('-');
+          let subPart = parts[0] ? parts[0].trim() : '';
+          let chapPart = parts[1] ? parts[1].trim() : q.ncert_chapter;
+          if(subPart === sub) {
+            if(chapPart) chapsMap[chapPart] = (chapsMap[chapPart] || 0) + 1;
+          }
+        }
+      });
+    }
+
+    const chapEl = document.getElementById('quizNcertChap');
+    if(chapEl) {
+      chapEl.innerHTML = '<option value="ALL">All Chapters</option>' + Object.keys(chapsMap).map(c => `<option value="${c}">(${chapsMap[c]} Qs)</option>`).join('');
+    }
+  }
+
+  function doesExamMatchCategory(q, cat) {
+    if(!q.exam) return false;
+    let ex = q.exam.trim();
+    let cleanEx = extractCleanExamName(ex);
+    let cleanLower = cleanEx.toLowerCase();
+
+    let isTeaching = cleanLower.includes('teacher') || cleanLower.includes('tet') || cleanLower.includes('ctet') || cleanLower.includes('htet') || cleanLower.includes('ptet') || cleanLower.includes('stet') || cleanLower.includes('tgt') || cleanLower.includes('pgt') || cleanLower.includes('prt') || cleanLower.includes('lecturer') || cleanLower.includes('professor') || cleanLower.includes('assistant professor') || cleanLower.includes('net') || cleanLower.includes('set');
+    let hasExplicitCG = /\bcg\b/.test(cleanLower) || /\bchhattisgarh\b/.test(cleanLower);
+
+    if (cat === 'ALL') return true;
+    if (cat === 'CGPSC') return cleanLower.includes('cgpsc');
+    if (cat === 'CGVyapam') return (cleanLower.includes('vyapam') || cleanLower.includes('cgvyapam')) && !cleanLower.includes('mp');
+    if (cat === 'CGSSB') return cleanLower.includes('cgssb') || cleanLower.includes('cg ssb') || (cleanLower.includes('ssb') && cleanLower.includes('cg'));
+    if (cat === 'Teaching Exams') return isTeaching;
+    if (cat === 'Other CG Exam') return hasExplicitCG && !cleanLower.includes('cgpsc') && !cleanLower.includes('vyapam') && !cleanLower.includes('ssb') && !cleanLower.includes('police') && !cleanLower.includes('si') && !cleanLower.includes('constable') && !cleanLower.includes('mp');
+    if (cat === 'SSC') return (cleanLower.startsWith('ssc') || cleanLower.includes(' ssc ') || cleanLower.includes('cgl') || cleanLower.includes('chsl')) && !cleanLower.includes('hssc');
+    if (cat === 'UPSC') return cleanLower.includes('upsc') || cleanLower.includes('ias') || cleanLower.includes('सिविल');
+    if (cat === 'Police/SI') {
+      let isPoliceExam = cleanLower.includes('police') || cleanLower.includes('si') || cleanLower.includes('constable') || cleanLower.includes('sub inspector') || cleanLower.includes('sub-inspector') || cleanLower.includes('asi');
+      return isPoliceExam && !isTeaching;
+    }
+    if (cat === 'Other Exams') {
+      let isKnown = cleanLower.includes('cgpsc') || cleanLower.includes('vyapam') || cleanLower.includes('ssb') || cleanLower.includes('ssc') || cleanLower.includes('upsc') || cleanLower.includes('police') || cleanLower.includes('si') || cleanLower.includes('constable') || hasExplicitCG || isTeaching || cleanLower.includes('bihar') || cleanLower.includes('rajasthan') || cleanLower.includes('mp') || cleanLower.includes('hssc');
+      return !isKnown;
+    }
+    return false;
+  }
+
+  function populateAdminExamDropdowns() {
+    cascadeAdminExamNames();
+  }
+
+  function extractCleanExamName(examStr) {
+    if(!examStr) return '';
+    return examStr.replace(/\b(19\d{2}|20\d{2})\b/g, '').replace(/\s+/g, ' ').trim();
+  }
+
+  function cascadeAdminExamNames() {
+    const cat = document.getElementById('quizExamCat').value;
+    let cleanExamsMap = {};
+    
+    questions.forEach(q => {
+      if(q.exam && q.exam.trim()) {
+        if(doesExamMatchCategory(q, cat)) {
+          let cleanEx = extractCleanExamName(q.exam.trim());
+          if(cleanEx) {
+            cleanExamsMap[cleanEx] = (cleanExamsMap[cleanEx] || 0) + 1;
+          }
+        }
+      }
+    });
+
+    const examEl = document.getElementById('quizExamName');
+    if(examEl) {
+      let keys = Object.keys(cleanExamsMap).sort((a,b)=>a.localeCompare(b));
+      examEl.innerHTML = '<option value="ALL">All Exams</option>' + keys.map(e => `<option value="${e}">${e} (${cleanExamsMap[e]} Qs)</option>`).join('');
+      cascadeAdminExamYears();
+    }
+  }
+
+  function cascadeAdminExamYears() {
+    const cat = document.getElementById('quizExamCat').value;
+    const selectedCleanExam = document.getElementById('quizExamName').value;
+    let yearsMap = {};
+    questions.forEach(q => {
+      if(q.exam && q.exam.trim() && doesExamMatchCategory(q, cat)) {
+        let cleanEx = extractCleanExamName(q.exam);
+        if(selectedCleanExam === 'ALL' || cleanEx.toLowerCase() === selectedCleanExam.toLowerCase()) {
+          let m = q.exam.match(/\b(19\d{2}|20\d{2})\b/);
+          let yr = m ? m[0] : 'General';
+          yearsMap[yr] = (yearsMap[yr] || 0) + 1;
+        }
+      }
+    });
+    const yrEl = document.getElementById('quizExamYear');
+    if(yrEl) {
+      yrEl.innerHTML = '<option value="ALL">All Years</option>' + Object.keys(yearsMap).sort((a,b)=>b-a).map(y => `<option value="${y}">${y} (${yearsMap[y]} Qs)</option>`).join('');
+      cascadeAdminExamSubs();
+    }
+  }
+
+  function cascadeAdminExamSubs() {
+    const cat = document.getElementById('quizExamCat').value;
+    const selectedCleanExam = document.getElementById('quizExamName').value;
+    const yr = document.getElementById('quizExamYear').value;
+    let subsMap = {};
+    questions.forEach(q => {
+      if(q.subject && q.exam && doesExamMatchCategory(q, cat)) {
+        let cleanEx = extractCleanExamName(q.exam);
+        let matchesExam = (selectedCleanExam === 'ALL' || cleanEx.toLowerCase() === selectedCleanExam.toLowerCase());
+        let matchesYr = (yr === 'ALL' || q.exam.includes(yr));
+        if(matchesExam && matchesYr) {
+          subsMap[q.subject] = (subsMap[q.subject] || 0) + 1;
+        }
+      }
+    });
+    const subEl = document.getElementById('quizExamSub');
+    if(subEl) {
+      subEl.innerHTML = '<option value="ALL">All Subjects</option>' + Object.keys(subsMap).sort((a,b)=>a.localeCompare(b)).map(s => `<option value="${s}">${s} (${subsMap[s]} Qs)</option>`).join('');
+      cascadeAdminExamTopics();
+    }
+  }
+
+  function cascadeAdminExamTopics() {
+    const cat = document.getElementById('quizExamCat').value;
+    const selectedCleanExam = document.getElementById('quizExamName').value;
+    const yr = document.getElementById('quizExamYear').value;
+    const sub = document.getElementById('quizExamSub').value;
+    const topEl = document.getElementById('quizExamTop');
+    
+    if(!topEl) return;
+
+    if(!sub || sub === 'ALL') {
+      topEl.innerHTML = '<option value="ALL">All Topics</option>';
+      cascadeAdminExamSubtopics();
+      return;
+    }
+
+    let topMap = {};
+    questions.forEach(q => {
+      if(q.topic && q.exam && q.subject === sub && doesExamMatchCategory(q, cat)) {
+        let cleanEx = extractCleanExamName(q.exam);
+        let matchesExam = (selectedCleanExam === 'ALL' || cleanEx.toLowerCase() === selectedCleanExam.toLowerCase());
+        let matchesYr = (yr === 'ALL' || q.exam.includes(yr));
+        if(matchesExam && matchesYr) {
+          topMap[q.topic] = (topMap[q.topic] || 0) + 1;
+        }
+      }
+    });
+
+    topEl.innerHTML = '<option value="ALL">All Topics</option>' + Object.keys(topMap).sort((a,b)=>a.localeCompare(b)).map(t => `<option value="${t}">${t} (${topMap[t]} Qs)</option>`).join('');
+    cascadeAdminExamSubtopics();
+  }
+
+  function cascadeAdminExamSubtopics() {
+    const cat = document.getElementById('quizExamCat').value;
+    const selectedCleanExam = document.getElementById('quizExamName').value;
+    const yr = document.getElementById('quizExamYear').value;
+    const sub = document.getElementById('quizExamSub').value;
+    const top = document.getElementById('quizExamTop').value;
+    const subtopEl = document.getElementById('quizExamSubtop');
+    
+    if(!subtopEl) return;
+
+    if(!top || top === 'ALL') {
+      subtopEl.innerHTML = '<option value="ALL">All Sub-Topics</option>';
+      return;
+    }
+
+    let subtopMap = {};
+    questions.forEach(q => {
+      if(q.subtopic && q.exam && q.subject === sub && q.topic === top && doesExamMatchCategory(q, cat)) {
+        let cleanEx = extractCleanExamName(q.exam);
+        let matchesExam = (selectedCleanExam === 'ALL' || cleanEx.toLowerCase() === selectedCleanExam.toLowerCase());
+        let matchesYr = (yr === 'ALL' || q.exam.includes(yr));
+        if(matchesExam && matchesYr) {
+          subtopMap[q.subtopic] = (subtopMap[q.subtopic] || 0) + 1;
+        }
+      }
+    });
+
+    subtopEl.innerHTML = '<option value="ALL">All Sub-Topics</option>' + Object.keys(subtopMap).sort((a,b)=>a.localeCompare(b)).map(st => `<option value="${st}">${st} (${subtopMap[st]} Qs)</option>`).join('');
+  }
+
+  function switchAdminQuizSubMode(mode) {
+    document.getElementById('btnAdminPracTopic').classList.toggle('active', mode === 'topic');
+    document.getElementById('btnAdminPracNcert').classList.toggle('active', mode === 'ncert');
+    document.getElementById('btnAdminPracExam').classList.toggle('active', mode === 'exam');
+
+    document.getElementById('panelAdminPracTopic').style.display = mode === 'topic' ? 'block' : 'none';
+    document.getElementById('panelAdminPracNcert').style.display = mode === 'ncert' ? 'block' : 'none';
+    document.getElementById('panelAdminPracExam').style.display = mode === 'exam' ? 'block' : 'none';
+  }
+
+  function switchAdminTab(tab) {
+    document.querySelectorAll('.admin-tab-view').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
+    
+    if(tab === 'feed') {
+      document.getElementById('adminTabFeed').style.display = 'block';
+      event.target.classList.add('active');
+    } else if(tab === 'quiz') {
+      document.getElementById('adminTabQuiz').style.display = 'block';
+      event.target.classList.add('active');
+    }
+  }
+
+  function toggleNcertContainer() {
+    const isChecked = document.getElementById('feedNcertCheck').checked;
+    document.getElementById('feedNcertContainer').style.display = isChecked ? 'grid' : 'none';
+    if(isChecked) updateNcertClassesForFeed();
+  }
+
+  function toggleEditNcertContainer() {
+    const isChecked = document.getElementById('editNcertCheck').checked;
+    document.getElementById('editNcertContainer').style.display = isChecked ? 'grid' : 'none';
+    if(isChecked) updateNcertClassesForEdit();
+  }
+
+  function toggleQTypeFields(type) {
+    document.getElementById('feed-ar-fields').style.display = type === 'ar' ? 'block' : 'none';
+    document.getElementById('feed-match-fields').style.display = type === 'match' ? 'block' : 'none';
+    document.getElementById('feed-statement-fields').style.display = type === 'statement' ? 'block' : 'none';
+    document.getElementById('feed-passage-fields').style.display = type === 'passage' ? 'block' : 'none';
+    document.getElementById('feed-standard-body-wrap').style.display = (type === 'statement' || type === 'passage') ? 'none' : 'block';
+    document.getElementById('feed-standard-options-wrap').style.display = type === 'passage' ? 'none' : 'block';
+  }
+
+  function toggleEditQTypeFields(type) {
+    const isMatch = (type === 'match');
+    const isAr = (type === 'ar');
+    const isStmt = (type === 'statement');
+    const isPassage = (type === 'passage');
+
+    let arBox = document.getElementById('edit-ar-fields');
+    if (!arBox && isAr) {
+      let standardWrap = document.getElementById('edit-standard-body-wrap');
+      arBox = document.createElement('div');
+      arBox.id = 'edit-ar-fields';
+      arBox.style.cssText = 'background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;';
+      arBox.innerHTML = `
+        <label>Direction Text:</label><textarea id="editArText" rows="2"></textarea>
+        <label>Assertion (A):</label><textarea id="editAssert" rows="2"></textarea>
+        <label>Reason (R):</label><textarea id="editReason" rows="2"></textarea>
+      `;
+      standardWrap.parentNode.insertBefore(arBox, standardWrap);
+    }
+    if(arBox) arBox.style.display = isAr ? 'block' : 'none';
+
+    let matchBox = document.getElementById('edit-match-fields');
+    if (!matchBox && isMatch) {
+      let standardWrap = document.getElementById('edit-standard-body-wrap');
+      matchBox = document.createElement('div');
+      matchBox.id = 'edit-match-fields';
+      matchBox.style.cssText = 'background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);';
+      matchBox.innerHTML = `
+        <h4 style="color:#38bdf8; margin-bottom:10px;">📋 Match List Table Builder</h4>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+          <div><label>Heading 1</label><input type="text" id="editMatchHead1" value="List I"></div>
+          <div><label>Heading 2</label><input type="text" id="editMatchHead2" value="List II"></div>
+        </div>
+        <label style="margin-top:8px;">Table Rows:</label>
+        <div id="editMatchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="addEditMatchRowInput()">+ Add Table Row</button>
+      `;
+      standardWrap.parentNode.insertBefore(matchBox, standardWrap);
+    }
+    if(matchBox) matchBox.style.display = isMatch ? 'block' : 'none';
+    document.getElementById('edit-statement-fields').style.display = isStmt ? 'block' : 'none';
+    document.getElementById('edit-passage-fields').style.display = isPassage ? 'block' : 'none';
+    document.getElementById('edit-standard-body-wrap').style.display = (isStmt || isPassage) ? 'none' : 'block';
+    document.getElementById('edit-standard-options-wrap').style.display = isPassage ? 'none' : 'block';
+  }
+
+  function openLivePreviewModal() {
+    const type = document.getElementById('feedType').value;
+    let bodyHtml = '';
+    const leftInputs = document.querySelectorAll('.match-left-input');
+    const rightInputs = document.querySelectorAll('.match-right-input');
+
+    if(type === 'ar') {
+      bodyHtml = `<strong>Direction:</strong> ${document.getElementById('feedArText').value}<br><strong>Assertion (A):</strong> ${document.getElementById('feedAssert').value}<br><strong>Reason (R):</strong> ${document.getElementById('feedReason').value}`;
+    } else if(type === 'statement') {
+      let stArr = document.getElementById('feedStList').value.trim().split('\n');
+      bodyHtml = `<strong>${document.getElementById('feedStIntro').value}</strong><br><br>`;
+      stArr.forEach((st, idx) => {
+        if(st.trim()) {
+          let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
+          let label = matchLabel ? matchLabel[1] : `${idx+1})`;
+          let text = matchLabel ? matchLabel[2] : st;
+          bodyHtml += `<div class="statement-preview-item"><span class="st-num">${label}</span><span class="st-text">${text}</span></div>`;
+        }
+      });
+      let conclusionVal = document.getElementById('feedStConclusion').value.trim();
+      if(conclusionVal) {
+        bodyHtml += `<br><strong>${conclusionVal}</strong>`;
+      }
+    } else if(type === 'passage') {
+      bodyHtml = `<div style="background:rgba(59,130,246,0.1); padding:10px; border-radius:8px; margin-bottom:10px; text-align: left;"><strong>Passage:</strong><br>${document.getElementById('feedPassageText').value}</div>`;
+      let subQs = document.querySelectorAll('.passage-subq-item');
+      subQs.forEach((item, idx) => {
+        let qText = item.querySelector('.pq-text').value;
+        bodyHtml += `<div style="margin-top:10px; border-top:1px solid var(--border); padding-top:8px; text-align: left;"><strong>Q${idx+1}:</strong> ${qText}</div>`;
+      });
+    } else if(type === 'match') {
+      let head1 = document.getElementById('feedMatchHead1').value || 'List I';
+      let head2 = document.getElementById('feedMatchHead2').value || 'List II';
+      let instructionText = document.getElementById('feedText').value.trim() || 'Match the following:';
+      bodyHtml = `<strong>${instructionText}</strong><div class="match-table-wrapper"><table class="match-table"><thead><tr><th>#</th><th>${head1}</th><th>Seq</th><th>${head2}</th></tr></thead><tbody>`;
+      let romans = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+      let serials = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+      leftInputs.forEach((inp, idx) => {
+        let l = inp.value.trim() || `Item`;
+        let r = rightInputs[idx] ? rightInputs[idx].value.trim() : '';
+        bodyHtml += `<tr><td><strong>${serials[idx] || '('+(idx+1)+')'}</strong></td><td>${l}</td><td><strong>${romans[idx] || '('+(idx+1)+')'}</strong></td><td>${r}</td></tr>`;
+      });
+      bodyHtml += `</tbody></table></div>`;
+    } else {
+      bodyHtml = document.getElementById('feedText').value || 'No question body entered.';
+    }
+
+    let opts = {
+      A: document.getElementById('feedA').value || 'Opt A',
+      B: document.getElementById('feedB').value || 'Opt B',
+      C: document.getElementById('feedC').value || 'Opt C',
+      D: document.getElementById('feedD').value || 'Opt D'
+    };
+    let ans = document.getElementById('feedAns').value;
+
+    document.getElementById('livePreviewBox').innerHTML = `
+      <div style="font-weight:bold; color:#60a5fa; margin-bottom:8px; text-align: left;">Subject: ${document.getElementById('feedSub').value}</div>
+      <div class="formatted-text">${bodyHtml}</div>
+      ${type !== 'passage' ? ['A','B','C','D'].map(k=>`<div class="test-opt ${k===ans?'opt-correct':''}"><span style="font-weight:bold; color:#38bdf8;">(${k})</span> <span>${opts[k]}</span></div>`).join('') : ''}
+      <div style="margin-top:10px; font-size:0.85rem; color:var(--muted); text-align: left;"><strong>Explanation:</strong>\n${document.getElementById('feedExpl').value || 'N/A'}</div>
+    `;
+    document.getElementById('livePreviewModal').style.display = 'block';
+  }
+
+  function closeLivePreviewModal() {
+    document.getElementById('livePreviewModal').style.display = 'none';
+  }
+
+  async function handleAdminQuestionSubmit(e) {
+    e.preventDefault();
+    let sub = document.getElementById('feedSub').value;
+    let isHistory = sub.toLowerCase().includes('history');
+    let type = document.getElementById('feedType').value;
+    let opts = {
+      A: document.getElementById('feedA').value.trim(),
+      B: document.getElementById('feedB').value.trim(),
+      C: document.getElementById('feedC').value.trim(),
+      D: document.getElementById('feedD').value.trim()
+    };
+
+    let ncertChecked = document.getElementById('feedNcertCheck').checked;
+    let qId = 'q_' + Date.now();
+
+    let newQ = {
+      id: qId,
+      subject: sub,
+      era: isHistory ? document.getElementById('feedEra').value : '',
+      timeline_year: isHistory ? document.getElementById('feedTimelineYear').value.trim() : '',
+      sub_timeline_year: isHistory ? document.getElementById('feedSubTimelineYear').value.trim() : '',
+      topic: document.getElementById('feedTop').value.trim(),
+      subtopic: document.getElementById('feedSubtop').value.trim(),
+      exam: document.getElementById('feedExam').value.trim() || 'PYQ',
+      type: type,
+      text: type === 'standard' ? document.getElementById('feedText').value.trim() : (type === 'statement' ? document.getElementById('feedStIntro').value.trim() : (type === 'passage' ? document.getElementById('feedPassageText').value.trim() : (type === 'match' ? (document.getElementById('feedText').value.trim() || 'Match the following:') : ''))),
+      assertion: type === 'ar' ? document.getElementById('feedAssert').value.trim() : '',
+      reason: type === 'ar' ? document.getElementById('feedReason').value.trim() : '',
+      arText: type === 'ar' ? document.getElementById('feedArText').value.trim() : '',
+      options: opts,
+      optionA: opts.A, optionB: opts.B, optionC: opts.C, optionD: opts.D,
+      ans: document.getElementById('feedAns').value,
+      expl: document.getElementById('feedExpl').value.trim(),
+      ncert_tag: ncertChecked ? "true" : "false",
+      ncert_book: ncertChecked ? document.getElementById('feedNcertBook').value : "",
+      ncert_class: ncertChecked ? document.getElementById('feedNcertClass').value : "",
+      ncert_chapter: ncertChecked ? `${document.getElementById('feedNcertPart').value.trim()} - ${document.getElementById('feedNcertChapter').value.trim()}` : ""
+    };
+
+    if(type === 'match') {
+      newQ.matchHead1 = document.getElementById('feedMatchHead1').value.trim() || 'List I';
+      newQ.matchHead2 = document.getElementById('feedMatchHead2').value.trim() || 'List II';
+      const leftInputs = document.querySelectorAll('.match-left-input');
+      const rightInputs = document.querySelectorAll('.match-right-input');
+      let rows = [];
+      let romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+      let romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+      leftInputs.forEach((inp, idx) => {
+        let lVal = inp.value.trim();
+        let rVal = rightInputs[idx] ? rightInputs[idx].value.trim() : '';
+        if(lVal || rVal) {
+          rows.push({ c1: romanLabels[idx] || `(${idx+1})`, c2: lVal, c3: romanVals[idx] || `(${idx+1})`, c4: rVal });
+        }
+      });
+      newQ.matchRows = rows;
+    } else if(type === 'statement') {
+      let introVal = document.getElementById('feedStIntro').value.trim();
+      let stArr = document.getElementById('feedStList').value.trim().split('\n').filter(s => s.trim() !== '');
+      let conclusionVal = document.getElementById('feedStConclusion').value.trim();
+
+      newQ.stIntro = introVal;
+      newQ.statements = stArr;
+      newQ.stConclusion = conclusionVal;
+      newQ.text = introVal;
+    } else if(type === 'passage') {
+      newQ.passageText = document.getElementById('feedPassageText').value.trim();
+      newQ.text = newQ.passageText;
+      
+      let subQs = [];
+      let subQElements = document.querySelectorAll('.passage-subq-item');
+      subQElements.forEach(item => {
+        let qText = item.querySelector('.pq-text').value.trim();
+        let optA = item.querySelector('.pq-optA').value.trim();
+        let optB = item.querySelector('.pq-optB').value.trim();
+        let optC = item.querySelector('.pq-optC').value.trim();
+        let optD = item.querySelector('.pq-optD').value.trim();
+        let ans = item.querySelector('.pq-ans').value;
+        let expl = item.querySelector('.pq-expl').value.trim();
+        if(qText) {
+          subQs.push({ qText, options: { A: optA, B: optB, C: optC, D: optD }, ans, expl });
+        }
+      });
+      newQ.passageQuestions = subQs;
+    } else if(type === 'ar') {
+      newQ.text = `Direction: ${newQ.arText}\nAssertion: ${newQ.assertion}\nReason: ${newQ.reason}`;
+    }
+
+    questions.unshift(newQ);
+    document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+    
+    document.getElementById('unifiedQForm').reset();
+    document.getElementById('feedType').value = 'standard';
+    toggleQTypeFields('standard');
+    document.getElementById('feedNcertContainer').style.display = 'none';
+    document.getElementById('matchRowsInputsList').innerHTML = '';
+    document.getElementById('passageSubQuestionsList').innerHTML = '';
+    addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
+    addPassageSubQuestionInput();
+    updateFeedSubjectOptions();
+    updateAdminDatalists();
+    
+    alert('Question Saved to Firebase Successfully!');
+
+    try {
+      if (db) await db.collection("questions").doc(qId).set(newQ);
+    } catch(err) { console.error(err); }
+  }
+
+  function startAdminPracticeQuiz(mode) {
+    let pool = [...questions];
+    if(mode === 'topic') {
+      const sub = document.getElementById('quizSub').value;
+      const top = document.getElementById('quizTop').value;
+      const subtop = document.getElementById('quizSubtop').value;
+      pool = pool.filter(q => q.subject === sub);
+      if(top && top !== 'ALL') pool = pool.filter(q => q.topic === top);
+      if(subtop && subtop !== 'ALL') pool = pool.filter(q => q.subtopic === subtop);
+      
+      const subLower = sub.toLowerCase();
+      if(subLower.includes('history')) {
+        const eraFilter = document.getElementById('quizEraFilter').value;
+        if(eraFilter && eraFilter !== 'ALL') {
+          pool = pool.filter(q => q.era && q.era.toLowerCase() === eraFilter.toLowerCase());
+        }
+        pool.sort((a, b) => {
+          let tA = parseFloat(a.timeline_year) || 0;
+          let tB = parseFloat(b.timeline_year) || 0;
+          if(tA !== tB) return tA - tB;
+          let stA = parseFloat(a.sub_timeline_year) || 0;
+          let stB = parseFloat(b.sub_timeline_year) || 0;
+          return stA - stB;
+        });
+      }
+    } else if(mode === 'ncert') {
+      const book = document.getElementById('quizNcertBook').value;
+      const cls = document.getElementById('quizNcertClass').value;
+      const sub = document.getElementById('quizNcertSub').value;
+      const chap = document.getElementById('quizNcertChap').value;
+      pool = pool.filter(q => {
+        let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+        if(!isNcert) return false;
+        let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+        let cName = q.ncert_class ? q.ncert_class.trim() : "";
+        if(bName !== book) return false;
+        if(cName !== cls) return false;
+        return true;
+      });
+      if(sub && sub !== 'ALL') pool = pool.filter(q => q.ncert_chapter && q.ncert_chapter.startsWith(sub));
+      if(chap && chap !== 'ALL') pool = pool.filter(q => q.ncert_chapter && q.ncert_chapter.includes(chap));
+    } else if(mode === 'exam') {
+      const cat = document.getElementById('quizExamCat').value;
+      const selectedCleanExam = document.getElementById('quizExamName').value;
+      const examYr = document.getElementById('quizExamYear').value;
+      const examSub = document.getElementById('quizExamSub').value;
+      const examTop = document.getElementById('quizExamTop').value;
+      const examSubtop = document.getElementById('quizExamSubtop').value;
+
+      pool = pool.filter(q => {
+        if(!q.exam || !q.exam.trim() || !doesExamMatchCategory(q, cat)) return false;
+        let cleanEx = extractCleanExamName(q.exam);
+        let matchesExam = (selectedCleanExam === 'ALL' || cleanEx.toLowerCase() === selectedCleanExam.toLowerCase());
+        let matchesYr = (examYr === 'ALL' || q.exam.includes(examYr));
+        let matchesSub = (examSub === 'ALL' || q.subject === examSub);
+        let matchesTop = (examTop === 'ALL' || q.topic === examTop);
+        let matchesSubtop = (examSubtop === 'ALL' || q.subtopic === examSubtop);
+        return matchesExam && matchesYr && matchesSub && matchesTop && matchesSubtop;
+      });
+    }
+
+    if(pool.length === 0) return alert('No questions found matching this filter!');
+    adminQuizList = pool;
+    adminQuizIdx = 0;
+    userResponses = {};
+    
+    const player = document.getElementById('adminQuizPlayer');
+    player.innerHTML = `
+      <div class="q-header-bar">
+        <div class="q-header-left">
+          <button class="btn btn-secondary btn-sm" onclick="backToQuizConfig()" title="Back">⬅️ Back</button>
+          <span id="aqCounter" style="color:#60a5fa; font-weight:bold; font-size:1.02rem;">Q 1</span>
+          <span class="badge-exam-tag" id="aqExamBadge">PYQ</span>
+        </div>
+        <div class="q-header-right">
+          <button class="btn btn-secondary btn-sm" onclick="openEditModalForCurrentQ()" title="Edit Question">✏️ Edit</button>
+        </div>
+      </div>
+
+      <div class="formatted-text" id="aqBody"></div>
+      <div id="aqMatchWrap"></div>
+      <div id="aqOpts"></div>
+      <div id="aqExpl" class="expl-box" style="display:none;"></div>
+      
+      <div style="display:flex; justify-content:space-between; margin-top:15px;">
+        <button class="btn btn-secondary" onclick="moveAdminQuizQ(-1)">Previous</button>
+        <button class="btn" id="aqNextBtn" onclick="moveAdminQuizQ(1)">Next</button>
+      </div>
+    `;
+
+    document.getElementById('adminQuizConfigCard').style.display = 'none';
+    player.style.display = 'block';
+    renderAdminQuizCard();
+  }
+
+  function backToQuizConfig() {
+    document.getElementById('adminQuizConfigCard').style.display = 'block';
+    document.getElementById('adminQuizPlayer').style.display = 'none';
+  }
+
+  function cleanMatchSeq(val) {
+    if(!val) return '';
+    let s = val.toString().trim();
+    return s.replace(/^[{(]+|[})]+$/g, '').trim();
+  }
+
+  function renderAdminQuizCard() {
+    const q = adminQuizList[adminQuizIdx];
+    document.getElementById('aqCounter').innerText = `Question ${adminQuizIdx + 1} of ${adminQuizList.length}`;
+    document.getElementById('aqExamBadge').innerText = q.exam || 'PYQ';
+
+    const nextBtn = document.getElementById('aqNextBtn');
+    if(adminQuizIdx === adminQuizList.length - 1) {
+      nextBtn.innerText = 'Finish';
+      nextBtn.className = 'btn btn-success';
+    } else {
+      nextBtn.innerText = 'Next';
+      nextBtn.className = 'btn';
+    }
+
+    let bodyHtml = '';
+    const matchWrap = document.getElementById('aqMatchWrap');
+    matchWrap.innerHTML = '';
+
+    if(q.type === 'ar') {
+      let assertText = q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || '');
+      let reasonText = q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || '');
+      bodyHtml = `
+        <div style="margin-bottom:6px; text-align: left;">${q.arText || 'Direction - For the below Assertion and Reason, choose correct alternative-'}</div>
+        <div class="ar-block">
+          <div class="ar-item"><span class="ar-label">Assertion (A):</span> <span>${assertText}</span></div>
+          <div class="ar-item"><span class="ar-label">Reason (R):</span> <span>${reasonText}</span></div>
+        </div>
+      `;
+    } else if(q.type === 'statement') {
+      let stArr = q.statements;
+      if(Array.isArray(stArr) && stArr.length > 0) {
+        bodyHtml = `<div style="margin-bottom:10px; text-align: left;">${q.stIntro || 'Consider the following statements:'}</div>`;
+        stArr.forEach((st, idx) => {
+          let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
+          let label = matchLabel ? matchLabel[1] : `${idx + 1}.`;
+          let cleanSt = matchLabel ? matchLabel[2] : st;
+          bodyHtml += `<div class="statement-preview-item"><span class="st-num">${label}</span><span class="st-text">${cleanSt}</span></div>`;
+        });
+      } else {
+        let lines = (q.text || '').split('\n').map(l => l.trim()).filter(Boolean);
+        bodyHtml = `<div style="margin-bottom:10px; text-align: left;">${lines[0] || 'Consider the following statements:'}</div>`;
+        let statementsList = lines.slice(1, lines.length - (q.stConclusion ? 1 : 0));
+        statementsList.forEach((st, idx) => {
+          bodyHtml += `<div class="statement-preview-item"><span class="st-num">${idx + 1}.</span><span class="st-text">${st}</span></div>`;
+        });
+      }
+      if(q.stConclusion && q.stConclusion.trim() !== '' && q.stConclusion !== 'undefined') {
+        bodyHtml += `<div style="margin-top:10px; text-align: left;">${q.stConclusion}</div>`;
+      }
+    } else if(q.isPassageSubQ) {
+      bodyHtml = `
+        <div style="background:rgba(59,130,246,0.12); padding:10px 14px; border-radius:10px; border:1px solid var(--border); margin-bottom:10px; text-align: left;">
+          <strong style="color:#60a5fa; font-size:0.9rem; text-align: left; display: block;">📖 Passage / Comprehension (Read for Q.${q.passageSubIdx} of ${q.passageTotal}):</strong>
+          <p style="margin-top:4px; line-height:1.45; font-size:0.92rem; text-align: left;">${q.passageText}</p>
+        </div>
+        <div style="font-weight:600; font-size:1rem; color:#f9fafb; margin-bottom:8px; text-align: left;">
+          Q${q.passageSubIdx}: ${q.text}
+        </div>
+      `;
+    } else if(q.type === 'match') {
+      let instructionText = q.text && q.text.trim() !== '' ? q.text : 'Match the following:';
+      bodyHtml = `<div style="margin-bottom:8px; text-align: left;"><strong>${instructionText}</strong></div>`;
+      let rows = q.matchRows;
+      if(typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(e){} }
+      if(rows) {
+        matchWrap.innerHTML = `
+          <div class="match-table-wrapper">
+            <table class="match-table">
+              <thead><tr><th>#</th><th>${q.matchHead1 || 'List I'}</th><th>Seq</th><th>${q.matchHead2 || 'List II'}</th></tr></thead>
+              <tbody>
+                ${rows.map(r => `<tr><td><strong>${r.c1}</strong></td><td>${r.c2}</td><td><strong>${cleanMatchSeq(r.c3)}</strong></td><td>${r.c4}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    } else {
+      bodyHtml = `<div style="text-align: left; width: 100%;">${q.text || ''}</div>`;
+    }
+
+    document.getElementById('aqBody').innerHTML = bodyHtml;
+
+    let opts = q.options;
+    if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+    if(!opts || typeof opts !== 'object') {
+      opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+    }
+
+    const optContainer = document.getElementById('aqOpts');
+    const explBox = document.getElementById('aqExpl');
+    optContainer.innerHTML = '';
+    explBox.style.display = 'none';
+
+    const chosen = userResponses[adminQuizIdx];
+    ['A', 'B', 'C', 'D'].forEach(k => {
+      let extraClass = '';
+      if(chosen) {
+        if(k === q.ans) extraClass = 'opt-correct';
+        else if(k === chosen) extraClass = 'opt-wrong';
+      }
+      optContainer.innerHTML += `
+        <div class="test-opt ${extraClass}" onclick="handleAdminQuizClick('${k}')">
+          <div class="test-opt-label">
+            <span class="opt-letter">(${k})</span>
+            <span class="opt-text">${(opts && opts[k]) ? opts[k] : ''}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    if(chosen) {
+      explBox.style.display = 'block';
+      explBox.innerHTML = `<strong>Explanation:</strong>\n${q.expl || 'Verified correct.'}`;
+    }
+  }
+
+  function handleAdminQuizClick(k) {
+    if(userResponses[adminQuizIdx]) return;
+    userResponses[adminQuizIdx] = k;
+    renderAdminQuizCard();
+  }
+
+  function moveAdminQuizQ(step) {
+    if(step > 0) {
+      if(adminQuizIdx + 1 < adminQuizList.length) {
+        adminQuizIdx++;
+        renderAdminQuizCard();
+      } else {
+        showQuizResultScreen();
+      }
+    } else {
+      if(adminQuizIdx > 0) {
+        adminQuizIdx--;
+        renderAdminQuizCard();
+      }
+    }
+  }
+
+  function showQuizResultScreen() {
+    let total = adminQuizList.length;
+    let correct = 0;
+    let wrong = 0;
+    let unattempted = 0;
+
+    for(let i = 0; i < total; i++) {
+      let chosen = userResponses[i];
+      let q = adminQuizList[i];
+      if(!chosen) {
+        unattempted++;
+      } else if(chosen === q.ans) {
+        correct++;
+      } else {
+        wrong++;
+      }
+    }
+
+    let score = (correct * 1) - (wrong * 0.333);
+    score = score.toFixed(2);
+
+    const player = document.getElementById('adminQuizPlayer');
+    player.innerHTML = `
+      <h3>📊 Quiz Result & Performance Summary</h3>
+      <div style="background:var(--card-inner); padding:16px; border-radius:12px; border:1px solid var(--border); margin:15px 0;">
+        <p style="font-size:1.05rem; margin-bottom:8px;"><strong>Total Questions:</strong> ${total}</p>
+        <p style="font-size:1.05rem; color:var(--success); margin-bottom:8px;"><strong>Correct Answers:</strong> ${correct}</p>
+        <p style="font-size:1.05rem; color:var(--danger); margin-bottom:8px;"><strong>Wrong Answers:</strong> ${wrong}</p>
+        <p style="font-size:1.05rem; color:var(--warning); margin-bottom:8px;"><strong>Unattempted:</strong> ${unattempted}</p>
+        <hr style="border-color:var(--border); margin:12px 0;">
+        <p style="font-size:1.2rem; font-weight:bold; color:#60a5fa;">Final Score (with 1/3rd Negative Marking): ${score}</p>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button class="btn btn-secondary" onclick="backToQuizConfig()">Back to Setup</button>
+      </div>
+    `;
+  }
+
+  function openEditModalForCurrentQ() {
+    const q = adminQuizList[adminQuizIdx];
+    if(!q) return;
+    document.getElementById('editQId').value = q.id;
+    document.getElementById('editSub').value = q.subject;
+    
+    toggleHistoryFieldsForEdit();
+    if(q.subject.toLowerCase().includes('history')) {
+      document.getElementById('editEra').value = q.era || 'Ancient';
+      document.getElementById('editTimelineYear').value = q.timeline_year || '';
+      document.getElementById('editSubTimelineYear').value = q.sub_timeline_year || '';
+    }
+
+    document.getElementById('editTop').value = q.topic || '';
+    document.getElementById('editSubtop').value = q.subtopic || '';
+    document.getElementById('editExam').value = q.exam || '';
+    document.getElementById('editType').value = q.type || 'standard';
+    
+    document.getElementById('editStIntro').value = '';
+    document.getElementById('editStList').value = '';
+    document.getElementById('editStConclusion').value = '';
+    document.getElementById('editPassageText').value = '';
+    document.getElementById('editText').value = '';
+
+    let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+    document.getElementById('editNcertCheck').checked = isNcert;
+    document.getElementById('editNcertContainer').style.display = isNcert ? 'grid' : 'none';
+    document.getElementById('editNcertBook').value = q.ncert_book || '';
+    
+    if(isNcert) updateNcertClassesForEdit();
+
+    document.getElementById('editNcertClass').value = q.ncert_class || '';
+    
+    if(isNcert) updateNcertSubjectsForEdit();
+
+    if(q.ncert_chapter && q.ncert_chapter.includes('-')) {
+      let parts = q.ncert_chapter.split('-');
+      document.getElementById('editNcertPart').value = parts[0] ? parts[0].trim() : '';
+      document.getElementById('editNcertChapter').value = parts[1] ? parts[1].trim() : '';
+    } else {
+      document.getElementById('editNcertPart').value = '';
+      document.getElementById('editNcertChapter').value = q.ncert_chapter || '';
+    }
+
+    if(isNcert) updateNcertChaptersForEdit();
+
+    toggleEditQTypeFields(q.type || 'standard');
+
+    if(q.type === 'ar') {
+      let arTextEl = document.getElementById('editArText');
+      let assertEl = document.getElementById('editAssert');
+      let reasonEl = document.getElementById('editReason');
+      if(arTextEl) arTextEl.value = q.arText || '';
+      if(assertEl) assertEl.value = q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || '');
+      if(reasonEl) reasonEl.value = q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || '');
+    } else if(q.type === 'match') {
+      let head1El = document.getElementById('editMatchHead1');
+      let head2El = document.getElementById('editMatchHead2');
+      if(head1El) head1El.value = q.matchHead1 || 'List I';
+      if(head2El) head2El.value = q.matchHead2 || 'List II';
+      document.getElementById('editText').value = q.text || '';
+
+      const rowContainer = document.getElementById('editMatchRowsInputsList');
+      if(rowContainer) {
+        rowContainer.innerHTML = '';
+        let rows = q.matchRows;
+        if(typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(e){} }
+        if(Array.isArray(rows) && rows.length > 0) {
+          rows.forEach(r => {
+            addEditMatchRowInput(r.c2 || '', r.c4 || '');
+          });
+        } else {
+          addEditMatchRowInput(); addEditMatchRowInput(); addEditMatchRowInput(); addEditMatchRowInput();
+        }
+      }
+    } else if(q.type === 'statement') {
+      let introVal = q.stIntro;
+      if(!introVal || introVal.trim() === '') {
+        if(q.text && !q.text.includes('i.') && !q.text.includes('1.')) {
+          introVal = q.text;
+        } else {
+          introVal = '';
+        }
+      }
+      document.getElementById('editStIntro').value = introVal;
+
+      let stArr = q.statements;
+      if(Array.isArray(stArr) && stArr.length > 0) {
+        document.getElementById('editStList').value = stArr.join('\n');
+      } else {
+        document.getElementById('editStList').value = '';
+      }
+      document.getElementById('editStConclusion').value = q.stConclusion || '';
+    } else if(q.type === 'passage') {
+      document.getElementById('editPassageText').value = q.passageText || q.text || '';
+    } else {
+      document.getElementById('editText').value = q.text || q.assertion || '';
+    }
+    
+    let opts = q.options;
+    document.getElementById('editA').value = opts?.A || '';
+    document.getElementById('editB').value = opts?.B || '';
+    document.getElementById('editC').value = opts?.C || '';
+    document.getElementById('editD').value = opts?.D || '';
+    document.getElementById('editAns').value = q.ans || 'A';
+    document.getElementById('editExpl').value = q.expl || '';
+
+    document.getElementById('editQuestionModal').style.display = 'block';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editQuestionModal').style.display = 'none';
+  }
+
+  async function handleEditQuestionSubmit(e) {
+    e.preventDefault();
+    const qId = document.getElementById('editQId').value;
+    let sub = document.getElementById('editSub').value;
+    let isHistory = sub.toLowerCase().includes('history');
+    let type = document.getElementById('editType').value;
+    let opts = {
+      A: document.getElementById('editA').value.trim(),
+      B: document.getElementById('editB').value.trim(),
+      C: document.getElementById('editC').value.trim(),
+      D: document.getElementById('editD').value.trim()
+    };
+
+    let ncertChecked = document.getElementById('editNcertCheck').checked;
+
+    let updated = {
+      id: qId,
+      subject: sub,
+      era: isHistory ? document.getElementById('editEra').value : '',
+      timeline_year: isHistory ? document.getElementById('editTimelineYear').value.trim() : '',
+      sub_timeline_year: isHistory ? document.getElementById('editSubTimelineYear').value.trim() : '',
+      topic: document.getElementById('editTop').value.trim(),
+      subtopic: document.getElementById('editSubtop').value.trim(),
+      exam: document.getElementById('editExam').value.trim() || 'PYQ',
+      type: type,
+      options: opts,
+      optionA: opts.A, optionB: opts.B, optionC: opts.C, optionD: opts.D,
+      ans: document.getElementById('editAns').value,
+      expl: document.getElementById('editExpl').value.trim(),
+      ncert_tag: ncertChecked ? "true" : "false",
+      ncert_book: ncertChecked ? document.getElementById('editNcertBook').value : "",
+      ncert_class: ncertChecked ? document.getElementById('editNcertClass').value : "",
+      ncert_chapter: ncertChecked ? `${document.getElementById('editNcertPart').value.trim()} - ${document.getElementById('editNcertChapter').value.trim()}` : ""
+    };
+
+    if(type === 'ar') {
+      updated.arText = document.getElementById('editArText').value.trim();
+      updated.assertion = document.getElementById('editAssert').value.trim();
+      updated.reason = document.getElementById('editReason').value.trim();
+      updated.text = `Direction: ${updated.arText}\nAssertion: ${updated.assertion}\nReason: ${updated.reason}`;
+    } else if(type === 'match') {
+      updated.matchHead1 = document.getElementById('editMatchHead1').value.trim() || 'List I';
+      updated.matchHead2 = document.getElementById('editMatchHead2').value.trim() || 'List II';
+      const leftInputs = document.querySelectorAll('#editMatchRowsInputsList .match-left-input');
+      const rightInputs = document.querySelectorAll('#editMatchRowsInputsList .match-right-input');
+      let rows = [];
+      let romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+      let romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+      leftInputs.forEach((inp, idx) => {
+        let lVal = inp.value.trim();
+        let rVal = rightInputs[idx] ? rightInputs[idx].value.trim() : '';
+        if(lVal || rVal) {
+          rows.push({ c1: romanLabels[idx] || `(${idx+1})`, c2: lVal, c3: romanVals[idx] || `(${idx+1})`, c4: rVal });
+        }
+      });
+      updated.matchRows = rows;
+      let bodyText = document.getElementById('editText').value.trim();
+      updated.text = bodyText !== '' ? bodyText : 'Match the following:';
+    } else if(type === 'statement') {
+      let stIntro = document.getElementById('editStIntro').value.trim();
+      let stListVal = document.getElementById('editStList').value.trim();
+      let stArr = stListVal ? stListVal.split('\n').filter(s => s.trim() !== '') : [];
+      let stConclusion = document.getElementById('editStConclusion').value.trim();
+
+      updated.stIntro = stIntro;
+      updated.statements = stArr;
+      updated.stConclusion = stConclusion;
+      updated.text = stIntro;
+    } else if(type === 'passage') {
+      updated.passageText = document.getElementById('editPassageText').value.trim();
+      updated.text = updated.passageText;
+    } else {
+      updated.text = document.getElementById('editText').value.trim();
+    }
+
+    let qIdx = questions.findIndex(q => q.id.toString() === qId.toString());
+    if(qIdx !== -1) questions[qIdx] = { ...questions[qIdx], ...updated };
+    let aqIdx = adminQuizList.findIndex(q => q.id.toString() === qId.toString());
+    if(aqIdx !== -1) adminQuizList[aqIdx] = { ...adminQuizList[aqIdx], ...updated };
+
+    closeEditModal();
+    alert('Question Updated in Firebase Successfully!');
+    renderAdminQuizCard();
+
+    try {
+      if (db) await db.collection("questions").doc(qId.toString()).set(updated, { merge: true });
+    } catch(err) { console.error(err); }
+  }
+
+  async function deleteCurrentQuestion() {
+    if(!confirm('Delete this question from Firebase?')) return;
+    const qId = document.getElementById('editQId').value;
+    questions = questions.filter(q => q.id.toString() !== qId.toString());
+    adminQuizList = adminQuizList.filter(q => q.id.toString() !== qId.toString());
+    document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+    populateDropdowns();
+    closeEditModal();
+    alert('Question Deleted!');
+    if(adminQuizList.length > 0) {
+      if(adminQuizIdx >= adminQuizList.length) adminQuizIdx = adminQuizList.length - 1;
+      renderAdminQuizCard();
+    } else {
+      backToQuizConfig();
+    }
+
+    try {
+      if (db) await db.collection("questions").doc(qId.toString()).delete();
+    } catch(err) { console.error(err); }
+  }
+
+  if(localStorage.getItem('cg_admin_logged') === 'true') {
+    document.getElementById('adminAuthCard').style.display = 'none';
+    document.getElementById('adminPortalPanel').style.display = 'block';
+    document.getElementById('adminHeaderUser').style.display = 'inline-block';
+    initAdminStudio();
+  }
+</script>
+</body>
+</html>
