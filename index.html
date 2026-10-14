@@ -1,4 +1,4 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -51,10 +51,6 @@
     label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-weight: 500; text-align: left; }
     input, select, textarea { width: 100%; padding: 10px 14px; background: var(--card-inner); border: 1px solid var(--border); color: #fff; border-radius: 10px; margin-bottom: 12px; font-size: 0.9rem; outline: none; position: relative; z-index: 2; text-align: left; }
     input:focus, select:focus, textarea:focus { border-color: var(--primary); }
-    
-    .password-wrapper { position: relative; width: 100%; }
-    .password-wrapper input { margin-bottom: 12px; padding-right: 42px; }
-    .toggle-password { position: absolute; right: 14px; top: 40%; transform: translateY(-50%); cursor: pointer; color: var(--muted); font-size: 1.1rem; user-select: none; }
 
     .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; box-shadow: var(--glow-blue); }
     .btn:hover { background: var(--primary-hover); }
@@ -127,32 +123,15 @@
     <div class="brand-title">Crack CGPSC</div>
     <div class="brand-sub">Admin Studio 🛠</div>
   </div>
-  <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:none;">
-    <span>@Adminsaket</span> | <a href="javascript:void(0)" onclick="adminLogout()" style="color:#f87171; text-decoration:none;">Logout</a>
+  <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:inline-block;">
+    <span>@Adminsaket</span>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- ADMIN LOGIN SCREEN -->
-  <div id="adminAuthCard" class="card" style="max-width: 400px; margin: 60px auto;">
-    <h3>Admin Studio Login</h3>
-    <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">Manage questions and database directly.</p>
-    
-    <label>Admin ID</label>
-    <input type="text" id="logAdminUser" placeholder="Enter Admin ID" value="Adminsaket">
-    
-    <label>Password</label>
-    <div class="password-wrapper">
-      <input type="password" id="logAdminPass" placeholder="Enter Password" value="qwertypad">
-      <span class="toggle-password" onclick="togglePasswordVisibility('logAdminPass', this)">👁</span>
-    </div>
-    
-    <button type="button" class="btn" style="width:100%; justify-content:center;" onclick="verifyAdminLogin()">Login to Studio</button>
-  </div>
-
-  <!-- ADMIN STUDIO PORTAL -->
-  <div id="adminPortalPanel" style="display:none;">
+  <!-- ADMIN STUDIO PORTAL (Directly Visible) -->
+  <div id="adminPortalPanel" style="display:block;">
     
     <!-- MIGRATION PANEL -->
     <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(16,185,129,0.15)); border: 1px solid var(--primary);">
@@ -679,39 +658,6 @@
   let adminQuizList = [];
   let adminQuizIdx = 0;
   let userResponses = {};
-
-  function togglePasswordVisibility(fieldId, iconEl) {
-    const field = document.getElementById(fieldId);
-    if (field.type === "password") {
-      field.type = "text";
-      iconEl.innerText = "🔒";
-    } else {
-      field.type = "password";
-      iconEl.innerText = "👁️";
-    }
-  }
-
-  function verifyAdminLogin() {
-    const u = document.getElementById('logAdminUser').value.trim();
-    const p = document.getElementById('logAdminPass').value.trim();
-    
-    if(u === 'Adminsaket' && p === 'qwertypad') {
-      localStorage.setItem('cg_admin_logged', 'true');
-      document.getElementById('adminAuthCard').style.display = 'none';
-      document.getElementById('adminPortalPanel').style.display = 'block';
-      document.getElementById('adminHeaderUser').style.display = 'inline-block';
-      initAdminStudio();
-    } else {
-      alert('Invalid ID or Password! (Use Adminsaket / qwertypad)');
-    }
-  }
-
-  function adminLogout() {
-    localStorage.removeItem('cg_admin_logged');
-    document.getElementById('adminAuthCard').style.display = 'block';
-    document.getElementById('adminPortalPanel').style.display = 'none';
-    document.getElementById('adminHeaderUser').style.display = 'none';
-  }
 
   async function initAdminStudio() {
     setProgress(30);
@@ -2372,12 +2318,10 @@
     } catch(err) { console.error(err); }
   }
 
-  if(localStorage.getItem('cg_admin_logged') === 'true') {
-    document.getElementById('adminAuthCard').style.display = 'none';
-    document.getElementById('adminPortalPanel').style.display = 'block';
-    document.getElementById('adminHeaderUser').style.display = 'inline-block';
+  // Direct Auto-Initialization on Page Load (No Login Needed)
+  window.addEventListener('DOMContentLoaded', () => {
     initAdminStudio();
-  }
+  });
 </script>
 </body>
 </html>
