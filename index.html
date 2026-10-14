@@ -130,7 +130,7 @@
 
 <div class="container">
 
-  <!-- ADMIN STUDIO PORTAL (Directly Visible) -->
+  <!-- ADMIN STUDIO PORTAL -->
   <div id="adminPortalPanel" style="display:block;">
     
     <!-- MIGRATION PANEL -->
@@ -748,7 +748,8 @@
         });
         localStorage.setItem('cg_subs', JSON.stringify(subjects));
 
-        document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+        const badge = document.getElementById('dbTotalCountBadge');
+        if(badge) badge.innerText = `Total Qs: ${questions.length}`;
         populateDropdowns();
         updateAdminDatalists();
         populateAdminNcertDropdowns();
@@ -2318,10 +2319,8 @@
     } catch(err) { console.error(err); }
   }
 
-  // Direct Auto-Initialization on Page Load (No Login Needed)
-  window.addEventListener('DOMContentLoaded', () => {
-    initAdminStudio();
-  });
+  // Turant execute hoga bina kisi event ke wait kiye
+  initAdminStudio();
 </script>
 </body>
 </html>
