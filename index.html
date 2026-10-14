@@ -132,14 +132,6 @@
 
   <div id="adminPortalPanel" style="display:block;">
     
-    <!-- MIGRATION PANEL WITH LIVE STATUS -->
-    <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(16,185,129,0.15)); border: 1px solid var(--primary);">
-      <h3 style="color: #38bdf8;">🔥 Firebase Migration Panel</h3>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Google Sheets se saara data live Firebase me transfer karne ke liye click karein:</p>
-      <button class="btn btn-success" onclick="migrateDataToFirebaseUI()">🚀 Start Migration</button>
-      <div id="migrationStatusBox" style="margin-top: 12px; font-weight: bold; color: #38bdf8; font-size: 0.9rem;"></div>
-    </div>
-
     <!-- Floating Header Navigation -->
     <div class="floating-header">
       <div class="nav-tabs" style="max-width: 340px; margin: 0 auto;">
@@ -152,7 +144,7 @@
     <div id="adminTabFeed" class="admin-tab-view">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <h3>Feed New Question to Firebase</h3>
+          <h3>Feed New Question</h3>
           <div style="display:flex; gap:8px; align-items:center;">
             <button class="btn btn-secondary btn-sm" onclick="openLivePreviewModal()" title="Preview Question">👁️ Preview</button>
             <span id="dbTotalCountBadge" style="background:rgba(59,130,246,0.2); border:1px solid var(--primary); color:#38bdf8; padding:4px 10px; border-radius:8px; font-size:0.8rem; font-weight:bold;">Total Qs: 0</span>
@@ -309,7 +301,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success" style="width:100%; justify-content:center; margin-top:10px;">💾 Save Question to Database</button>
+          <button type="submit" class="btn btn-success" style="width:100%; justify-content:center; margin-top:10px;">💾 Save Question</button>
         </form>
       </div>
     </div>
@@ -598,24 +590,6 @@
 <datalist id="datalistNcertChapters"></datalist>
 
 <script>
-  let db = null;
-  try {
-    const firebaseConfig = {
-      apiKey: "AIzaSyAozn3dx9h874oCBX120p7MYye6dyjPkME",
-      authDomain: "crackcgpsc-2ca60.firebaseapp.com",
-      projectId: "crackcgpsc-2ca60",
-      storageBucket: "crackcgpsc-2ca60.firebasestorage.app",
-      messagingSenderId: "421965977544",
-      appId: "1:421965977544:web:9265149dd667f205d892fd"
-    };
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    db = firebase.firestore();
-  } catch(e) {
-    console.error("Firebase Init Error:", e);
-  }
-
   function setProgress(percent) {
     const bar = document.getElementById('topProgressBar');
     if(!bar) return;
@@ -629,6 +603,27 @@
     }
   }
 
+  function updateSwipeIndicator(gridId, dotsBarId) {
+    const grid = document.getElementById(gridId);
+    if(!grid) return;
+    const scrollLeft = grid.scrollLeft;
+    const cardWidth = grid.querySelector('.selector-card').offsetWidth + 12;
+    const activeIdx = Math.round(scrollLeft / cardWidth);
+    const dots = document.querySelectorAll(`#${dotsBarId} .swipe-dot`);
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIdx);
+    });
+  }
+
+  function scrollToCard(gridId, idx) {
+    const grid = document.getElementById(gridId);
+    if(!grid) return;
+    const cardWidth = grid.querySelector('.selector-card').offsetWidth + 12;
+    grid.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
+  }
+
+  const QUESTIONS_API_URL = "https://script.google.com/macros/s/AKfycbx7QhvQi1_Am1I6nRT9mH9dPdU1q3pTN9-nvM0Cg9flFxQrtFHOd4OCI9gcjNenKI8C/exec";
+  
   let indianGsSubs = ["Indian History", "Polity", "Economy", "General Science", "Indian Geography", "Computer", "Hindi", "English"];
   let cgGsSubs = ["CG History", "CG Geography", "CG Tribes", "CG Art & Culture", "CG Language", "CG Administration", "CG Panchayati Raj", "CG Economy", "CG General Knowledge"];
   let otherSubs = ["CDP", "General Mental Ability", "Maths", "Current Affairs"];
@@ -648,7 +643,10 @@
     populateAdminNcertDropdowns();
     populateAdminExamDropdowns();
     if(document.getElementById('matchRowsInputsList').children.length === 0) {
-      addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
+      addMatchRowInput();
+      addMatchRowInput();
+      addMatchRowInput();
+      addMatchRowInput();
     }
     if(document.getElementById('passageSubQuestionsList').children.length === 0) {
       addPassageSubQuestionInput();
@@ -657,156 +655,76 @@
   }
 
   async function fetchQuestions() {
-    let data = [];
     try {
-      if (db) {
-        let snapshot = await db.collection("questions").get();
-        snapshot.forEach(doc => {
-          data.push({ id: doc.id, ...doc.data() });
-        });
-      }
-    } catch(e) { console.error("Firestore Fetch Error:", e); }
+      let res = await fetch(QUESTIONS_API_URL + "?action=getQuestions");
+      let data = await res.json();
+      if(Array.isArray(data)) {
+        let flatList = [];
+        data.forEach(q => {
+          let opts = q.options;
+          if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+          if(!opts || typeof opts !== 'object') {
+            opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+          }
+          q.options = opts;
 
-    if(!data || data.length === 0) {
-      data = [
-        {
-          id: "fallback_1",
-          subject: "Polity",
-          topic: "President",
-          subtopic: "Executive Powers",
-          exam: "CGPSC 2024",
-          type: "standard",
-          text: "Under which article is the executive power of the state vested in the Governor?",
-          options: { A: "Article 154", B: "Article 155", C: "Article 160", D: "Article 165" },
-          optionA: "Article 154", optionB: "Article 155", optionC: "Article 160", optionD: "Article 165",
-          ans: "A",
-          expl: "Under Article 154 of the Indian Constitution, executive power is vested in the Governor."
-        }
-      ];
-    }
+          let st = q.statements;
+          if(typeof st === 'string' && st.trim() !== '') {
+            try { st = JSON.parse(st); } catch(e){ st = []; }
+          }
+          q.statements = Array.isArray(st) ? st : [];
 
-    if(Array.isArray(data)) {
-      let flatList = [];
-      data.forEach(q => {
-        let opts = q.options;
-        if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
-        if(!opts || typeof opts !== 'object') {
-          opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
-        }
-        q.options = opts;
+          let mr = q.matchRows;
+          if(typeof mr === 'string' && mr.trim() !== '') {
+            try { mr = JSON.parse(mr); } catch(e){ mr = []; }
+          }
+          q.matchRows = Array.isArray(mr) ? mr : [];
 
-        let st = q.statements;
-        if(typeof st === 'string' && st.trim() !== '') {
-          try { st = JSON.parse(st); } catch(e){ st = []; }
-        }
-        q.statements = Array.isArray(st) ? st : [];
+          let pq = q.passageQuestions;
+          if(typeof pq === 'string' && pq.trim() !== '') {
+            try { pq = JSON.parse(pq); } catch(e){ pq = []; }
+          }
+          q.passageQuestions = Array.isArray(pq) ? pq : [];
 
-        let mr = q.matchRows;
-        if(typeof mr === 'string' && mr.trim() !== '') {
-          try { mr = JSON.parse(mr); } catch(e){ mr = []; }
-        }
-        q.matchRows = Array.isArray(mr) ? mr : [];
-
-        let pq = q.passageQuestions;
-        if(typeof pq === 'string' && pq.trim() !== '') {
-          try { pq = JSON.parse(pq); } catch(e){ pq = []; }
-        }
-        q.passageQuestions = Array.isArray(pq) ? pq : [];
-
-        if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
-          pq.forEach((subQ, pIdx) => {
-            let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
-            flatList.push({
-              ...q,
-              id: `${q.id}_p${pIdx+1}`,
-              originalId: q.id,
-              isPassageSubQ: true,
-              passageSubIdx: pIdx + 1,
-              passageTotal: pq.length,
-              passageText: q.passageText || q.text,
-              text: subQ.qText,
-              options: subOpts,
-              ans: subQ.ans,
-              expl: subQ.expl
+          if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
+            pq.forEach((subQ, pIdx) => {
+              let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
+              flatList.push({
+                ...q,
+                id: `${q.id}_p${pIdx+1}`,
+                originalId: q.id,
+                isPassageSubQ: true,
+                passageSubIdx: pIdx + 1,
+                passageTotal: pq.length,
+                passageText: q.passageText || q.text,
+                text: subQ.qText,
+                options: subOpts,
+                ans: subQ.ans,
+                expl: subQ.expl
+              });
             });
-          });
-        } else {
-          flatList.push(q);
-        }
-      });
+          } else {
+            flatList.push(q);
+          }
+        });
 
-      questions = flatList;
+        questions = flatList;
 
-      let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
-      sheetSubs.forEach(s => {
-        if (!subjects.includes(s)) {
-          subjects.push(s);
-        }
-      });
-      localStorage.setItem('cg_subs', JSON.stringify(subjects));
+        let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
+        sheetSubs.forEach(s => {
+          if (!subjects.includes(s)) {
+            subjects.push(s);
+          }
+        });
+        localStorage.setItem('cg_subs', JSON.stringify(subjects));
 
-      const badge = document.getElementById('dbTotalCountBadge');
-      if(badge) badge.innerText = `Total Qs: ${questions.length}`;
-      populateDropdowns();
-      updateAdminDatalists();
-      populateAdminNcertDropdowns();
-      populateAdminExamDropdowns();
-    }
-  }
-
-  async function migrateDataToFirebaseUI() {
-    if (!confirm("Kya aap apna saara data Google Sheets se Firebase me migrate karna chahte hain?")) return;
-    if (!db) { alert("Firebase connected nahi hai!"); return; }
-    
-    const statusBox = document.getElementById('migrationStatusBox');
-    statusBox.innerText = "⏳ Connecting to Google Sheets...";
-    setProgress(15);
-
-    try {
-      const QUESTIONS_API_URL = "https://script.google.com/macros/s/AKfycbx7QhvQi1_Am1I6nRT9mH9dPdU1q3pTN9-nvM0Cg9flFxQrtFHOd4OCI9gcjNenKI8C/exec";
-      const USERS_API_URL = "https://script.google.com/macros/s/AKfycbzuPQnDdlaeutLZvuQpqMMQDOjY-u_xH0e9CtOmmQKE-dV7IAuhqG0dDgXryO-VpdK_/exec";
-
-      statusBox.innerText = "⏳ Fetching Questions from Sheet...";
-      setProgress(35);
-      const qResponse = await fetch(QUESTIONS_API_URL + "?action=getQuestions");
-      const questionsList = await qResponse.json();
-      
-      let countQ = 0;
-      if(Array.isArray(questionsList)) {
-        let totalQ = questionsList.length;
-        for (let q of questionsList) {
-          let qId = q.id ? q.id.toString() : 'q_' + Math.random().toString(36.substr(2, 9));
-          await db.collection("questions").doc(qId).set(q, { merge: true });
-          countQ++;
-          statusBox.innerText = `⏳ Migrating Questions: ${countQ} / ${totalQ}`;
-        }
+        document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+        populateDropdowns();
+        updateAdminDatalists();
+        populateAdminNcertDropdowns();
+        populateAdminExamDropdowns();
       }
-
-      statusBox.innerText = "⏳ Fetching Users from Sheet...";
-      setProgress(75);
-      const uResponse = await fetch(USERS_API_URL + "?action=getUsers");
-      const usersList = await uResponse.json();
-      
-      let countU = 0;
-      if(Array.isArray(usersList)) {
-        let totalU = usersList.length;
-        for (let u of usersList) {
-          let username = u.username ? u.username.toString().toLowerCase() : 'user_' + Math.random();
-          await db.collection("users").doc(username).set(u, { merge: true });
-          countU++;
-          statusBox.innerText = `⏳ Migrating Users: ${countU} / ${totalU}`;
-        }
-      }
-
-      setProgress(100);
-      statusBox.innerText = `🎉 Migration Successful! Questions: ${countQ}, Users: ${countU}`;
-      alert(`🎉 Migration Successful!\nTotal Questions migrated: ${countQ}\nTotal Users migrated: ${countU}`);
-      await fetchQuestions();
-    } catch(error) {
-      console.error(error);
-      statusBox.innerText = "❌ Migration Error: " + error.message;
-      alert("Migration Error: " + error.message);
-    }
+    } catch(e) { console.error(e); }
   }
 
   function updateFeedSubjectOptions() {
@@ -1726,10 +1644,9 @@
     };
 
     let ncertChecked = document.getElementById('feedNcertCheck').checked;
-    let qId = 'q_' + Date.now();
 
     let newQ = {
-      id: qId,
+      id: Date.now(),
       subject: sub,
       era: isHistory ? document.getElementById('feedEra').value : '',
       timeline_year: isHistory ? document.getElementById('feedTimelineYear').value.trim() : '',
@@ -1792,13 +1709,33 @@
         let ans = item.querySelector('.pq-ans').value;
         let expl = item.querySelector('.pq-expl').value.trim();
         if(qText) {
-          subQs.push({ qText, options: { A: optA, B: optB, C: optC, D: optD }, ans, expl });
+          subQs.push({
+            qText,
+            options: { A: optA, B: optB, C: optC, D: optD },
+            ans,
+            expl
+          });
         }
       });
       newQ.passageQuestions = subQs;
     } else if(type === 'ar') {
       newQ.text = `Direction: ${newQ.arText}\nAssertion: ${newQ.assertion}\nReason: ${newQ.reason}`;
     }
+
+    let qForSheet = { 
+      ...newQ, 
+      options: JSON.stringify(opts),
+      matchRows: newQ.matchRows ? JSON.stringify(newQ.matchRows) : "",
+      statements: newQ.statements ? JSON.stringify(newQ.statements) : "",
+      passageQuestions: newQ.passageQuestions ? JSON.stringify(newQ.passageQuestions) : "",
+      matchHead1: newQ.matchHead1 || "",
+      matchHead2: newQ.matchHead2 || "",
+      assertion: newQ.assertion || "",
+      reason: newQ.reason || "",
+      arText: newQ.arText || "",
+      stConclusion: newQ.stConclusion || "",
+      passageText: newQ.passageText || ""
+    };
 
     questions.unshift(newQ);
     document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
@@ -1809,15 +1746,22 @@
     document.getElementById('feedNcertContainer').style.display = 'none';
     document.getElementById('matchRowsInputsList').innerHTML = '';
     document.getElementById('passageSubQuestionsList').innerHTML = '';
-    addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
+    addMatchRowInput();
+    addMatchRowInput();
+    addMatchRowInput();
+    addMatchRowInput();
     addPassageSubQuestionInput();
     updateFeedSubjectOptions();
     updateAdminDatalists();
     
-    alert('Question Saved to Firebase Successfully!');
+    alert('Question Saved to Database Successfully!');
 
     try {
-      if (db) await db.collection("questions").doc(qId).set(newQ);
+      await fetch(QUESTIONS_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "saveQuestion", question: qForSheet })
+      });
     } catch(err) { console.error(err); }
   }
 
@@ -2106,7 +2050,7 @@
   function openEditModalForCurrentQ() {
     const q = adminQuizList[adminQuizIdx];
     if(!q) return;
-    document.getElementById('editQId').value = q.id;
+    document.getElementById('editQId').value = q.originalId || q.id;
     document.getElementById('editSub').value = q.subject;
     
     toggleHistoryFieldsForEdit();
@@ -2292,25 +2236,42 @@
       updated.text = document.getElementById('editText').value.trim();
     }
 
-    let qIdx = questions.findIndex(q => q.id.toString() === qId.toString());
+    let qIdx = questions.findIndex(q => q.id.toString() === qId.toString() || q.originalId?.toString() === qId.toString());
     if(qIdx !== -1) questions[qIdx] = { ...questions[qIdx], ...updated };
-    let aqIdx = adminQuizList.findIndex(q => q.id.toString() === qId.toString());
+    let aqIdx = adminQuizList.findIndex(q => q.id.toString() === qId.toString() || q.originalId?.toString() === qId.toString());
     if(aqIdx !== -1) adminQuizList[aqIdx] = { ...adminQuizList[aqIdx], ...updated };
 
     closeEditModal();
-    alert('Question Updated in Firebase Successfully!');
+    alert('Question Updated and Cleaned Successfully!');
     renderAdminQuizCard();
 
     try {
-      if (db) await db.collection("questions").doc(qId.toString()).set(updated, { merge: true });
+      let qForSheet = { 
+        ...updated, 
+        options: JSON.stringify(opts),
+        matchRows: updated.matchRows ? JSON.stringify(updated.matchRows) : "",
+        statements: updated.statements ? JSON.stringify(updated.statements) : "",
+        matchHead1: updated.matchHead1 || "",
+        matchHead2: updated.matchHead2 || "",
+        assertion: updated.assertion || "",
+        reason: updated.reason || "",
+        arText: updated.arText || "",
+        stConclusion: updated.stConclusion || "",
+        passageText: updated.passageText || ""
+      };
+      await fetch(QUESTIONS_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "saveQuestion", question: qForSheet })
+      });
     } catch(err) { console.error(err); }
   }
 
   async function deleteCurrentQuestion() {
-    if(!confirm('Delete this question from Firebase?')) return;
+    if(!confirm('Delete this question?')) return;
     const qId = document.getElementById('editQId').value;
-    questions = questions.filter(q => q.id.toString() !== qId.toString());
-    adminQuizList = adminQuizList.filter(q => q.id.toString() !== qId.toString());
+    questions = questions.filter(q => q.id.toString() !== qId.toString() && q.originalId?.toString() !== qId.toString());
+    adminQuizList = adminQuizList.filter(q => q.id.toString() !== qId.toString() && q.originalId?.toString() !== qId.toString());
     document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
     populateDropdowns();
     closeEditModal();
@@ -2323,7 +2284,11 @@
     }
 
     try {
-      if (db) await db.collection("questions").doc(qId.toString()).delete();
+      await fetch(QUESTIONS_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "deletePosition", id: qId })
+      });
     } catch(err) { console.error(err); }
   }
 
