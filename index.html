@@ -132,11 +132,12 @@
 
   <div id="adminPortalPanel" style="display:block;">
     
-    <!-- MIGRATION PANEL -->
+    <!-- MIGRATION PANEL WITH LIVE STATUS -->
     <div class="card" style="background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(16,185,129,0.15)); border: 1px solid var(--primary);">
       <h3 style="color: #38bdf8;">🔥 Firebase Migration Panel</h3>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Aapka purana data Google Sheets se Firebase Firestore me transfer karne ke liye niche wale button par click karein.</p>
-      <button class="btn btn-success" onclick="migrateDataToFirebaseUI()">🚀 Migrate Data from Google Sheets to Firebase</button>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 12px;">Google Sheets se saara data live Firebase me transfer karne ke liye click karein:</p>
+      <button class="btn btn-success" onclick="migrateDataToFirebaseUI()">🚀 Start Migration</button>
+      <div id="migrationStatusBox" style="margin-top: 12px; font-weight: bold; color: #38bdf8; font-size: 0.9rem;"></div>
     </div>
 
     <!-- Floating Header Navigation -->
@@ -628,25 +629,6 @@
     }
   }
 
-  function updateSwipeIndicator(gridId, dotsBarId) {
-    const grid = document.getElementById(gridId);
-    if(!grid) return;
-    const scrollLeft = grid.scrollLeft;
-    const cardWidth = grid.querySelector('.selector-card').offsetWidth + 12;
-    const activeIdx = Math.round(scrollLeft / cardWidth);
-    const dots = document.querySelectorAll(`#${dotsBarId} .swipe-dot`);
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === activeIdx);
-    });
-  }
-
-  function scrollToCard(gridId, idx) {
-    const grid = document.getElementById(gridId);
-    if(!grid) return;
-    const cardWidth = grid.querySelector('.selector-card').offsetWidth + 12;
-    grid.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
-  }
-
   let indianGsSubs = ["Indian History", "Polity", "Economy", "General Science", "Indian Geography", "Computer", "Hindi", "English"];
   let cgGsSubs = ["CG History", "CG Geography", "CG Tribes", "CG Art & Culture", "CG Language", "CG Administration", "CG Panchayati Raj", "CG Economy", "CG General Knowledge"];
   let otherSubs = ["CDP", "General Mental Ability", "Maths", "Current Affairs"];
@@ -666,10 +648,7 @@
     populateAdminNcertDropdowns();
     populateAdminExamDropdowns();
     if(document.getElementById('matchRowsInputsList').children.length === 0) {
-      addMatchRowInput();
-      addMatchRowInput();
-      addMatchRowInput();
-      addMatchRowInput();
+      addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
     }
     if(document.getElementById('passageSubQuestionsList').children.length === 0) {
       addPassageSubQuestionInput();
@@ -778,42 +757,54 @@
   async function migrateDataToFirebaseUI() {
     if (!confirm("Kya aap apna saara data Google Sheets se Firebase me migrate karna chahte hain?")) return;
     if (!db) { alert("Firebase connected nahi hai!"); return; }
+    
+    const statusBox = document.getElementById('migrationStatusBox');
+    statusBox.innerText = "⏳ Connecting to Google Sheets...";
     setProgress(15);
+
     try {
       const QUESTIONS_API_URL = "https://script.google.com/macros/s/AKfycbx7QhvQi1_Am1I6nRT9mH9dPdU1q3pTN9-nvM0Cg9flFxQrtFHOd4OCI9gcjNenKI8C/exec";
       const USERS_API_URL = "https://script.google.com/macros/s/AKfycbzuPQnDdlaeutLZvuQpqMMQDOjY-u_xH0e9CtOmmQKE-dV7IAuhqG0dDgXryO-VpdK_/exec";
 
+      statusBox.innerText = "⏳ Fetching Questions from Sheet...";
       setProgress(35);
       const qResponse = await fetch(QUESTIONS_API_URL + "?action=getQuestions");
       const questionsList = await qResponse.json();
       
       let countQ = 0;
       if(Array.isArray(questionsList)) {
+        let totalQ = questionsList.length;
         for (let q of questionsList) {
           let qId = q.id ? q.id.toString() : 'q_' + Math.random().toString(36.substr(2, 9));
           await db.collection("questions").doc(qId).set(q, { merge: true });
           countQ++;
+          statusBox.innerText = `⏳ Migrating Questions: ${countQ} / ${totalQ}`;
         }
       }
 
+      statusBox.innerText = "⏳ Fetching Users from Sheet...";
       setProgress(75);
       const uResponse = await fetch(USERS_API_URL + "?action=getUsers");
       const usersList = await uResponse.json();
       
       let countU = 0;
       if(Array.isArray(usersList)) {
+        let totalU = usersList.length;
         for (let u of usersList) {
           let username = u.username ? u.username.toString().toLowerCase() : 'user_' + Math.random();
           await db.collection("users").doc(username).set(u, { merge: true });
           countU++;
+          statusBox.innerText = `⏳ Migrating Users: ${countU} / ${totalU}`;
         }
       }
 
       setProgress(100);
+      statusBox.innerText = `🎉 Migration Successful! Questions: ${countQ}, Users: ${countU}`;
       alert(`🎉 Migration Successful!\nTotal Questions migrated: ${countQ}\nTotal Users migrated: ${countU}`);
       await fetchQuestions();
     } catch(error) {
       console.error(error);
+      statusBox.innerText = "❌ Migration Error: " + error.message;
       alert("Migration Error: " + error.message);
     }
   }
