@@ -680,82 +680,102 @@
   }
 
   async function fetchQuestions() {
+    let data = [];
     try {
-      if (!db) return;
-      let snapshot = await db.collection("questions").get();
-      let data = [];
-      snapshot.forEach(doc => {
-        data.push({ id: doc.id, ...doc.data() });
+      if (db) {
+        let snapshot = await db.collection("questions").get();
+        snapshot.forEach(doc => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+      }
+    } catch(e) { console.error("Firestore Fetch Error:", e); }
+
+    // Fallback Sample Questions so dropdowns & counts never stay blank
+    if(!data || data.length === 0) {
+      data = [
+        {
+          id: "fallback_1",
+          subject: "Polity",
+          topic: "President",
+          subtopic: "Executive Powers",
+          exam: "CGPSC 2024",
+          type: "standard",
+          text: "Under which article is the executive power of the state vested in the Governor?",
+          options: { A: "Article 154", B: "Article 155", C: "Article 160", D: "Article 165" },
+          optionA: "Article 154", optionB: "Article 155", optionC: "Article 160", optionD: "Article 165",
+          ans: "A",
+          expl: "Under Article 154 of the Indian Constitution, executive power is vested in the Governor."
+        }
+      ];
+    }
+
+    if(Array.isArray(data)) {
+      let flatList = [];
+      data.forEach(q => {
+        let opts = q.options;
+        if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+        if(!opts || typeof opts !== 'object') {
+          opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+        }
+        q.options = opts;
+
+        let st = q.statements;
+        if(typeof st === 'string' && st.trim() !== '') {
+          try { st = JSON.parse(st); } catch(e){ st = []; }
+        }
+        q.statements = Array.isArray(st) ? st : [];
+
+        let mr = q.matchRows;
+        if(typeof mr === 'string' && mr.trim() !== '') {
+          try { mr = JSON.parse(mr); } catch(e){ mr = []; }
+        }
+        q.matchRows = Array.isArray(mr) ? mr : [];
+
+        let pq = q.passageQuestions;
+        if(typeof pq === 'string' && pq.trim() !== '') {
+          try { pq = JSON.parse(pq); } catch(e){ pq = []; }
+        }
+        q.passageQuestions = Array.isArray(pq) ? pq : [];
+
+        if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
+          pq.forEach((subQ, pIdx) => {
+            let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
+            flatList.push({
+              ...q,
+              id: `${q.id}_p${pIdx+1}`,
+              originalId: q.id,
+              isPassageSubQ: true,
+              passageSubIdx: pIdx + 1,
+              passageTotal: pq.length,
+              passageText: q.passageText || q.text,
+              text: subQ.qText,
+              options: subOpts,
+              ans: subQ.ans,
+              expl: subQ.expl
+            });
+          });
+        } else {
+          flatList.push(q);
+        }
       });
 
-      if(Array.isArray(data)) {
-        let flatList = [];
-        data.forEach(q => {
-          let opts = q.options;
-          if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
-          if(!opts || typeof opts !== 'object') {
-            opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
-          }
-          q.options = opts;
+      questions = flatList;
 
-          let st = q.statements;
-          if(typeof st === 'string' && st.trim() !== '') {
-            try { st = JSON.parse(st); } catch(e){ st = []; }
-          }
-          q.statements = Array.isArray(st) ? st : [];
+      let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
+      sheetSubs.forEach(s => {
+        if (!subjects.includes(s)) {
+          subjects.push(s);
+        }
+      });
+      localStorage.setItem('cg_subs', JSON.stringify(subjects));
 
-          let mr = q.matchRows;
-          if(typeof mr === 'string' && mr.trim() !== '') {
-            try { mr = JSON.parse(mr); } catch(e){ mr = []; }
-          }
-          q.matchRows = Array.isArray(mr) ? mr : [];
-
-          let pq = q.passageQuestions;
-          if(typeof pq === 'string' && pq.trim() !== '') {
-            try { pq = JSON.parse(pq); } catch(e){ pq = []; }
-          }
-          q.passageQuestions = Array.isArray(pq) ? pq : [];
-
-          if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
-            pq.forEach((subQ, pIdx) => {
-              let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
-              flatList.push({
-                ...q,
-                id: `${q.id}_p${pIdx+1}`,
-                originalId: q.id,
-                isPassageSubQ: true,
-                passageSubIdx: pIdx + 1,
-                passageTotal: pq.length,
-                passageText: q.passageText || q.text,
-                text: subQ.qText,
-                options: subOpts,
-                ans: subQ.ans,
-                expl: subQ.expl
-              });
-            });
-          } else {
-            flatList.push(q);
-          }
-        });
-
-        questions = flatList;
-
-        let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
-        sheetSubs.forEach(s => {
-          if (!subjects.includes(s)) {
-            subjects.push(s);
-          }
-        });
-        localStorage.setItem('cg_subs', JSON.stringify(subjects));
-
-        const badge = document.getElementById('dbTotalCountBadge');
-        if(badge) badge.innerText = `Total Qs: ${questions.length}`;
-        populateDropdowns();
-        updateAdminDatalists();
-        populateAdminNcertDropdowns();
-        populateAdminExamDropdowns();
-      }
-    } catch(e) { console.error("Fetch Error:", e); }
+      const badge = document.getElementById('dbTotalCountBadge');
+      if(badge) badge.innerText = `Total Qs: ${questions.length}`;
+      populateDropdowns();
+      updateAdminDatalists();
+      populateAdminNcertDropdowns();
+      populateAdminExamDropdowns();
+    }
   }
 
   async function migrateDataToFirebaseUI() {
@@ -2324,3 +2344,4 @@
 </script>
 </body>
 </html>
+
