@@ -130,7 +130,6 @@
 
 <div class="container">
 
-  <!-- ADMIN STUDIO PORTAL -->
   <div id="adminPortalPanel" style="display:block;">
     
     <!-- MIGRATION PANEL -->
@@ -598,7 +597,6 @@
 <datalist id="datalistNcertChapters"></datalist>
 
 <script>
-  // Initialize Firebase safely
   let db = null;
   try {
     const firebaseConfig = {
@@ -690,7 +688,6 @@
       }
     } catch(e) { console.error("Firestore Fetch Error:", e); }
 
-    // Fallback Sample Questions so dropdowns & counts never stay blank
     if(!data || data.length === 0) {
       data = [
         {
@@ -2339,9 +2336,7 @@
     } catch(err) { console.error(err); }
   }
 
-  // Turant execute hoga bina kisi event ke wait kiye
   initAdminStudio();
 </script>
 </body>
 </html>
-
