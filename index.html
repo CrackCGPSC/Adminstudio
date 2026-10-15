@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crack CGPSC Admin Studio</title>
+  <title>Crack CGPSC Admin Studio (Firebase Firestore)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
   
-  <!-- Firebase App & Firestore SDK (Compat) -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <!-- Firebase App & Firestore SDKs (v10 compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
@@ -51,6 +52,10 @@
     label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-weight: 500; text-align: left; }
     input, select, textarea { width: 100%; padding: 10px 14px; background: var(--card-inner); border: 1px solid var(--border); color: #fff; border-radius: 10px; margin-bottom: 12px; font-size: 0.9rem; outline: none; position: relative; z-index: 2; text-align: left; }
     input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+    
+    .password-wrapper { position: relative; width: 100%; }
+    .password-wrapper input { margin-bottom: 12px; padding-right: 42px; }
+    .toggle-password { position: absolute; right: 14px; top: 40%; transform: translateY(-50%); cursor: pointer; color: var(--muted); font-size: 1.1rem; user-select: none; }
 
     .btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; box-shadow: var(--glow-blue); }
     .btn:hover { background: var(--primary-hover); }
@@ -121,16 +126,37 @@
 <header>
   <div>
     <div class="brand-title">Crack CGPSC</div>
-    <div class="brand-sub">Admin Studio 🛠</div>
+    <div class="brand-sub">Admin Studio & Cloud DB 🛠</div>
   </div>
-  <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:inline-block;">
-    <span>@Adminsaket</span>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span style="background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#34d399; padding:4px 10px; border-radius:8px; font-size:0.78rem; font-weight:bold;" id="dbTotalCountBadge">Total Qs: 0</span>
+    <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:none;">
+      <span>@Adminsaket</span> | <a href="javascript:void(0)" onclick="adminLogout()" style="color:#f87171; text-decoration:none;">Logout</a>
+    </div>
   </div>
 </header>
 
 <div class="container">
 
-  <div id="adminPortalPanel" style="display:block;">
+  <!-- ADMIN LOGIN SCREEN -->
+  <div id="adminAuthCard" class="card" style="max-width: 400px; margin: 60px auto;">
+    <h3>Admin Studio Login</h3>
+    <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">Manage questions in Firebase Firestore (crackcgpsc-2ca60).</p>
+    
+    <label>Admin ID</label>
+    <input type="text" id="logAdminUser" placeholder="Enter Admin ID" value="Adminsaket">
+    
+    <label>Password</label>
+    <div class="password-wrapper">
+      <input type="password" id="logAdminPass" placeholder="Enter Password" value="qwertypad">
+      <span class="toggle-password" onclick="togglePasswordVisibility('logAdminPass', this)">👁</span>
+    </div>
+    
+    <button class="btn" style="width:100%; justify-content:center;" onclick="verifyAdminLogin()">Login to Studio</button>
+  </div>
+
+  <!-- ADMIN STUDIO PORTAL -->
+  <div id="adminPortalPanel" style="display:none;">
     
     <!-- Floating Header Navigation -->
     <div class="floating-header">
@@ -144,10 +170,9 @@
     <div id="adminTabFeed" class="admin-tab-view">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <h3>Feed New Question</h3>
+          <h3>Feed New Question to Firebase Firestore</h3>
           <div style="display:flex; gap:8px; align-items:center;">
             <button class="btn btn-secondary btn-sm" onclick="openLivePreviewModal()" title="Preview Question">👁️ Preview</button>
-            <span id="dbTotalCountBadge" style="background:rgba(59,130,246,0.2); border:1px solid var(--primary); color:#38bdf8; padding:4px 10px; border-radius:8px; font-size:0.8rem; font-weight:bold;">Total Qs: 0</span>
           </div>
         </div>
 
@@ -301,7 +326,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success" style="width:100%; justify-content:center; margin-top:10px;">💾 Save Question</button>
+          <button type="submit" class="btn btn-success" style="width:100%; justify-content:center; margin-top:10px;">💾 Save Question to Firebase Firestore</button>
         </form>
       </div>
     </div>
@@ -561,7 +586,7 @@
       
       <div style="display:flex; justify-content:space-between; margin-top:15px;">
         <button type="button" class="btn btn-danger" onclick="deleteCurrentQuestion()">🗑️ Delete</button>
-        <button type="submit" class="btn btn-success">💾 Update</button>
+        <button type="submit" class="btn btn-success">💾 Update in Firestore</button>
       </div>
     </form>
   </div>
@@ -590,6 +615,21 @@
 <datalist id="datalistNcertChapters"></datalist>
 
 <script>
+  // EXACT FIREBASE PROJECT CONFIGURATION FOR crackcgpsc-2ca60
+  const firebaseConfig = {
+    apiKey: "AIzaSyAozn3dx9h874oCBX120p7MYye6dyjPKmE",
+    authDomain: "crackcgpsc-2ca60.firebaseapp.com",
+    projectId: "crackcgpsc-2ca60",
+    storageBucket: "crackcgpsc-2ca60.firebasestorage.app",
+    messagingSenderId: "421965977544",
+    appId: "1:421965977544:web:9265149dd667f205d892fd"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const db = firebase.firestore();
+
   function setProgress(percent) {
     const bar = document.getElementById('topProgressBar');
     if(!bar) return;
@@ -622,8 +662,6 @@
     grid.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
   }
 
-  const QUESTIONS_API_URL = "https://script.google.com/macros/s/AKfycbx7QhvQi1_Am1I6nRT9mH9dPdU1q3pTN9-nvM0Cg9flFxQrtFHOd4OCI9gcjNenKI8C/exec";
-  
   let indianGsSubs = ["Indian History", "Polity", "Economy", "General Science", "Indian Geography", "Computer", "Hindi", "English"];
   let cgGsSubs = ["CG History", "CG Geography", "CG Tribes", "CG Art & Culture", "CG Language", "CG Administration", "CG Panchayati Raj", "CG Economy", "CG General Knowledge"];
   let otherSubs = ["CDP", "General Mental Ability", "Maths", "Current Affairs"];
@@ -634,9 +672,42 @@
   let adminQuizIdx = 0;
   let userResponses = {};
 
+  function togglePasswordVisibility(fieldId, iconEl) {
+    const field = document.getElementById(fieldId);
+    if (field.type === "password") {
+      field.type = "text";
+      iconEl.innerText = "🔒";
+    } else {
+      field.type = "password";
+      iconEl.innerText = "👁️";
+    }
+  }
+
+  function verifyAdminLogin() {
+    const u = document.getElementById('logAdminUser').value.trim();
+    const p = document.getElementById('logAdminPass').value.trim();
+    
+    if(u === 'Adminsaket' && p === 'qwertypad') {
+      localStorage.setItem('cg_admin_logged', 'true');
+      document.getElementById('adminAuthCard').style.display = 'none';
+      document.getElementById('adminPortalPanel').style.display = 'block';
+      document.getElementById('adminHeaderUser').style.display = 'inline-block';
+      initAdminStudio();
+    } else {
+      alert('Invalid ID or Password! (Use Adminsaket / qwertypad)');
+    }
+  }
+
+  function adminLogout() {
+    localStorage.removeItem('cg_admin_logged');
+    document.getElementById('adminAuthCard').style.display = 'block';
+    document.getElementById('adminPortalPanel').style.display = 'none';
+    document.getElementById('adminHeaderUser').style.display = 'none';
+  }
+
   async function initAdminStudio() {
     setProgress(30);
-    await fetchQuestions();
+    await fetchQuestionsFromFirestore();
     setProgress(70);
     populateDropdowns();
     updateAdminDatalists();
@@ -654,77 +725,75 @@
     setProgress(100);
   }
 
-  async function fetchQuestions() {
+  async function fetchQuestionsFromFirestore() {
     try {
-      let res = await fetch(QUESTIONS_API_URL + "?action=getQuestions");
-      let data = await res.json();
-      if(Array.isArray(data)) {
-        let flatList = [];
-        data.forEach(q => {
-          let opts = q.options;
-          if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
-          if(!opts || typeof opts !== 'object') {
-            opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
-          }
-          q.options = opts;
+      let snap = await db.collection("questions").get();
+      let flatList = [];
+      snap.forEach(doc => {
+        let q = { id: doc.id, ...doc.data() };
+        let opts = q.options;
+        if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+        if(!opts || typeof opts !== 'object') {
+          opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+        }
+        q.options = opts;
 
-          let st = q.statements;
-          if(typeof st === 'string' && st.trim() !== '') {
-            try { st = JSON.parse(st); } catch(e){ st = []; }
-          }
-          q.statements = Array.isArray(st) ? st : [];
+        let st = q.statements;
+        if(typeof st === 'string' && st.trim() !== '') {
+          try { st = JSON.parse(st); } catch(e){ st = []; }
+        }
+        q.statements = Array.isArray(st) ? st : [];
 
-          let mr = q.matchRows;
-          if(typeof mr === 'string' && mr.trim() !== '') {
-            try { mr = JSON.parse(mr); } catch(e){ mr = []; }
-          }
-          q.matchRows = Array.isArray(mr) ? mr : [];
+        let mr = q.matchRows;
+        if(typeof mr === 'string' && mr.trim() !== '') {
+          try { mr = JSON.parse(mr); } catch(e){ mr = []; }
+        }
+        q.matchRows = Array.isArray(mr) ? mr : [];
 
-          let pq = q.passageQuestions;
-          if(typeof pq === 'string' && pq.trim() !== '') {
-            try { pq = JSON.parse(pq); } catch(e){ pq = []; }
-          }
-          q.passageQuestions = Array.isArray(pq) ? pq : [];
+        let pq = q.passageQuestions;
+        if(typeof pq === 'string' && pq.trim() !== '') {
+          try { pq = JSON.parse(pq); } catch(e){ pq = []; }
+        }
+        q.passageQuestions = Array.isArray(pq) ? pq : [];
 
-          if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
-            pq.forEach((subQ, pIdx) => {
-              let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
-              flatList.push({
-                ...q,
-                id: `${q.id}_p${pIdx+1}`,
-                originalId: q.id,
-                isPassageSubQ: true,
-                passageSubIdx: pIdx + 1,
-                passageTotal: pq.length,
-                passageText: q.passageText || q.text,
-                text: subQ.qText,
-                options: subOpts,
-                ans: subQ.ans,
-                expl: subQ.expl
-              });
+        if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
+          pq.forEach((subQ, pIdx) => {
+            let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
+            flatList.push({
+              ...q,
+              id: `${q.id}_p${pIdx+1}`,
+              originalId: q.id,
+              isPassageSubQ: true,
+              passageSubIdx: pIdx + 1,
+              passageTotal: pq.length,
+              passageText: q.passageText || q.text,
+              text: subQ.qText,
+              options: subOpts,
+              ans: subQ.ans,
+              expl: subQ.expl
             });
-          } else {
-            flatList.push(q);
-          }
-        });
+          });
+        } else {
+          flatList.push(q);
+        }
+      });
 
-        questions = flatList;
+      questions = flatList;
 
-        let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
-        sheetSubs.forEach(s => {
-          if (!subjects.includes(s)) {
-            subjects.push(s);
-          }
-        });
-        localStorage.setItem('cg_subs', JSON.stringify(subjects));
+      let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
+      sheetSubs.forEach(s => {
+        if (!subjects.includes(s)) {
+          subjects.push(s);
+        }
+      });
+      localStorage.setItem('cg_subs', JSON.stringify(subjects));
 
-        document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
-        populateDropdowns();
-        updateAdminDatalists();
-        populateAdminNcertDropdowns();
-        populateAdminExamDropdowns();
-      }
-    } catch(e) { console.error(e); }
+      document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+      populateDropdowns();
+      updateAdminDatalists();
+      populateAdminNcertDropdowns();
+      populateAdminExamDropdowns();
+    } catch(e) { console.error("Firestore fetch error:", e); }
   }
 
   function updateFeedSubjectOptions() {
@@ -1646,7 +1715,6 @@
     let ncertChecked = document.getElementById('feedNcertCheck').checked;
 
     let newQ = {
-      id: Date.now(),
       subject: sub,
       era: isHistory ? document.getElementById('feedEra').value : '',
       timeline_year: isHistory ? document.getElementById('feedTimelineYear').value.trim() : '',
@@ -1666,7 +1734,9 @@
       ncert_tag: ncertChecked ? "true" : "false",
       ncert_book: ncertChecked ? document.getElementById('feedNcertBook').value : "",
       ncert_class: ncertChecked ? document.getElementById('feedNcertClass').value : "",
-      ncert_chapter: ncertChecked ? `${document.getElementById('feedNcertPart').value.trim()} - ${document.getElementById('feedNcertChapter').value.trim()}` : ""
+      ncert_chapter: ncertChecked ? `${document.getElementById('feedNcertPart').value.trim()} - ${document.getElementById('feedNcertChapter').value.trim()}` : "",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
     if(type === 'match') {
@@ -1722,47 +1792,24 @@
       newQ.text = `Direction: ${newQ.arText}\nAssertion: ${newQ.assertion}\nReason: ${newQ.reason}`;
     }
 
-    let qForSheet = { 
-      ...newQ, 
-      options: JSON.stringify(opts),
-      matchRows: newQ.matchRows ? JSON.stringify(newQ.matchRows) : "",
-      statements: newQ.statements ? JSON.stringify(newQ.statements) : "",
-      passageQuestions: newQ.passageQuestions ? JSON.stringify(newQ.passageQuestions) : "",
-      matchHead1: newQ.matchHead1 || "",
-      matchHead2: newQ.matchHead2 || "",
-      assertion: newQ.assertion || "",
-      reason: newQ.reason || "",
-      arText: newQ.arText || "",
-      stConclusion: newQ.stConclusion || "",
-      passageText: newQ.passageText || ""
-    };
-
-    questions.unshift(newQ);
-    document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
-    
-    document.getElementById('unifiedQForm').reset();
-    document.getElementById('feedType').value = 'standard';
-    toggleQTypeFields('standard');
-    document.getElementById('feedNcertContainer').style.display = 'none';
-    document.getElementById('matchRowsInputsList').innerHTML = '';
-    document.getElementById('passageSubQuestionsList').innerHTML = '';
-    addMatchRowInput();
-    addMatchRowInput();
-    addMatchRowInput();
-    addMatchRowInput();
-    addPassageSubQuestionInput();
-    updateFeedSubjectOptions();
-    updateAdminDatalists();
-    
-    alert('Question Saved to Database Successfully!');
-
     try {
-      await fetch(QUESTIONS_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "saveQuestion", question: qForSheet })
-      });
-    } catch(err) { console.error(err); }
+      const docRef = await db.collection("questions").add(newQ);
+      alert('✅ Question Saved to Firebase Firestore successfully! ID: ' + docRef.id);
+      
+      document.getElementById('unifiedQForm').reset();
+      document.getElementById('feedType').value = 'standard';
+      toggleQTypeFields('standard');
+      document.getElementById('feedNcertContainer').style.display = 'none';
+      document.getElementById('matchRowsInputsList').innerHTML = '';
+      document.getElementById('passageSubQuestionsList').innerHTML = '';
+      addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
+      addPassageSubQuestionInput();
+      updateFeedSubjectOptions();
+      updateAdminDatalists();
+      fetchQuestionsFromFirestore();
+    } catch(err) {
+      alert('Error saving to Firestore: ' + err.message);
+    }
   }
 
   function startAdminPracticeQuiz(mode) {
@@ -2177,7 +2224,6 @@
     let ncertChecked = document.getElementById('editNcertCheck').checked;
 
     let updated = {
-      id: qId,
       subject: sub,
       era: isHistory ? document.getElementById('editEra').value : '',
       timeline_year: isHistory ? document.getElementById('editTimelineYear').value.trim() : '',
@@ -2193,7 +2239,8 @@
       ncert_tag: ncertChecked ? "true" : "false",
       ncert_book: ncertChecked ? document.getElementById('editNcertBook').value : "",
       ncert_class: ncertChecked ? document.getElementById('editNcertClass').value : "",
-      ncert_chapter: ncertChecked ? `${document.getElementById('editNcertPart').value.trim()} - ${document.getElementById('editNcertChapter').value.trim()}` : ""
+      ncert_chapter: ncertChecked ? `${document.getElementById('editNcertPart').value.trim()} - ${document.getElementById('editNcertChapter').value.trim()}` : "",
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
     if(type === 'ar') {
@@ -2236,63 +2283,41 @@
       updated.text = document.getElementById('editText').value.trim();
     }
 
-    let qIdx = questions.findIndex(q => q.id.toString() === qId.toString() || q.originalId?.toString() === qId.toString());
-    if(qIdx !== -1) questions[qIdx] = { ...questions[qIdx], ...updated };
-    let aqIdx = adminQuizList.findIndex(q => q.id.toString() === qId.toString() || q.originalId?.toString() === qId.toString());
-    if(aqIdx !== -1) adminQuizList[aqIdx] = { ...adminQuizList[aqIdx], ...updated };
-
-    closeEditModal();
-    alert('Question Updated and Cleaned Successfully!');
-    renderAdminQuizCard();
-
     try {
-      let qForSheet = { 
-        ...updated, 
-        options: JSON.stringify(opts),
-        matchRows: updated.matchRows ? JSON.stringify(updated.matchRows) : "",
-        statements: updated.statements ? JSON.stringify(updated.statements) : "",
-        matchHead1: updated.matchHead1 || "",
-        matchHead2: updated.matchHead2 || "",
-        assertion: updated.assertion || "",
-        reason: updated.reason || "",
-        arText: updated.arText || "",
-        stConclusion: updated.stConclusion || "",
-        passageText: updated.passageText || ""
-      };
-      await fetch(QUESTIONS_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "saveQuestion", question: qForSheet })
-      });
-    } catch(err) { console.error(err); }
+      await db.collection("questions").doc(qId).update(updated);
+      closeEditModal();
+      alert('✅ Question Updated in Firestore Successfully!');
+      fetchQuestionsFromFirestore();
+    } catch(err) {
+      alert("Error updating question in Firestore: " + err.message);
+    }
   }
 
   async function deleteCurrentQuestion() {
-    if(!confirm('Delete this question?')) return;
+    if(!confirm('Delete this question from Firestore?')) return;
     const qId = document.getElementById('editQId').value;
-    questions = questions.filter(q => q.id.toString() !== qId.toString() && q.originalId?.toString() !== qId.toString());
-    adminQuizList = adminQuizList.filter(q => q.id.toString() !== qId.toString() && q.originalId?.toString() !== qId.toString());
-    document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
-    populateDropdowns();
-    closeEditModal();
-    alert('Question Deleted!');
-    if(adminQuizList.length > 0) {
-      if(adminQuizIdx >= adminQuizList.length) adminQuizIdx = adminQuizList.length - 1;
-      renderAdminQuizCard();
-    } else {
-      backToQuizConfig();
-    }
-
     try {
-      await fetch(QUESTIONS_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ action: "deletePosition", id: qId })
-      });
-    } catch(err) { console.error(err); }
+      await db.collection("questions").doc(qId).delete();
+      closeEditModal();
+      alert('🗑️ Question Deleted from Firestore!');
+      fetchQuestionsFromFirestore();
+      if(adminQuizList.length > 0) {
+        if(adminQuizIdx >= adminQuizList.length) adminQuizIdx = adminQuizList.length - 1;
+        renderAdminQuizCard();
+      } else {
+        backToQuizConfig();
+      }
+    } catch(err) {
+      alert("Error deleting question: " + err.message);
+    }
   }
 
-  initAdminStudio();
+  if(localStorage.getItem('cg_admin_logged') === 'true') {
+    document.getElementById('adminAuthCard').style.display = 'none';
+    document.getElementById('adminPortalPanel').style.display = 'block';
+    document.getElementById('adminHeaderUser').style.display = 'inline-block';
+    initAdminStudio();
+  }
 </script>
 </body>
 </html>
