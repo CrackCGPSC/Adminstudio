@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -40,11 +40,12 @@
       box-shadow: 0 0 10px #38bdf8;
     }
 
-    header { background: rgba(3, 7, 18, 0.95); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); }
+    header { background: rgba(3, 7, 18, 0.95); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); flex-wrap: wrap; gap: 10px; }
     .brand-title { font-size: 1.15rem; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; }
     .brand-sub { font-size: 0.78rem; font-weight: 600; color: #a78bfa; letter-spacing: 0.8px; text-transform: uppercase; }
     
-    .floating-header { position: sticky; top: 65px; z-index: 90; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(12px); padding: 10px 0; margin-bottom: 15px; border-bottom: 1px solid var(--border); }
+    .floating-header { position: sticky; top: 61px; z-index: 90; background: rgba(3, 7, 18, 0.95); backdrop-filter: blur(12px); padding: 10px 15px; margin-bottom: 15px; border-bottom: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.4); overflow-x: auto; scrollbar-width: none; }
+    .floating-header::-webkit-scrollbar { display: none; }
 
     .container { max-width: 900px; margin: 15px auto; padding: 0 15px; }
     .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.5); position: relative; z-index: 1; text-align: left; }
@@ -63,8 +64,8 @@
     .btn-success { background: var(--success); }
     .btn-secondary { background: #334155; padding: 6px 12px; font-size: 0.8rem; border-radius: 8px; color: #fff; }
     
-    .nav-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; justify-content: center; }
-    .nav-tab-btn { background: var(--card-inner); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; white-space: nowrap; font-size: 0.88rem; }
+    .nav-tabs { display: flex; gap: 10px; overflow-x: auto; padding: 4px 10px 8px 10px; scrollbar-width: auto; justify-content: flex-start; flex-wrap: nowrap; width: max-content; min-width: 100%; }
+    .nav-tab-btn { background: var(--card-inner); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; white-space: nowrap; font-size: 0.88rem; flex-shrink: 0; }
     .nav-tab-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: var(--glow-blue); }
 
     .selector-grid {
@@ -116,7 +117,6 @@
     
     .expl-box { background: rgba(37, 99, 235, 0.15); border-left: 4px solid var(--primary); padding: 12px; margin-top: 8px; border-radius: 8px; font-size: 0.92rem; line-height: 1.5; white-space: pre-wrap; text-align: left; }
     .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; text-align: left; }
-    .modal-content { max-width: 750px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; text-align: left; }
   </style>
 </head>
 <body>
@@ -126,12 +126,16 @@
 <header>
   <div>
     <div class="brand-title">Crack CGPSC</div>
-    <div class="brand-sub">Admin Studio & Cloud DB 🛠</div>
+    <div class="brand-sub">ADMIN STUDIO 🛠</div>
   </div>
-  <div style="display:flex; align-items:center; gap:10px;">
-    <span style="background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#34d399; padding:4px 10px; border-radius:8px; font-size:0.78rem; font-weight:bold;" id="dbTotalCountBadge">Total Qs: 0</span>
-    <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:none;">
-      <span>@Adminsaket</span> | <a href="javascript:void(0)" onclick="adminLogout()" style="color:#f87171; text-decoration:none;">Logout</a>
+  <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+    <div id="adminHeaderUser" style="font-size:0.85rem; color:#93c5fd; display:none; flex-direction:column; align-items:flex-end; gap:2px;">
+      <span>@Adminsaket</span>
+      <a href="javascript:void(0)" onclick="adminLogout()" style="color:#f87171; text-decoration:none; font-size:0.78rem;">Logout</a>
+    </div>
+    <!-- 3-Dots Menu Button in Header -->
+    <div style="position:relative; display:inline-block;">
+      <button onclick="toggleStorageModal()" style="background:transparent; border:none; color:#f9fafb; font-size:1.3rem; cursor:pointer; padding:4px 8px; border-radius:8px;" title="Settings & Storage">⋮</button>
     </div>
   </div>
 </header>
@@ -144,11 +148,11 @@
     <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">Manage questions in Firebase Firestore (crackcgpsc-2ca60).</p>
     
     <label>Admin ID</label>
-    <input type="text" id="logAdminUser" placeholder="Enter Admin ID" value="Adminsaket">
+    <input type="text" id="logAdminUser" placeholder="Enter Admin ID" autocomplete="off">
     
     <label>Password</label>
     <div class="password-wrapper">
-      <input type="password" id="logAdminPass" placeholder="Enter Password" value="qwertypad">
+      <input type="password" id="logAdminPass" placeholder="Enter Password" autocomplete="off">
       <span class="toggle-password" onclick="togglePasswordVisibility('logAdminPass', this)">👁</span>
     </div>
     
@@ -160,18 +164,21 @@
     
     <!-- Floating Header Navigation -->
     <div class="floating-header">
-      <div class="nav-tabs" style="max-width: 340px; margin: 0 auto;">
-        <button class="nav-tab-btn active" onclick="switchAdminTab('feed')" style="flex:1;">📝 Feed Questions</button>
-        <button class="nav-tab-btn" onclick="switchAdminTab('quiz')" style="flex:1;">⚡ Quiz Practice & Edit</button>
+      <div class="nav-tabs">
+        <button class="nav-tab-btn active" onclick="switchAdminTab('feed')">📝 Feed Questions</button>
+        <button class="nav-tab-btn" onclick="switchAdminTab('quiz')">⚡ Quiz &amp; Edit</button>
+        <button class="nav-tab-btn" onclick="switchAdminTab('flt')">🚀 Custom FLT &amp; Results</button>
       </div>
     </div>
 
     <!-- TAB 1: FEED QUESTIONS -->
     <div id="adminTabFeed" class="admin-tab-view">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
           <h3>Feed New Question to Firebase Firestore</h3>
-          <div style="display:flex; gap:8px; align-items:center;">
+          <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+            <span style="background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#34d399; padding:6px 10px; border-radius:8px; font-size:0.78rem; font-weight:bold;" id="dbTotalCountBadge">Total Qs: 0</span>
+            <button class="btn btn-secondary btn-sm" onclick="syncQuestionsFromCloud()" title="Sync with Firestore">🔄 Sync from Cloud</button>
             <button class="btn btn-secondary btn-sm" onclick="openLivePreviewModal()" title="Preview Question">👁️ Preview</button>
           </div>
         </div>
@@ -199,29 +206,29 @@
           <div style="display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:flex-end; margin-bottom:12px;">
             <div>
               <label>Topic / Chapter</label>
-              <input type="text" id="feedTop" list="datalistTopics" placeholder="Select or type topic..." oninput="onFeedTopicInput()" required style="margin-bottom:0;">
+              <input type="text" id="feedTop" list="datalistTopics" placeholder="Select or type topic..." oninput="onFeedTopicInput()" required style="margin-bottom:0;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
               <datalist id="datalistTopics"></datalist>
             </div>
             <div id="feedTimelineWrap" style="display:none;">
               <label>Timeline Year</label>
-              <input type="text" id="feedTimelineYear" placeholder="e.g. -322" style="margin-bottom:0;">
+              <input type="text" id="feedTimelineYear" placeholder="e.g. -322" style="margin-bottom:0;" autocomplete="off" spellcheck="false">
             </div>
           </div>
 
           <div style="display:grid; grid-template-columns: 1fr 140px; gap:10px; align-items:flex-end; margin-bottom:12px;">
             <div>
               <label>Sub-Topic</label>
-              <input type="text" id="feedSubtop" list="datalistSubtopics" placeholder="Select or type sub-topic..." oninput="onFeedSubtopicInput()" required style="margin-bottom:0;">
+              <input type="text" id="feedSubtop" list="datalistSubtopics" placeholder="Select or type sub-topic..." oninput="onFeedSubtopicInput()" required style="margin-bottom:0;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
               <datalist id="datalistSubtopics"></datalist>
             </div>
             <div id="feedSubTimelineWrap" style="display:none;">
               <label>Sub-Timeline (Opt)</label>
-              <input type="text" id="feedSubTimelineYear" placeholder="e.g. 261" style="margin-bottom:0;">
+              <input type="text" id="feedSubTimelineYear" placeholder="e.g. 261" style="margin-bottom:0;" autocomplete="off" spellcheck="false">
             </div>
           </div>
           
           <label>PYQ Exam Tag</label>
-          <input type="text" id="feedExam" list="datalistExams" placeholder="e.g. CGPSC 2024">
+          <input type="text" id="feedExam" list="datalistExams" placeholder="e.g. CGPSC 2024" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
           <datalist id="datalistExams"></datalist>
 
           <!-- NCERT / SCERT Tagging Section -->
@@ -233,7 +240,7 @@
             <div id="feedNcertContainer" style="display: none; margin-top: 10px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;">
               <div>
                 <label>Book Name</label>
-                <input type="text" id="feedNcertBook" list="datalistNcertBooks" placeholder="Book..." oninput="updateNcertClassesForFeed();" style="margin-bottom:0;">
+                <input type="text" id="feedNcertBook" list="datalistNcertBooks" placeholder="Book..." oninput="updateNcertClassesForFeed();" style="margin-bottom:0;" autocomplete="off">
                 <datalist id="datalistNcertBooks">
                   <option value="NCERT">
                   <option value="CG SCERT">
@@ -241,17 +248,17 @@
               </div>
               <div>
                 <label>Class</label>
-                <input type="text" id="feedNcertClass" list="datalistNcertClasses" placeholder="Class..." oninput="updateNcertSubjectsForFeed();" style="margin-bottom:0;">
+                <input type="text" id="feedNcertClass" list="datalistNcertClasses" placeholder="Class..." oninput="updateNcertSubjectsForFeed();" style="margin-bottom:0;" autocomplete="off">
                 <datalist id="datalistNcertClasses"></datalist>
               </div>
               <div>
                 <label>Subject/Part</label>
-                <input type="text" id="feedNcertPart" list="datalistNcertParts" placeholder="Subject..." oninput="updateNcertChaptersForFeed();" style="margin-bottom:0;">
+                <input type="text" id="feedNcertPart" list="datalistNcertParts" placeholder="Subject..." oninput="updateNcertChaptersForFeed();" style="margin-bottom:0;" autocomplete="off">
                 <datalist id="datalistNcertParts"></datalist>
               </div>
               <div>
                 <label>Chapter</label>
-                <input type="text" id="feedNcertChapter" list="datalistNcertChapters" placeholder="Chapter..." style="margin-bottom:0;">
+                <input type="text" id="feedNcertChapter" list="datalistNcertChapters" placeholder="Chapter..." style="margin-bottom:0;" autocomplete="off">
                 <datalist id="datalistNcertChapters"></datalist>
               </div>
             </div>
@@ -260,23 +267,23 @@
           <label>Question Type</label>
           <select id="feedType" onchange="toggleQTypeFields(this.value)">
             <option value="standard">Standard MCQ</option>
-            <option value="ar">Type 1: Assertion & Reasoning</option>
+            <option value="ar">Type 1: Assertion &amp; Reasoning</option>
             <option value="match">Type 2: Match the Following (Table)</option>
             <option value="statement">Type 3: Statement Questions</option>
             <option value="passage">Type 4: Passage / Comprehension</option>
           </select>
 
           <div id="feed-ar-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;">
-            <label>Direction Text:</label><textarea id="feedArText" rows="2" placeholder="Direction..."></textarea>
-            <label>Assertion (A):</label><textarea id="feedAssert" rows="2"></textarea>
-            <label>Reason (R):</label><textarea id="feedReason" rows="2"></textarea>
+            <label>Direction Text:</label><textarea id="feedArText" rows="2" placeholder="Direction..." autocomplete="off" spellcheck="false"></textarea>
+            <label>Assertion (A):</label><textarea id="feedAssert" rows="2" autocomplete="off" spellcheck="false"></textarea>
+            <label>Reason (R):</label><textarea id="feedReason" rows="2" autocomplete="off" spellcheck="false"></textarea>
           </div>
 
           <div id="feed-match-fields" style="display:none; background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);">
             <h4 style="color:#38bdf8; margin-bottom:10px;">📋 Match List Table Builder</h4>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-              <div><label>Heading 1</label><input type="text" id="feedMatchHead1" value="List I"></div>
-              <div><label>Heading 2</label><input type="text" id="feedMatchHead2" value="List II"></div>
+              <div><label>Heading 1</label><input type="text" id="feedMatchHead1" value="List I" autocomplete="off"></div>
+              <div><label>Heading 2</label><input type="text" id="feedMatchHead2" value="List II" autocomplete="off"></div>
             </div>
             <label style="margin-top:8px;">Table Rows (Add items for List I and List II):</label>
             <div id="matchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
@@ -284,15 +291,15 @@
           </div>
 
           <div id="feed-statement-fields" style="display:none; background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;">
-            <label>Intro Text:</label><textarea id="feedStIntro" rows="2" placeholder="Consider the following statements:"></textarea>
-            <label>Statements (One per line with labels like (J), (K)...):</label><textarea id="feedStList" rows="3" placeholder="(J) Using specific keywords...&#10;(K) Applying filters..."></textarea>
-            <label>Conclusion Text (Optional):</label><textarea id="feedStConclusion" rows="2" placeholder="Leave blank if no conclusion text needed..."></textarea>
+            <label>Intro Text:</label><textarea id="feedStIntro" rows="2" placeholder="Consider the following statements:" autocomplete="off" spellcheck="false"></textarea>
+            <label>Statements (One per line with labels like (J), (K)...):</label><textarea id="feedStList" rows="3" placeholder="(J) Using specific keywords...&#10;(K) Applying filters..." autocomplete="off" spellcheck="false"></textarea>
+            <label>Conclusion Text (Optional):</label><textarea id="feedStConclusion" rows="2" placeholder="Leave blank if no conclusion text needed..." autocomplete="off" spellcheck="false"></textarea>
           </div>
 
           <div id="feed-passage-fields" style="display:none; background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);">
-            <h4 style="color:#38bdf8; margin-bottom:6px;">📖 Passage / Comprehension & Questions Builder</h4>
+            <h4 style="color:#38bdf8; margin-bottom:6px;">📖 Passage / Comprehension &amp; Questions Builder</h4>
             <label>Passage Paragraph Text:</label>
-            <textarea id="feedPassageText" rows="4" placeholder="Enter passage text..."></textarea>
+            <textarea id="feedPassageText" rows="4" placeholder="Enter passage text..." autocomplete="off" spellcheck="false"></textarea>
             
             <label style="margin-top:10px;">Passage Sub-Questions (Add questions based on above passage):</label>
             <div id="passageSubQuestionsList" style="display:flex; flex-direction:column; gap:12px; margin-bottom:10px;"></div>
@@ -300,16 +307,16 @@
           </div>
 
           <div id="feed-standard-body-wrap">
-            <label>Question Body / Instruction Text:</label>
-            <textarea id="feedText" rows="3" placeholder="Enter question text or instruction..."></textarea>
+            <label>Question Body / Instruction Text (Supports Math symbols like √, ∫, π, ±, ≤, ≥, etc.):</label>
+            <textarea id="feedText" rows="3" placeholder="Enter question text or instruction..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
           </div>
 
           <div id="feed-standard-options-wrap">
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-              <div><label>Option (A)</label><input type="text" id="feedA" placeholder="e.g. Both 1 and 2"></div>
-              <div><label>Option (B)</label><input type="text" id="feedB" placeholder="e.g. Only 1"></div>
-              <div><label>Option (C)</label><input type="text" id="feedC" placeholder="e.g. Only 2"></div>
-              <div><label>Option (D)</label><input type="text" id="feedD" placeholder="e.g. Neither 1 nor 2"></div>
+              <div><label>Option (A)</label><input type="text" id="feedA" placeholder="e.g. Both 1 and 2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+              <div><label>Option (B)</label><input type="text" id="feedB" placeholder="e.g. Only 1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+              <div><label>Option (C)</label><input type="text" id="feedC" placeholder="e.g. Only 2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+              <div><label>Option (D)</label><input type="text" id="feedD" placeholder="e.g. Neither 1 nor 2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
             </div>
 
             <div style="display:grid; grid-template-columns: 140px 1fr; gap:10px;">
@@ -321,7 +328,7 @@
               </div>
               <div>
                 <label>Explanation</label>
-                <textarea id="feedExpl" rows="2" placeholder="Explanation..."></textarea>
+                <textarea id="feedExpl" rows="2" placeholder="Explanation..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
               </div>
             </div>
           </div>
@@ -340,12 +347,12 @@
         
         <div class="selector-grid" id="adminPracSelectorGrid" onscroll="updateSwipeIndicator('adminPracSelectorGrid', 'adminPracSwipeDots')">
           <div class="selector-card active" id="btnAdminPracTopic" onclick="switchAdminQuizSubMode('topic')">
-            <h4 style="color:#10b981; margin-bottom:4px;">Instant Practice & Quiz</h4>
-            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Immediate feedback & verification</p>
+            <h4 style="color:#10b981; margin-bottom:4px;">Instant Practice &amp; Quiz</h4>
+            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Immediate feedback &amp; verification</p>
           </div>
           <div class="selector-card" id="btnAdminPracNcert" onclick="switchAdminQuizSubMode('ncert')">
             <h4 style="color:#38bdf8; margin-bottom:4px;">NCERT Based PYQ</h4>
-            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Book & chapter wise practice</p>
+            <p style="color:var(--muted); font-size:0.75rem; margin:0;">Book &amp; chapter wise practice</p>
           </div>
           <div class="selector-card" id="btnAdminPracExam" onclick="switchAdminQuizSubMode('exam')">
             <h4 style="color:#facc15; margin-bottom:4px;">Exam Based PYQ</h4>
@@ -438,36 +445,212 @@
       </div>
 
       <div id="adminQuizPlayer" class="card" style="display:none;">
-        <div class="q-header-bar">
-          <div class="q-header-left">
-            <button class="btn btn-secondary btn-sm" onclick="backToQuizConfig()" title="Back">⬅️ Back</button>
-            <span id="aqCounter" style="color:#60a5fa; font-weight:bold; font-size:1.02rem;">Q 1</span>
-            <span class="badge-exam-tag" id="aqExamBadge">PYQ</span>
+        <div id="adminQuizPlayView">
+          <div class="q-header-bar">
+            <div class="q-header-left">
+              <button class="btn btn-secondary btn-sm" onclick="backToQuizConfig()" title="Back">⬅️ Back</button>
+              <span id="aqCounter" style="color:#60a5fa; font-weight:bold; font-size:1.02rem;">Q 1</span>
+              <span class="badge-exam-tag" id="aqExamBadge">PYQ</span>
+            </div>
+            <div class="q-header-right">
+              <button class="btn btn-secondary btn-sm" onclick="openEditModalForCurrentQ()" title="Edit Question">✏️ Edit</button>
+            </div>
           </div>
-          <div class="q-header-right">
-            <button class="btn btn-secondary btn-sm" onclick="openEditModalForCurrentQ()" title="Edit Question">✏️ Edit</button>
+
+          <div class="formatted-text" id="aqBody"></div>
+          <div id="aqMatchWrap"></div>
+          <div id="aqOpts"></div>
+          <div id="aqExpl" class="expl-box" style="display:none;"></div>
+          
+          <div style="display:flex; justify-content:space-between; margin-top:15px;">
+            <button class="btn btn-secondary" onclick="moveAdminQuizQ(-1)">Previous</button>
+            <button class="btn" id="aqNextBtn" onclick="moveAdminQuizQ(1)">Next</button>
           </div>
         </div>
 
-        <div class="formatted-text" id="aqBody"></div>
-        <div id="aqMatchWrap"></div>
-        <div id="aqOpts"></div>
-        <div id="aqExpl" class="expl-box" style="display:none;"></div>
-        
-        <div style="display:flex; justify-content:space-between; margin-top:15px;">
-          <button class="btn btn-secondary" onclick="moveAdminQuizQ(-1)">Previous</button>
-          <button class="btn" id="aqNextBtn" onclick="moveAdminQuizQ(1)">Next</button>
+        <div id="adminQuizResultView" style="display:none;">
+          <h3>📊 Quiz Result &amp; Performance Summary</h3>
+          <div id="adminQuizResultSummaryBox" style="background:var(--card-inner); padding:16px; border-radius:12px; border:1px solid var(--border); margin:15px 0;"></div>
+          <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button class="btn btn-secondary" onclick="backToQuizConfig()">Back to Setup</button>
+          </div>
         </div>
       </div>
+    </div>
+
+    <!-- TAB 3: CUSTOM SECTION-WISE FLT & RESULTS -->
+    <div id="adminTabFlt" class="admin-tab-view" style="display:none;">
+      
+      <!-- Sub Nav for FLT Builder vs Results History -->
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <button class="btn btn-secondary" id="btnFltTabBuilder" onclick="switchFltSubTab('builder')" style="flex:1; background:var(--primary);">🚀 Custom FLT Builder</button>
+        <button class="btn btn-secondary" id="btnFltTabHistory" onclick="switchFltSubTab('history')" style="flex:1;">📊 Results History</button>
+      </div>
+
+      <!-- FLT BUILDER VIEW -->
+      <div id="fltBuilderSubView">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+            <h3 style="margin:0; color:#38bdf8;">Custom Section-wise FLT Builder</h3>
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              <span id="fltTotalDbBadge" style="background:rgba(59,130,246,0.2); border:1px solid var(--primary); color:#93c5fd; padding:5px 10px; border-radius:8px; font-size:0.78rem; font-weight:bold;">Total DB Qs: 0</span>
+              <button class="btn btn-secondary btn-sm" onclick="resetFltBuilder()">Reset All</button>
+            </div>
+          </div>
+          <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">Select exam sections, customize sequence order [▲/▼], and choose specific topics according to your syllabus[span_1](start_span)[span_1](end_span).</p>
+
+          <!-- Template Saving & Loading Bar -->
+          <div style="background:var(--card-inner); padding:12px; border-radius:12px; border:1px solid var(--border); margin-bottom:16px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <select id="fltSavedTemplatesSelect" style="flex:1; margin-bottom:0;"><option value="">-- Load Saved Test Structure Template --</option></select>
+            <button class="btn btn-secondary btn-sm" onclick="loadFltTemplate()">📥 Load Template</button>
+            <button class="btn btn-secondary btn-sm" onclick="saveCurrentFltTemplate()">💾 Save as Template</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteFltTemplate()">🗑️ Delete</button>
+          </div>
+
+          <!-- Fully Optimized Responsive Grid for Top Controls -->
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px; align-items:flex-end;">
+            <div>
+              <label>Custom Test Name</label>
+              <input type="text" id="fltCustomTestName" placeholder="e.g. CGPSC Prelims Mock 1" style="margin-bottom:0;" autocomplete="off">
+            </div>
+            <div>
+              <label>Test Timer Duration</label>
+              <select id="fltTestDuration" style="margin-bottom:0;">
+                <option value="15">15 Min</option>
+                <option value="30">30 Min</option>
+                <option value="45">45 Min</option>
+                <option value="60" selected>60 Min</option>
+                <option value="90">90 Min</option>
+                <option value="120">120 Min</option>
+              </select>
+            </div>
+            <div>
+              <label>Minus Marking</label>
+              <select id="fltMinusMarking" style="margin-bottom:0;">
+                <option value="-0.33">-0.33 (1/3rd)</option>
+                <option value="-0.25">-0.25 (1/4th)</option>
+                <option value="-0.5">-0.50 (1/2)</option>
+                <option value="0" selected>0 (No Negative)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="color:#facc15; font-size:0.82rem; margin-bottom:12px; font-weight:bold;">
+            💡 Sequence Order: Use ▲ / ▼ buttons on any section to set test sequence. Real CGPSC &amp; CGVYAPAM format[span_2](start_span)[span_2](end_span).
+          </div>
+
+          <!-- SECTIONS CONTAINER -->
+          <div id="fltSectionsContainer" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;"></div>
+
+          <!-- Live Configuration Summary Panel & Start Test Button -->
+          <div style="background:var(--card-inner); padding:16px; border-radius:12px; border:1px solid var(--border); margin-bottom:16px;">
+            <h4 style="color:#38bdf8; margin-bottom:8px; font-size:0.95rem;">📋 Test Configuration Summary</h4>
+            <div id="fltConfigSummaryBox" style="font-size:0.85rem; color:#cbd5e1; margin-bottom:12px; line-height:1.4;">Configure sections and question counts above to see summary.</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <strong style="font-size:0.95rem; color:#cbd5e1;">Total Configured Questions: <span id="fltTotalConfiguredCount" style="color:#34d399;">0</span></strong>
+              <button class="btn btn-success" onclick="startCustomFltTest()">Start Custom Mock Test</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS HISTORY SUBVIEW -->
+      <div id="fltHistorySubView" style="display:none;">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h3 style="margin:0; color:#38bdf8;">📊 Saved Test Results History</h3>
+            <button class="btn btn-danger btn-sm" onclick="clearAllResultsHistory()">🗑️ Clear History</button>
+          </div>
+          <div id="fltResultsHistoryList" style="display:flex; flex-direction:column; gap:10px;">
+            <p style="color:var(--muted); font-size:0.88rem;">No test results recorded yet. Take a Custom FLT test to see performance summary here.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>
 
 </div>
 
+<!-- CUSTOM FLT FULL-PAGE TEST WORKSPACE -->
+<div id="fltFullPageTestWorkspace" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:var(--bg); z-index:2000; overflow-y:auto; padding:12px; text-align:left;">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; min-height:96vh;">
+    
+    <!-- Top Player Header Bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:8px; flex-wrap:wrap; gap:8px; background:var(--card); padding:10px 14px; border-radius:12px;">
+      <div>
+        <h3 id="fltPlayerTestTitle" style="margin:0; color:#60a5fa; font-size:1.05rem;">Custom FLT Mock Test</h3>
+        <span id="fltPlayerSectionBadge" class="badge-exam-tag" style="margin-top:3px; display:inline-block;">Section</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <div id="fltPlayerTimerBox" style="background:rgba(245,158,11,0.15); border:1px solid var(--warning); color:#f59e0b; padding:5px 10px; border-radius:8px; font-weight:bold; font-size:0.9rem;">⏱️ 00:00</div>
+        <button class="btn btn-secondary btn-sm" onclick="toggleFltPaletteDrawer()">📂 Question Palette</button>
+        <button class="btn btn-danger btn-sm" onclick="quitFltTest()">❌ Quit Test</button>
+      </div>
+    </div>
+
+    <!-- Main Test Workspace Layout -->
+    <div style="display:flex; gap:12px; position:relative; flex:1; align-items:flex-start; flex-wrap:wrap; padding-bottom:30px;">
+      
+      <!-- Left Question View Box -->
+      <div class="card" style="flex:1; min-width:280px; display:flex; flex-direction:column; justify-content:space-between; margin-bottom:0; min-height:420px; overflow-y:auto; max-height:80vh;">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong id="fltPlayerQCounter" style="color:#38bdf8;">Question 1</strong>
+            <span id="fltPlayerExamTag" style="font-size:0.78rem; color:var(--muted);">PYQ</span>
+          </div>
+          <div class="formatted-text" id="fltPlayerBody"></div>
+          <div id="fltPlayerMatchWrap"></div>
+          <div id="fltPlayerOpts" style="margin-top:10px;"></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; border-top:1px solid var(--border); padding-top:12px; flex-wrap:wrap; gap:8px; background:var(--card); position:sticky; bottom:0; z-index:10;">
+          <button class="btn btn-secondary" onclick="moveFltPlayerQ(-1)">Previous</button>
+          <button class="btn btn-success" id="fltPlayerMarkReviewBtn" onclick="markFltQForReview()">Mark for Review &amp; Next</button>
+          <button class="btn" id="fltPlayerNextBtn" onclick="moveFltPlayerQ(1)">Save &amp; Next</button>
+        </div>
+      </div>
+
+      <!-- Right Sliding Question Palette Drawer -->
+      <div id="fltPaletteDrawer" style="display:none; width:100%; max-width:320px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:15px; max-height:480px; overflow-y:auto; flex-shrink:0; box-shadow: 0 10px 40px rgba(0,0,0,0.7);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+          <strong style="font-size:0.95rem; color:#cbd5e1;">📋 Question Palette</strong>
+          <button class="btn btn-secondary btn-sm" onclick="toggleFltPaletteDrawer()" style="padding:2px 8px;">✕</button>
+        </div>
+        
+        <div style="display:flex; flex-direction:column; gap:8px; font-size:0.82rem; margin-bottom:14px; background:var(--card-inner); padding:10px; border-radius:8px; border:1px solid var(--border);">
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:14px; height:14px; background:#10b981; border-radius:3px; flex-shrink:0;"></span><span style="color:#cbd5e1;">Answered</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:14px; height:14px; background:#ef4444; border-radius:3px; flex-shrink:0;"></span><span style="color:#cbd5e1;">Not Answered</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:14px; height:14px; background:#8b5cf6; border-radius:3px; flex-shrink:0;"></span><span style="color:#cbd5e1;">Marked for Review</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:14px; height:14px; background:#334155; border-radius:3px; flex-shrink:0;"></span><span style="color:#cbd5e1;">Not Visited</span></div>
+        </div>
+        
+        <div id="fltPaletteSectionWiseContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FLT RESULT SUMMARY MODAL -->
+<div class="modal-backdrop" id="fltResultModal">
+  <div class="modal-content" style="max-width: 650px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px;">
+    <h3 style="color:#34d399; margin-bottom:14px;">🎉 Test Submitted Successfully!</h3>
+    <div id="fltResultSummaryBox" style="background:var(--card-inner); padding:16px; border-radius:12px; border:1px solid var(--border); margin-bottom:16px; display:flex; flex-direction:column; gap:8px;"></div>
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+      <button class="btn btn-secondary" onclick="downloadWrongUnattemptedPdf()" style="background:#8b5cf6;">📥 Download Wrong/Unattempted PDF</button>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary" onclick="closeFltResultModalAndGoHistory()">View in Results History</button>
+        <button class="btn" onclick="closeFltResultModal()">Back to Builder</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- EDIT QUESTION MODAL -->
 <div class="modal-backdrop" id="editQuestionModal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width: 750px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
       <h3>✏️ Edit Question</h3>
       <button class="btn btn-secondary" onclick="closeEditModal()" style="padding:4px 10px;">✕</button>
@@ -534,7 +717,7 @@
       <label>Question Type</label>
       <select id="editType" onchange="toggleEditQTypeFields(this.value)">
         <option value="standard">Standard MCQ</option>
-        <option value="ar">Assertion & Reasoning</option>
+        <option value="ar">Assertion &amp; Reasoning</option>
         <option value="match">Match the Following</option>
         <option value="statement">Statement Question</option>
         <option value="passage">Passage / Comprehension</option>
@@ -569,19 +752,19 @@
       </div>
 
       <div id="edit-standard-body-wrap">
-        <label>Question Text / Body / Instruction Text</label><textarea id="editText" rows="3"></textarea>
+        <label>Question Text / Body / Instruction Text</label><textarea id="editText" rows="3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       </div>
 
       <div id="edit-standard-options-wrap">
         <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
-          <div><label>Opt A</label><input type="text" id="editA"></div>
-          <div><label>Opt B</label><input type="text" id="editB"></div>
-          <div><label>Opt C</label><input type="text" id="editC"></div>
-          <div><label>Opt D</label><input type="text" id="editD"></div>
+          <div><label>Opt A</label><input type="text" id="editA" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+          <div><label>Opt B</label><input type="text" id="editB" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+          <div><label>Opt C</label><input type="text" id="editC" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
+          <div><label>Opt D</label><input type="text" id="editD" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></div>
         </div>
         <label>Correct Answer</label>
         <select id="editAns"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
-        <label>Explanation</label><textarea id="editExpl" rows="2"></textarea>
+        <label>Explanation</label><textarea id="editExpl" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
       </div>
       
       <div style="display:flex; justify-content:space-between; margin-top:15px;">
@@ -594,12 +777,88 @@
 
 <!-- LIVE PREVIEW MODAL -->
 <div class="modal-backdrop" id="livePreviewModal">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width: 750px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
       <h3>👁️ Question Live Preview</h3>
       <button class="btn btn-secondary" onclick="closeLivePreviewModal()" style="padding:4px 10px;">✕</button>
     </div>
     <div id="livePreviewBox" style="background:var(--card-inner); padding:15px; border-radius:12px; border:1px solid var(--border);"></div>
+  </div>
+</div>
+
+<!-- STORAGE & EXPORT/IMPORT MODAL -->
+<div class="modal-backdrop" id="storageDetailsModal">
+  <div class="modal-content" style="max-width: 480px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="margin:0; color:#38bdf8;">📊 App Storage, Sync &amp; Export</h3>
+      <button class="btn btn-secondary" onclick="toggleStorageModal()" style="padding:4px 10px;">✕</button>
+    </div>
+    <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">Manage device storage, export all questions to JSON, and sync data across devices.</p>
+    
+    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+      <div style="background:var(--card-inner); padding:12px 14px; border-radius:10px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.88rem; color:#cbd5e1;">Total Cached Questions:</span>
+        <strong id="stTotalQsCount" style="color:#60a5fa;">0 Qs</strong>
+      </div>
+      <div style="background:var(--card-inner); padding:12px 14px; border-radius:10px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.88rem; color:#cbd5e1;">Questions Cache Size:</span>
+        <strong id="stQuestionsMemorySize" style="color:#34d399;">0 KB</strong>
+      </div>
+      <div style="background:var(--card-inner); padding:12px 14px; border-radius:10px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.88rem; color:#cbd5e1;">Total LocalStorage Used:</span>
+        <strong id="stTotalLocalStorage" style="color:#f472b6;">0 KB</strong>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg, rgba(30, 58, 138, 0.45), rgba(59, 130, 246, 0.2)); border:1px solid #3b82f6; padding:12px 14px; border-radius:12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <strong style="color:#60a5fa; font-size:0.95rem; display:block;">🗂️ Manage Subjects in GS Category</strong>
+        <span style="color:#cbd5e1; font-size:0.75rem;">Edit names, delete subjects, or move categories</span>
+      </div>
+      <button class="btn btn-sm" onclick="openManageSubjectsModal()" style="font-size:0.8rem; padding:6px 12px; white-space:nowrap; background:#2563eb;">Manage ➔</button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      <button class="btn btn-secondary btn-sm" style="width:100%; justify-content:center;" onclick="exportAllQuestionsJson()">📦 Export All Questions (JSON)</button>
+      <button class="btn btn-secondary btn-sm" style="width:100%; justify-content:center;" onclick="exportAppDataBackup()">💾 Export Data Backup (FLT &amp; Results)</button>
+      <button class="btn btn-secondary btn-sm" style="width:100%; justify-content:center;" onclick="document.getElementById('importBackupFileInput').click()">📥 Import Data Backup</button>
+      <input type="file" id="importBackupFileInput" style="display:none;" accept=".json" onchange="importAppDataBackup(event)">
+      <button class="btn btn-danger btn-sm" style="width:100% ; justify-content:center;" onclick="clearLocalCacheStorage()">🗑️ Clear Local Cache</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE SUBJECTS IN GS CATEGORY MODAL -->
+<div class="modal-backdrop" id="manageSubjectsModal">
+  <div class="modal-content" style="max-width: 680px; margin: 30px auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; max-height: 90vh; overflow-y: auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:8px;">
+      <h3 style="margin:0; color:#38bdf8;">🗂️ Manage Subjects in GS Category</h3>
+      <button class="btn btn-secondary btn-sm" onclick="closeManageSubjectsModal()" style="padding:4px 10px;">✕</button>
+    </div>
+    <p style="color:var(--muted); font-size:0.82rem; margin-bottom:14px;">
+      Easily edit subject names, delete unwanted subjects from Feed/Quiz dropdowns, or move subjects between categories.
+    </p>
+
+    <!-- Category Filter Tabs -->
+    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+      <button class="btn btn-secondary btn-sm" id="btnManageCatIndian" onclick="switchManageCatTab('indian')" style="background:var(--primary);">🇮🇳 Indian GS (<span id="countManageIndian">0</span>)</button>
+      <button class="btn btn-secondary btn-sm" id="btnManageCatCg" onclick="switchManageCatTab('cg')">🏛️ CG GS (<span id="countManageCg">0</span>)</button>
+      <button class="btn btn-secondary btn-sm" id="btnManageCatOther" onclick="switchManageCatTab('other')">📚 Other Subjects (<span id="countManageOther">0</span>)</button>
+    </div>
+
+    <!-- Quick Add New Subject to Active Category -->
+    <div style="background:var(--card-inner); padding:10px 12px; border-radius:10px; border:1px solid var(--border); margin-bottom:14px; display:flex; gap:8px; align-items:center;">
+      <input type="text" id="newSubjectInputManage" placeholder="Type new subject name to add..." style="margin-bottom:0; flex:1; font-size:0.85rem;" autocomplete="off">
+      <button class="btn btn-success btn-sm" onclick="addNewSubjectFromManager()">+ Add Subject</button>
+    </div>
+
+    <!-- Subject List for the Selected Category -->
+    <div id="manageSubjectsListContainer" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:12px; flex-wrap:wrap; gap:8px;">
+      <button class="btn btn-secondary btn-sm" onclick="resetAllCategoriesToDefault()">↺ Reset Categories to Default</button>
+      <button class="btn btn-sm" onclick="closeManageSubjectsModal()">Done</button>
+    </div>
   </div>
 </div>
 
@@ -613,9 +872,9 @@
 <datalist id="datalistNcertClasses"></datalist>
 <datalist id="datalistNcertParts"></datalist>
 <datalist id="datalistNcertChapters"></datalist>
+<datalist id="datalistAllDbSubjects"></datalist>
 
 <script>
-  // EXACT FIREBASE PROJECT CONFIGURATION FOR crackcgpsc-2ca60
   const firebaseConfig = {
     apiKey: "AIzaSyAozn3dx9h874oCBX120p7MYye6dyjPKmE",
     authDomain: "crackcgpsc-2ca60.firebaseapp.com",
@@ -662,15 +921,345 @@
     grid.scrollTo({ left: cardWidth * idx, behavior: 'smooth' });
   }
 
-  let indianGsSubs = ["Indian History", "Polity", "Economy", "General Science", "Indian Geography", "Computer", "Hindi", "English"];
-  let cgGsSubs = ["CG History", "CG Geography", "CG Tribes", "CG Art & Culture", "CG Language", "CG Administration", "CG Panchayati Raj", "CG Economy", "CG General Knowledge"];
-  let otherSubs = ["CDP", "General Mental Ability", "Maths", "Current Affairs"];
+  function toggleQTypeFields(type) {
+    const ar = document.getElementById('feed-ar-fields');
+    const match = document.getElementById('feed-match-fields');
+    const st = document.getElementById('feed-statement-fields');
+    const passage = document.getElementById('feed-passage-fields');
+    const bodyWrap = document.getElementById('feed-standard-body-wrap');
+    const optsWrap = document.getElementById('feed-standard-options-wrap');
+
+    if (ar) ar.style.display = (type === 'ar') ? 'block' : 'none';
+    if (match) match.style.display = (type === 'match') ? 'block' : 'none';
+    if (st) st.style.display = (type === 'statement') ? 'block' : 'none';
+    if (passage) passage.style.display = (type === 'passage') ? 'block' : 'none';
+    if (bodyWrap) bodyWrap.style.display = (type === 'standard' || type === 'match') ? 'block' : 'none';
+    if (optsWrap) optsWrap.style.display = (type === 'passage') ? 'none' : 'block';
+  }
+
+  function toggleEditQTypeFields(type) {
+    const ar = document.getElementById('edit-ar-fields');
+    const match = document.getElementById('edit-match-fields');
+    const st = document.getElementById('edit-statement-fields');
+    const passage = document.getElementById('edit-passage-fields');
+    const bodyWrap = document.getElementById('edit-standard-body-wrap');
+    const optsWrap = document.getElementById('edit-standard-options-wrap');
+
+    if (ar) ar.style.display = (type === 'ar') ? 'block' : 'none';
+    if (match) match.style.display = (type === 'match') ? 'block' : 'none';
+    if (st) st.style.display = (type === 'statement') ? 'block' : 'none';
+    if (passage) passage.style.display = (type === 'passage') ? 'block' : 'none';
+    if (bodyWrap) bodyWrap.style.display = (type === 'standard' || type === 'match') ? 'block' : 'none';
+    if (optsWrap) optsWrap.style.display = (type === 'passage') ? 'none' : 'block';
+  }
+
+  function toggleNcertContainer() {
+    const chk = document.getElementById('feedNcertCheck');
+    const container = document.getElementById('feedNcertContainer');
+    if (!container || !chk) return;
+    container.style.display = chk.checked ? 'grid' : 'none';
+    if (chk.checked) {
+      if (!document.getElementById('feedNcertBook').value) {
+        document.getElementById('feedNcertBook').value = 'NCERT';
+      }
+      updateNcertClassesForFeed();
+    }
+  }
+
+  function toggleEditNcertContainer() {
+    const chk = document.getElementById('editNcertCheck');
+    const container = document.getElementById('editNcertContainer');
+    if (!container || !chk) return;
+    container.style.display = chk.checked ? 'grid' : 'none';
+    if (chk.checked) {
+      if (!document.getElementById('editNcertBook').value) {
+        document.getElementById('editNcertBook').value = 'NCERT';
+      }
+      updateNcertClassesForEdit();
+    }
+  }
+
+  let defaultIndianGsSubs = ["Indian History", "Polity", "Economy", "General Science", "Indian Geography", "Indian Philosophy", "Art & Culture", "Current Affairs", "Computer", "Hindi", "English"];
+  let defaultCgGsSubs = ["CG History", "CG Geography", "CG Tribes", "CG Art & Culture", "CG Language", "CG Administration", "CG Panchayati Raj", "CG Economy", "CG General Knowledge"];
+  let defaultOtherSubs = ["CDP", "General Mental Ability", "Maths", "Current Affairs", "Social Science Pedagogy"];
+
+  let indianGsSubs = JSON.parse(localStorage.getItem('cg_indian_subs')) || [...defaultIndianGsSubs];
+  let cgGsSubs = JSON.parse(localStorage.getItem('cg_cg_subs')) || [...defaultCgGsSubs];
+  let otherSubs = JSON.parse(localStorage.getItem('cg_other_subs')) || [...defaultOtherSubs];
+
+  // Ensure Social Science Pedagogy is removed from Indian GS and present in Other Subjects
+  indianGsSubs = indianGsSubs.filter(s => s.toLowerCase() !== "social science pedagogy");
+  if(!otherSubs.some(s => s.toLowerCase() === "social science pedagogy")) {
+    otherSubs.push("Social Science Pedagogy");
+  }
+  localStorage.setItem('cg_indian_subs', JSON.stringify(indianGsSubs));
+  localStorage.setItem('cg_other_subs', JSON.stringify(otherSubs));
   
-  let subjects = JSON.parse(localStorage.getItem('cg_subs')) || [...indianGsSubs, ...cgGsSubs, ...otherSubs];
-  let questions = [];
+  let subjects = JSON.parse(localStorage.getItem('cg_subs')) || [...new Set([...indianGsSubs, ...cgGsSubs, ...otherSubs])];
+  let questions = JSON.parse(localStorage.getItem('cg_admin_cached_questions')) || [];
   let adminQuizList = [];
   let adminQuizIdx = 0;
   let userResponses = {};
+  let lastSubmittedWrongUnattemptedList = [];
+
+  function saveCategoriesToStorage() {
+    localStorage.setItem('cg_indian_subs', JSON.stringify(indianGsSubs));
+    localStorage.setItem('cg_cg_subs', JSON.stringify(cgGsSubs));
+    localStorage.setItem('cg_other_subs', JSON.stringify(otherSubs));
+    subjects = [...new Set([...indianGsSubs, ...cgGsSubs, ...otherSubs])];
+    localStorage.setItem('cg_subs', JSON.stringify(subjects));
+    populateDropdowns();
+    updateAdminDatalists();
+    populateDbSubjectsDatelist();
+  }
+
+  // --- MANAGE SUBJECTS IN GS CATEGORY MODAL LOGIC ---
+  let activeManageCategory = 'indian';
+
+  function openManageSubjectsModal() {
+    const stModal = document.getElementById('storageDetailsModal');
+    if(stModal) stModal.style.display = 'none';
+    const modal = document.getElementById('manageSubjectsModal');
+    if(!modal) return;
+    modal.style.display = 'block';
+    renderManageSubjectsUI();
+  }
+
+  function closeManageSubjectsModal() {
+    const modal = document.getElementById('manageSubjectsModal');
+    if(modal) modal.style.display = 'none';
+  }
+
+  function switchManageCatTab(cat) {
+    activeManageCategory = cat;
+    renderManageSubjectsUI();
+  }
+
+  function renderManageSubjectsUI() {
+    const btnInd = document.getElementById('btnManageCatIndian');
+    const btnCg = document.getElementById('btnManageCatCg');
+    const btnOth = document.getElementById('btnManageCatOther');
+    if(btnInd) btnInd.style.background = (activeManageCategory === 'indian') ? 'var(--primary)' : '#334155';
+    if(btnCg) btnCg.style.background = (activeManageCategory === 'cg') ? 'var(--primary)' : '#334155';
+    if(btnOth) btnOth.style.background = (activeManageCategory === 'other') ? 'var(--primary)' : '#334155';
+
+    const countIndEl = document.getElementById('countManageIndian');
+    const countCgEl = document.getElementById('countManageCg');
+    const countOthEl = document.getElementById('countManageOther');
+    if(countIndEl) countIndEl.innerText = indianGsSubs.length;
+    if(countCgEl) countCgEl.innerText = cgGsSubs.length;
+    if(countOthEl) countOthEl.innerText = otherSubs.length;
+
+    const container = document.getElementById('manageSubjectsListContainer');
+    if(!container) return;
+
+    let list = (activeManageCategory === 'indian') ? indianGsSubs : ((activeManageCategory === 'cg') ? cgGsSubs : otherSubs);
+    let catTitle = (activeManageCategory === 'indian') ? 'Indian GS' : ((activeManageCategory === 'cg') ? 'CG GS' : 'Other Subjects');
+
+    if(list.length === 0) {
+      container.innerHTML = `<div style="color:var(--muted); font-size:0.85rem; padding:16px; text-align:center;">No subjects in ${catTitle}. Type above to add one.</div>`;
+      return;
+    }
+
+    container.innerHTML = list.map((s, idx) => {
+      let qCount = questions.filter(q => (q.subject || '').trim().toLowerCase() === s.trim().toLowerCase()).length;
+      return `
+        <div style="background:var(--card-inner); border:1px solid var(--border); border-radius:10px; padding:10px 14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <strong style="color:#f1f5f9; font-size:0.92rem;">${s}</strong>
+            <span style="font-size:0.75rem; color:#93c5fd; margin-left:6px; background:rgba(59,130,246,0.15); padding:2px 6px; border-radius:4px;">${qCount} Qs</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <select onchange="moveSubjectToCategory('${activeManageCategory}', ${idx}, this.value)" style="width:auto; margin-bottom:0; font-size:0.78rem; padding:4px 8px; background:#1e293b; color:#cbd5e1; border:1px solid var(--border);" title="Move to another category">
+              <option value="">Move Category ▾</option>
+              ${activeManageCategory !== 'indian' ? '<option value="indian">➡️ Indian GS</option>' : ''}
+              ${activeManageCategory !== 'cg' ? '<option value="cg">🏛️ CG GS</option>' : ''}
+              ${activeManageCategory !== 'other' ? '<option value="other">📚 Other Subjects</option>' : ''}
+            </select>
+            <button class="btn btn-secondary btn-sm" onclick="renameSubjectPrompt('${activeManageCategory}', ${idx})" style="font-size:0.78rem; padding:4px 8px;" title="Rename Subject">✏️ Rename</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteSubjectFromCategory('${activeManageCategory}', ${idx})" style="font-size:0.78rem; padding:4px 8px;" title="Delete Subject">🗑️</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function addNewSubjectFromManager() {
+    const input = document.getElementById('newSubjectInputManage');
+    if(!input) return;
+    let name = input.value.trim();
+    if(!name) return alert('Please enter a subject name!');
+    
+    let list = (activeManageCategory === 'indian') ? indianGsSubs : ((activeManageCategory === 'cg') ? cgGsSubs : otherSubs);
+    if(list.some(s => s.toLowerCase() === name.toLowerCase())) {
+      return alert(`"${name}" already exists in this category!`);
+    }
+
+    list.push(name);
+    if(!subjects.includes(name)) subjects.push(name);
+    input.value = '';
+    saveCategoriesToStorage();
+    renderManageSubjectsUI();
+    alert(`✅ "${name}" added to ${activeManageCategory === 'indian' ? 'Indian GS' : (activeManageCategory === 'cg' ? 'CG GS' : 'Other Subjects')}!`);
+  }
+
+  function renameSubjectPrompt(cat, idx) {
+    let list = (cat === 'indian') ? indianGsSubs : ((cat === 'cg') ? cgGsSubs : otherSubs);
+    let oldName = list[idx];
+    let newName = prompt(`Rename subject "${oldName}" to:`, oldName);
+    if(!newName || newName.trim() === '' || newName.trim() === oldName) return;
+    newName = newName.trim();
+
+    list[idx] = newName;
+    let sIdx = subjects.indexOf(oldName);
+    if(sIdx !== -1) subjects[sIdx] = newName;
+    else subjects.push(newName);
+
+    let matchedQs = questions.filter(q => q.subject === oldName);
+    if(matchedQs.length > 0) {
+      if(confirm(`Update ${matchedQs.length} question(s) in local cache to have subject "${newName}"?`)) {
+        questions.forEach(q => {
+          if(q.subject === oldName) q.subject = newName;
+        });
+        localStorage.setItem('cg_admin_cached_questions', JSON.stringify(questions));
+        localStorage.setItem('cg_cached_questions', JSON.stringify(questions));
+      }
+    }
+
+    saveCategoriesToStorage();
+    renderManageSubjectsUI();
+  }
+
+  function moveSubjectToCategory(fromCat, idx, toCat) {
+    if(!toCat) return;
+    let fromList = (fromCat === 'indian') ? indianGsSubs : ((fromCat === 'cg') ? cgGsSubs : otherSubs);
+    let toList = (toCat === 'indian') ? indianGsSubs : ((toCat === 'cg') ? cgGsSubs : otherSubs);
+    let item = fromList[idx];
+
+    fromList.splice(idx, 1);
+    if(!toList.some(s => s.toLowerCase() === item.toLowerCase())) {
+      toList.push(item);
+    }
+    saveCategoriesToStorage();
+    renderManageSubjectsUI();
+    alert(`✅ "${item}" moved to ${toCat === 'indian' ? 'Indian GS' : (toCat === 'cg' ? 'CG GS' : 'Other Subjects')} successfully!`);
+  }
+
+  function deleteSubjectFromCategory(cat, idx) {
+    let list = (cat === 'indian') ? indianGsSubs : ((cat === 'cg') ? cgGsSubs : otherSubs);
+    let item = list[idx];
+    if(!confirm(`Delete subject "${item}" from this category? It will no longer appear in the Feed/Quiz dropdowns.`)) return;
+
+    list.splice(idx, 1);
+    subjects = subjects.filter(s => s !== item);
+    saveCategoriesToStorage();
+    renderManageSubjectsUI();
+  }
+
+  function resetAllCategoriesToDefault() {
+    if(!confirm('Reset all categories (Indian GS, CG GS, Other) to default subject lists?')) return;
+    indianGsSubs = [...defaultIndianGsSubs];
+    cgGsSubs = [...defaultCgGsSubs];
+    otherSubs = [...defaultOtherSubs];
+    saveCategoriesToStorage();
+    renderManageSubjectsUI();
+    alert('↺ Categories reset to default successfully!');
+  }
+
+  // --- DEFAULT FLT SECTIONS TEMPLATE & STATE ---
+  const DEFAULT_FLT_SECTIONS_TEMPLATE = [
+    { id: 'indian_gs', title: '🇮🇳 Indian General Studies', enabled: true, subjects: [
+      { name: 'Indian History', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Polity', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Economy', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'General Science', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Indian Geography', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Indian Philosophy', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Art & Culture', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Current Affairs', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'cg_gs', title: '🏛️ Chhattisgarh General Studies', enabled: true, subjects: [
+      { name: 'CG History', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Geography', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Tribes', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Art & Culture', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Language', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Administration', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Panchayati Raj', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Economy', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG General Knowledge', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'gen_knowledge', title: '📚 General Knowledge', enabled: true, subjects: [
+      { name: 'Polity', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Indian History', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Indian Geography', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Economy', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'General Science', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG History', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Geography', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Tribes', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Art & Culture', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Language', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Administration', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Panchayati Raj', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG Economy', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'CG General Knowledge', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 },
+      { name: 'Current Affairs', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'history_sec', title: '📜 Indian History', enabled: true, subjects: [
+      { name: 'Indian History', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'polity_sec', title: '⚖️ Polity', enabled: true, subjects: [
+      { name: 'Polity', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'geo_sec', title: '🌍 Indian Geography', enabled: true, subjects: [
+      { name: 'Indian Geography', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'econ_sec', title: '📈 Economy', enabled: true, subjects: [
+      { name: 'Economy', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'sci_sec', title: '🔬 General Science', enabled: true, subjects: [
+      { name: 'General Science', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'mental_ability', title: '🧠 General Mental Ability', enabled: true, subjects: [
+      { name: 'General Mental Ability', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'maths', title: '📐 Mathematics', enabled: true, subjects: [
+      { name: 'Maths', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'english', title: '🔤 General English', enabled: true, subjects: [
+      { name: 'English', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'hindi', title: '🇮🇳 General Hindi', enabled: true, subjects: [
+      { name: 'Hindi', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'computer', title: '💻 Computer Knowledge', enabled: true, subjects: [
+      { name: 'Computer', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'cdp', title: '🧒 Child Development &amp; Pedagogy', enabled: true, subjects: [
+      { name: 'CDP', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]},
+    { id: 'current_affairs', title: '📰 Current Affairs', enabled: true, subjects: [
+      { name: 'Current Affairs', topicsOpen: false, selectedTopics: null, enabled: true, count: 0 }
+    ]}
+  ];
+
+  function getDefaultFltConfig() {
+    return JSON.parse(JSON.stringify(DEFAULT_FLT_SECTIONS_TEMPLATE));
+  }
+
+  let fltSectionsConfig = getDefaultFltConfig();
+
+  let fltActiveTestList = [];
+  let fltActiveTestIdx = 0;
+  let fltUserAnswers = {};
+  let fltMarkedReview = {};
+  let fltVisitedQs = {};
+  let fltTimerInterval = null;
+  let fltSecondsLeft = 0;
+  let fltStartTime = 0;
+  let fltCurrentNegativeMarking = 0;
+  let fltActiveTestName = '';
 
   function togglePasswordVisibility(fieldId, iconEl) {
     const field = document.getElementById(fieldId);
@@ -691,7 +1280,7 @@
       localStorage.setItem('cg_admin_logged', 'true');
       document.getElementById('adminAuthCard').style.display = 'none';
       document.getElementById('adminPortalPanel').style.display = 'block';
-      document.getElementById('adminHeaderUser').style.display = 'inline-block';
+      document.getElementById('adminHeaderUser').style.display = 'flex';
       initAdminStudio();
     } else {
       alert('Invalid ID or Password! (Use Adminsaket / qwertypad)');
@@ -705,107 +1294,263 @@
     document.getElementById('adminHeaderUser').style.display = 'none';
   }
 
+  // --- STORAGE & EXPORT/IMPORT MODAL CONTROLS ---
+  function toggleStorageModal() {
+    const modal = document.getElementById('storageDetailsModal');
+    if(!modal) return;
+    const isShowing = modal.style.display === 'block';
+    modal.style.display = isShowing ? 'none' : 'block';
+    if(!isShowing) {
+      refreshStorageStats();
+    }
+  }
+
+  function refreshStorageStats() {
+    try {
+      const qCache = localStorage.getItem('cg_admin_cached_questions') || '[]';
+      const qBytes = new Blob([qCache]).size;
+      const qKb = (qBytes / 1024).toFixed(2);
+      
+      let totalBytes = 0;
+      for (let key in localStorage) {
+        if (localStorage.hasOwnProperty(key)) {
+          totalBytes += (localStorage[key].length * 2);
+        }
+      }
+      const totalKb = (totalBytes / 1024).toFixed(2);
+      const parsedQs = JSON.parse(qCache);
+
+      document.getElementById('stTotalQsCount').innerText = `${parsedQs.length} Qs`;
+      document.getElementById('stQuestionsMemorySize').innerText = `${qKb} KB`;
+      document.getElementById('stTotalLocalStorage').innerText = `${totalKb} KB`;
+    } catch(e) {
+      console.warn("Storage stats calculation error:", e);
+    }
+  }
+
+  function exportAllQuestionsJson() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(questions, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `CrackCGPSC_Questions_Backup_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  }
+
+  function exportAppDataBackup() {
+    const backupObj = {
+      questions: questions,
+      fltTemplates: JSON.parse(localStorage.getItem('cg_flt_templates') || '[]'),
+      fltResults: JSON.parse(localStorage.getItem('cg_flt_results_history') || '[]'),
+      subjects: subjects
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `CrackCGPSC_AdminStudio_FullBackup_${new Date().toISOString().slice(0,10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  }
+
+  function importAppDataBackup(e) {
+    const fileReader = new FileReader();
+    if(e.target.files[0]) {
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = function(event) {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if(imported.questions && Array.isArray(imported.questions)) {
+            questions = imported.questions;
+            localStorage.setItem('cg_admin_cached_questions', JSON.stringify(questions));
+            localStorage.setItem('cg_cached_questions', JSON.stringify(questions));
+          }
+          if(imported.fltTemplates) {
+            localStorage.setItem('cg_flt_templates', JSON.stringify(imported.fltTemplates));
+          }
+          if(imported.fltResults) {
+            localStorage.setItem('cg_flt_results_history', JSON.stringify(imported.fltResults));
+          }
+          if(imported.subjects) {
+            subjects = imported.subjects;
+            localStorage.setItem('cg_subs', JSON.stringify(subjects));
+          }
+          processLoadedQuestions();
+          renderFltBuilderUI();
+          alert('📥 App Data Backup imported and synced successfully!');
+          toggleStorageModal();
+        } catch(err) {
+          alert('Error parsing JSON backup file: ' + err.message);
+        }
+      };
+    }
+  }
+
+  function clearLocalCacheStorage() {
+    if(!confirm('Clear all local cache questions and storage? (Cloud questions remain safe on Firebase)')) return;
+    localStorage.removeItem('cg_admin_cached_questions');
+    localStorage.removeItem('cg_cached_questions');
+    questions = [];
+    refreshStorageStats();
+    processLoadedQuestions();
+    renderFltBuilderUI();
+    alert('🧹 Local cache cleared successfully! Click "Sync from Cloud" to re-fetch latest data.');
+    toggleStorageModal();
+  }
+
   async function initAdminStudio() {
     setProgress(30);
-    await fetchQuestionsFromFirestore();
-    setProgress(70);
-    populateDropdowns();
-    updateAdminDatalists();
-    populateAdminNcertDropdowns();
-    populateAdminExamDropdowns();
-    if(document.getElementById('matchRowsInputsList').children.length === 0) {
-      addMatchRowInput();
-      addMatchRowInput();
-      addMatchRowInput();
-      addMatchRowInput();
-    }
-    if(document.getElementById('passageSubQuestionsList').children.length === 0) {
-      addPassageSubQuestionInput();
+    if(questions.length === 0) {
+      await syncQuestionsFromCloud();
+    } else {
+      processLoadedQuestions();
     }
     setProgress(100);
   }
 
-  async function fetchQuestionsFromFirestore() {
+  async function syncQuestionsFromCloud() {
+    setProgress(20);
     try {
       let snap = await db.collection("questions").get();
-      let flatList = [];
+      let rawList = [];
       snap.forEach(doc => {
-        let q = { id: doc.id, ...doc.data() };
-        let opts = q.options;
-        if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
-        if(!opts || typeof opts !== 'object') {
-          opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
-        }
-        q.options = opts;
-
-        let st = q.statements;
-        if(typeof st === 'string' && st.trim() !== '') {
-          try { st = JSON.parse(st); } catch(e){ st = []; }
-        }
-        q.statements = Array.isArray(st) ? st : [];
-
-        let mr = q.matchRows;
-        if(typeof mr === 'string' && mr.trim() !== '') {
-          try { mr = JSON.parse(mr); } catch(e){ mr = []; }
-        }
-        q.matchRows = Array.isArray(mr) ? mr : [];
-
-        let pq = q.passageQuestions;
-        if(typeof pq === 'string' && pq.trim() !== '') {
-          try { pq = JSON.parse(pq); } catch(e){ pq = []; }
-        }
-        q.passageQuestions = Array.isArray(pq) ? pq : [];
-
-        if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
-          pq.forEach((subQ, pIdx) => {
-            let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
-            flatList.push({
-              ...q,
-              id: `${q.id}_p${pIdx+1}`,
-              originalId: q.id,
-              isPassageSubQ: true,
-              passageSubIdx: pIdx + 1,
-              passageTotal: pq.length,
-              passageText: q.passageText || q.text,
-              text: subQ.qText,
-              options: subOpts,
-              ans: subQ.ans,
-              expl: subQ.expl
-            });
-          });
-        } else {
-          flatList.push(q);
-        }
+        rawList.push({ id: doc.id, ...doc.data() });
       });
-
-      questions = flatList;
-
-      let sheetSubs = [...new Set(questions.map(q => q.subject).filter(Boolean))];
-      sheetSubs.forEach(s => {
-        if (!subjects.includes(s)) {
-          subjects.push(s);
-        }
-      });
-      localStorage.setItem('cg_subs', JSON.stringify(subjects));
-
-      document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
-      populateDropdowns();
-      updateAdminDatalists();
-      populateAdminNcertDropdowns();
-      populateAdminExamDropdowns();
-    } catch(e) { console.error("Firestore fetch error:", e); }
+      
+      questions = rawList;
+      localStorage.setItem('cg_admin_cached_questions', JSON.stringify(questions));
+      localStorage.setItem('cg_cached_questions', JSON.stringify(questions));
+      
+      processLoadedQuestions();
+      renderFltBuilderUI();
+      setProgress(100);
+      alert('🔄 Successfully synced latest questions from Cloud Firestore!');
+    } catch(e) {
+      console.error("Firestore sync error:", e);
+      alert('Sync failed. Using local cache.');
+      processLoadedQuestions();
+      renderFltBuilderUI();
+      setProgress(100);
+    }
   }
 
-  function updateFeedSubjectOptions() {
+  function processLoadedQuestions() {
+    let flatList = [];
+    questions.forEach(q => {
+      let opts = q.options;
+      if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+      if(!opts || typeof opts !== 'object') {
+        opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+      }
+      q.options = opts;
+
+      let st = q.statements;
+      if(typeof st === 'string' && st.trim() !== '') {
+        try { st = JSON.parse(st); } catch(e){ st = []; }
+      }
+      q.statements = Array.isArray(st) ? st : [];
+
+      let mr = q.matchRows;
+      if(typeof mr === 'string' && mr.trim() !== '') {
+        try { mr = JSON.parse(mr); } catch(e){ mr = []; }
+      }
+      q.matchRows = Array.isArray(mr) ? mr : [];
+
+      let pq = q.passageQuestions;
+      if(typeof pq === 'string' && pq.trim() !== '') {
+        try { pq = JSON.parse(pq); } catch(e){ pq = []; }
+      }
+      q.passageQuestions = Array.isArray(pq) ? pq : [];
+
+      if(q.type === 'passage' && Array.isArray(pq) && pq.length > 0) {
+        pq.forEach((subQ, pIdx) => {
+          let subOpts = subQ.options || { A: subQ.optionA || '', B: subQ.optionB || '', C: subQ.optionC || '', D: subQ.optionD || '' };
+          flatList.push({
+            ...q,
+            id: `${q.id}_p${pIdx+1}`,
+            originalId: q.id,
+            isPassageSubQ: true,
+            passageSubIdx: pIdx + 1,
+            passageTotal: pq.length,
+            passageText: q.passageText || q.text,
+            text: subQ.qText,
+            options: subOpts,
+            ans: subQ.ans,
+            expl: subQ.expl
+          });
+        });
+      } else {
+        flatList.push(q);
+      }
+    });
+
+    let sheetSubs = [...new Set(flatList.map(q => q.subject).filter(Boolean))];
+    sheetSubs.forEach(s => {
+      let trimmed = s.trim();
+      if (!subjects.includes(trimmed)) {
+        subjects.push(trimmed);
+      }
+      if (!indianGsSubs.includes(trimmed) && !cgGsSubs.includes(trimmed) && !otherSubs.includes(trimmed)) {
+        otherSubs.push(trimmed);
+      }
+    });
+
+    // Ensure Social Science Pedagogy is in Other Subjects, not Indian GS
+    indianGsSubs = indianGsSubs.filter(s => s.toLowerCase() !== "social science pedagogy");
+    if(!otherSubs.some(s => s.toLowerCase() === "social science pedagogy")) {
+      otherSubs.push("Social Science Pedagogy");
+    }
+    saveCategoriesToStorage();
+
+    document.getElementById('dbTotalCountBadge').innerText = `Total Qs: ${questions.length}`;
+    const fltBadge = document.getElementById('fltTotalDbBadge');
+    if(fltBadge) fltBadge.innerText = `Total DB Qs: ${questions.length}`;
+
+    populateDropdowns();
+    updateAdminDatalists();
+    populateAdminNcertDropdowns();
+    populateAdminExamDropdowns();
+    renderFltBuilderUI();
+    loadFltTemplatesDropdown();
+    renderFltResultsHistory();
+    populateDbSubjectsDatelist();
+    
+    if(document.getElementById('matchRowsInputsList').children.length === 0) {
+      addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
+    }
+    if(document.getElementById('passageSubQuestionsList').children.length === 0) {
+      addPassageSubQuestionInput();
+    }
+  }
+
+  function populateDbSubjectsDatelist() {
+    const dl = document.getElementById('datalistAllDbSubjects');
+    if(!dl) return;
+    dl.innerHTML = subjects.map(s => `<option value="${s}">`).join('');
+  }
+
+  function updateFeedSubjectOptions(selectedVal = null) {
     const cat = document.getElementById('feedGsCategory').value;
     const subEl = document.getElementById('feedSub');
     let list = (cat === 'indian') ? indianGsSubs : ((cat === 'cg') ? cgGsSubs : otherSubs);
     
+    if (cat === 'other') {
+      subjects.forEach(s => {
+        if(!indianGsSubs.includes(s) && !cgGsSubs.includes(s) && !otherSubs.includes(s)) {
+          otherSubs.push(s);
+        }
+      });
+    }
+
     subEl.innerHTML = list.map(s => {
-      let count = questions.filter(q => q.subject === s).length;
+      let count = questions.filter(q => (q.subject || '').trim().toLowerCase() === s.trim().toLowerCase()).length;
       return `<option value="${s}">${s} (${count} Qs)</option>`;
     }).join('') + `<option value="ADD_NEW" style="color:#60a5fa; font-weight:bold;">+ Add New Subject...</option>`;
     
+    if(selectedVal) {
+      subEl.value = selectedVal;
+    }
     toggleHistoryFieldsForFeed();
   }
 
@@ -813,9 +1558,9 @@
     const cat = document.getElementById('quizGsCategory').value;
     const subEl = document.getElementById('quizSub');
     let list = (cat === 'indian') ? indianGsSubs : ((cat === 'cg') ? cgGsSubs : otherSubs);
-    
+
     subEl.innerHTML = '<option value="ALL">All Subjects</option>' + list.map(s => {
-      let count = questions.filter(q => q.subject === s).length;
+      let count = questions.filter(q => (q.subject || '').trim().toLowerCase() === s.trim().toLowerCase()).length;
       return `<option value="${s}">${s} (${count} Qs)</option>`;
     }).join('');
     
@@ -904,9 +1649,9 @@
           subjects.push(cleanName);
           otherSubs.push(cleanName);
           localStorage.setItem('cg_subs', JSON.stringify(subjects));
-          populateDropdowns();
-          selectEl.value = cleanName;
+          updateFeedSubjectOptions(cleanName);
           updateAdminDatalists();
+          populateDbSubjectsDatelist();
         } else {
           alert('Subject already exists!');
           selectEl.value = subjects[0];
@@ -1238,18 +1983,8 @@
     }
 
     let topicCounts = {};
-    let partCounts = {};
-    let chapterCounts = {};
-
     subPool.forEach(q => {
       if(q.topic) topicCounts[q.topic] = (topicCounts[q.topic] || 0) + 1;
-      if(q.ncert_chapter) {
-        let parts = q.ncert_chapter.split('-');
-        let p = parts[0] ? parts[0].trim() : '';
-        let c = parts[1] ? parts[1].trim() : '';
-        if(p) partCounts[p] = (partCounts[p] || 0) + 1;
-        if(c) chapterCounts[c] = (chapterCounts[c] || 0) + 1;
-      }
     });
 
     const fillDatalist = (listId, countsObj) => {
@@ -1269,10 +2004,18 @@
   function updateAdminSubtopicDatalist() {
     const selectedSub = document.getElementById('feedSub').value;
     const selectedTopic = document.getElementById('feedTop').value.trim();
+    const dl = document.getElementById('datalistSubtopics');
+    if(!dl) return;
+
+    if(!selectedTopic) {
+      dl.innerHTML = '';
+      return;
+    }
+
     const isHistory = selectedSub.toLowerCase().includes('history');
     const selectedEra = isHistory ? document.getElementById('feedEra').value : '';
 
-    let subPool = questions.filter(q => q.subject === selectedSub && q.topic === selectedTopic);
+    let subPool = questions.filter(q => q.subject === selectedSub && q.topic && q.topic.toLowerCase() === selectedTopic.toLowerCase());
     if(isHistory && selectedEra) {
       subPool = subPool.filter(q => q.era && q.era.toLowerCase() === selectedEra.toLowerCase());
     }
@@ -1282,8 +2025,6 @@
       if(q.subtopic) subtopicCounts[q.subtopic] = (subtopicCounts[q.subtopic] || 0) + 1;
     });
 
-    const dl = document.getElementById('datalistSubtopics');
-    if(!dl) return;
     dl.innerHTML = Object.keys(subtopicCounts).sort((a,b)=>a.localeCompare(b)).map(item => `<option value="${item}">(${subtopicCounts[item]} Qs)</option>`).join('');
   }
 
@@ -1356,25 +2097,23 @@
     const sub = document.getElementById('quizNcertSub').value;
     let chapsMap = {};
     
-    if(sub && sub !== 'ALL') {
-      questions.forEach(q => {
-        let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
-        let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
-        let cName = q.ncert_class ? q.ncert_class.trim() : "";
-        if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
-          let parts = q.ncert_chapter.split('-');
-          let subPart = parts[0] ? parts[0].trim() : '';
-          let chapPart = parts[1] ? parts[1].trim() : q.ncert_chapter;
-          if(subPart === sub) {
-            if(chapPart) chapsMap[chapPart] = (chapsMap[chapPart] || 0) + 1;
-          }
+    questions.forEach(q => {
+      let isNcert = (q.ncert_tag === "true" || q.ncert_tag === true || q.ncert_book);
+      let bName = (q.ncert_book && q.ncert_book.trim() !== "") ? q.ncert_book.trim() : "NCERT";
+      let cName = q.ncert_class ? q.ncert_class.trim() : "";
+      if(isNcert && bName === book && cName === cls && q.ncert_chapter) {
+        let parts = q.ncert_chapter.split('-');
+        let subPart = parts[0] ? parts[0].trim() : '';
+        let chapPart = parts[1] ? parts[1].trim() : q.ncert_chapter;
+        if(sub === 'ALL' || subPart === sub) {
+          if(chapPart) chapsMap[chapPart] = (chapsMap[chapPart] || 0) + 1;
         }
-      });
-    }
+      }
+    });
 
     const chapEl = document.getElementById('quizNcertChap');
     if(chapEl) {
-      chapEl.innerHTML = '<option value="ALL">All Chapters</option>' + Object.keys(chapsMap).map(c => `<option value="${c}">(${chapsMap[c]} Qs)</option>`).join('');
+      chapEl.innerHTML = '<option value="ALL">All Chapters</option>' + Object.keys(chapsMap).map(c => `<option value="${c}">${c} (${chapsMap[c]} Qs)</option>`).join('');
     }
   }
 
@@ -1562,76 +2301,1032 @@
     } else if(tab === 'quiz') {
       document.getElementById('adminTabQuiz').style.display = 'block';
       event.target.classList.add('active');
+    } else if(tab === 'flt') {
+      document.getElementById('adminTabFlt').style.display = 'block';
+      event.target.classList.add('active');
+      renderFltBuilderUI();
     }
   }
 
-  function toggleNcertContainer() {
-    const isChecked = document.getElementById('feedNcertCheck').checked;
-    document.getElementById('feedNcertContainer').style.display = isChecked ? 'grid' : 'none';
-    if(isChecked) updateNcertClassesForFeed();
+  function switchFltSubTab(sub) {
+    const isBuilder = (sub === 'builder');
+    document.getElementById('fltBuilderSubView').style.display = isBuilder ? 'block' : 'none';
+    document.getElementById('fltHistorySubView').style.display = isBuilder ? 'none' : 'block';
+    document.getElementById('btnFltTabBuilder').style.background = isBuilder ? 'var(--primary)' : '#334155';
+    document.getElementById('btnFltTabHistory').style.background = isBuilder ? '#334155' : 'var(--primary)';
+    if(!isBuilder) renderFltResultsHistory();
   }
 
-  function toggleEditNcertContainer() {
-    const isChecked = document.getElementById('editNcertCheck').checked;
-    document.getElementById('editNcertContainer').style.display = isChecked ? 'grid' : 'none';
-    if(isChecked) updateNcertClassesForEdit();
-  }
+  // --- CUSTOM FLT BUILDER LOGIC ---
+  function renderFltBuilderUI() {
+    const container = document.getElementById('fltSectionsContainer');
+    if(!container) return;
+    container.innerHTML = '';
 
-  function toggleQTypeFields(type) {
-    document.getElementById('feed-ar-fields').style.display = type === 'ar' ? 'block' : 'none';
-    document.getElementById('feed-match-fields').style.display = type === 'match' ? 'block' : 'none';
-    document.getElementById('feed-statement-fields').style.display = type === 'statement' ? 'block' : 'none';
-    document.getElementById('feed-passage-fields').style.display = type === 'passage' ? 'block' : 'none';
-    document.getElementById('feed-standard-body-wrap').style.display = (type === 'statement' || type === 'passage') ? 'none' : 'block';
-    document.getElementById('feed-standard-options-wrap').style.display = type === 'passage' ? 'none' : 'block';
-  }
+    let totalConfigured = 0;
+    let summaryHtml = '';
 
-  function toggleEditQTypeFields(type) {
-    const isMatch = (type === 'match');
-    const isAr = (type === 'ar');
-    const isStmt = (type === 'statement');
-    const isPassage = (type === 'passage');
+    fltSectionsConfig.forEach((sec, sIdx) => {
+      let secCard = document.createElement('div');
+      secCard.style.cssText = 'background:var(--card-inner); border:1px solid var(--border); border-radius:14px; padding:16px;';
+      
+      let subjectsHtml = '';
+      let secSummaryText = [];
+      let secTotal = 0;
 
-    let arBox = document.getElementById('edit-ar-fields');
-    if (!arBox && isAr) {
-      let standardWrap = document.getElementById('edit-standard-body-wrap');
-      arBox = document.createElement('div');
-      arBox.id = 'edit-ar-fields';
-      arBox.style.cssText = 'background:var(--card-inner); padding:10px; border-radius:10px; margin-bottom:10px;';
-      arBox.innerHTML = `
-        <label>Direction Text:</label><textarea id="editArText" rows="2"></textarea>
-        <label>Assertion (A):</label><textarea id="editAssert" rows="2"></textarea>
-        <label>Reason (R):</label><textarea id="editReason" rows="2"></textarea>
-      `;
-      standardWrap.parentNode.insertBefore(arBox, standardWrap);
-    }
-    if(arBox) arBox.style.display = isAr ? 'block' : 'none';
+      sec.subjects.forEach((sub, subIdx) => {
+        let subPool = questions.filter(q => q.subject.toLowerCase() === sub.name.toLowerCase());
+        let topicsList = [...new Set(subPool.map(q => q.topic).filter(Boolean))].sort();
+        let availSubQs = subPool.length;
 
-    let matchBox = document.getElementById('edit-match-fields');
-    if (!matchBox && isMatch) {
-      let standardWrap = document.getElementById('edit-standard-body-wrap');
-      matchBox = document.createElement('div');
-      matchBox.id = 'edit-match-fields';
-      matchBox.style.cssText = 'background:var(--card-inner); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border);';
-      matchBox.innerHTML = `
-        <h4 style="color:#38bdf8; margin-bottom:10px;">📋 Match List Table Builder</h4>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-          <div><label>Heading 1</label><input type="text" id="editMatchHead1" value="List I"></div>
-          <div><label>Heading 2</label><input type="text" id="editMatchHead2" value="List II"></div>
+        let isSubChecked = (sub.enabled !== false);
+        let activeTopics = (sub.selectedTopics === null) ? topicsList : sub.selectedTopics;
+        let topicLabelText = (sub.selectedTopics === null || sub.selectedTopics.length === topicsList.length) ? 'All Topics' : `${activeTopics.length} Topics`;
+        let subCount = parseInt(sub.count) || 0;
+
+        if(sec.enabled && isSubChecked && subCount > 0) {
+          secTotal += subCount;
+          secSummaryText.push(`${sub.name}: ${subCount} Qs`);
+        }
+
+        subjectsHtml += `
+          <div style="background:rgba(17,24,39,0.7); border:1px solid var(--border); border-radius:10px; padding:10px; margin-bottom:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="flt_sub_chk_${sIdx}_${subIdx}" ${isSubChecked ? 'checked' : ''} onchange="toggleFltSubjectCheck(${sIdx}, ${subIdx}, this.checked)" style="width:16px; height:16px; accent-color:var(--primary);">
+                <strong style="color:#f1f5f9; font-size:0.9rem;">${sub.name}</strong>
+                ${sub.isCustom ? `<button type="button" onclick="removeSubjectFromSection(${sIdx}, ${subIdx})" style="background:transparent; border:none; color:#f87171; font-size:0.85rem; cursor:pointer; padding:0 4px; font-weight:bold;" title="Remove this subject from section">✕</button>` : ''}
+                <span style="font-size:0.75rem; color:var(--muted);">Avail: ${availSubQs} Qs</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleFltTopicsDropdown(${sIdx}, ${subIdx})" style="font-size:0.75rem; padding:3px 8px;">
+                  🏷️ ${topicLabelText} ▼
+                </button>
+                <div style="display:flex; align-items:center; gap:4px;">
+                  <span style="font-size:0.8rem; color:var(--muted);">Qs:</span>
+                  <input type="number" id="flt_sub_count_${sIdx}_${subIdx}" value="${sub.count || 0}" min="0" oninput="updateFltSubCount(${sIdx}, ${subIdx}, this.value)" style="width:65px; margin-bottom:0; padding:4px 8px; font-size:0.85rem; text-align:center;">
+                </div>
+              </div>
+            </div>
+
+            <!-- Collapsible Topics Checklist Dropdown -->
+            <div id="flt_topics_dropdown_${sIdx}_${subIdx}" style="display:${sub.topicsOpen ? 'block' : 'none'}; margin-top:10px; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px; max-height:160px; overflow-y:auto;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.78rem;">
+                <a href="javascript:void(0)" onclick="selectAllFltTopics(${sIdx}, ${subIdx}, true)" style="color:#60a5fa; text-decoration:none;">Select All</a>
+                <a href="javascript:void(0)" onclick="selectAllFltTopics(${sIdx}, ${subIdx}, false)" style="color:#f87171; text-decoration:none;">Clear Topics</a>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                ${topicsList.length > 0 ? topicsList.map(top => `
+                  <label style="display:flex; align-items:center; gap:8px; font-size:0.82rem; cursor:pointer; margin-bottom:0;">
+                    <input type="checkbox" value="${top}" ${activeTopics.includes(top) ? 'checked' : ''} onchange="onFltTopicCheckboxChange(${sIdx}, ${subIdx}, '${top}', this.checked)" style="accent-color:var(--primary); width:15px; height:15px;">
+                    <span style="color:#e2e8f0;">${top}</span>
+                  </label>
+                `).join('') : '<span style="color:var(--muted); font-size:0.8rem;">No topics available in database for this subject.</span>'}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      subjectsHtml += `
+        <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+          <input type="text" id="custom_sub_input_${sIdx}" list="datalistAllDbSubjects" placeholder="Add custom subject (suggestions available)..." style="margin-bottom:0; font-size:0.85rem; padding:6px 10px; flex:1;" autocomplete="off">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="addCustomSubjectToSection(${sIdx})">+ Add Subject</button>
         </div>
-        <label style="margin-top:8px;">Table Rows:</label>
-        <div id="editMatchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
-        <button type="button" class="btn btn-secondary btn-sm" onclick="addEditMatchRowInput()">+ Add Table Row</button>
       `;
-      standardWrap.parentNode.insertBefore(matchBox, standardWrap);
+
+      totalConfigured += secTotal;
+      if(sec.enabled && secTotal > 0) {
+        summaryHtml += `<div style="margin-bottom:4px;"><strong style="color:#60a5fa;">${sec.title} (${secTotal} Qs):</strong> ${secSummaryText.join(' | ')}</div>`;
+      }
+
+      secCard.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" ${sec.enabled ? 'checked' : ''} onchange="toggleFltSectionEnabled(${sIdx}, this.checked)" style="width:18px; height:18px; accent-color:var(--primary);">
+            <h4 style="margin:0; color:#38bdf8; font-size:1.02rem;">${sec.title}</h4>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span id="flt_sec_total_badge_${sIdx}" style="font-size:0.8rem; color:#34d399; font-weight:bold;">${secTotal} Qs</span>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="moveFltSection(${sIdx}, -1)" title="Move Up">▲</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="moveFltSection(${sIdx}, 1)" title="Move Down">▼</button>
+          </div>
+        </div>
+        <div style="display:${sec.enabled ? 'block' : 'none'};">
+          ${subjectsHtml}
+        </div>
+      `;
+      container.appendChild(secCard);
+    });
+
+    const totalEl = document.getElementById('fltTotalConfiguredCount');
+    if(totalEl) totalEl.innerText = totalConfigured;
+
+    const summaryBox = document.getElementById('fltConfigSummaryBox');
+    if(summaryBox) {
+      let testNameVal = document.getElementById('fltCustomTestName').value.trim() || 'Custom Mock Test';
+      let durationVal = document.getElementById('fltTestDuration').value;
+      let minusVal = document.getElementById('fltMinusMarking').options[document.getElementById('fltMinusMarking').selectedIndex].text;
+      
+      summaryBox.innerHTML = `
+        <div><strong>Test Name:</strong> ${testNameVal} &nbsp;|&nbsp; <strong>Duration:</strong> ${durationVal} Min &nbsp;|&nbsp; <strong>Minus Marking:</strong> ${minusVal}</div>
+        <hr style="border-color:var(--border); margin:6px 0;">
+        ${summaryHtml || '<span style="color:var(--muted);">No questions configured yet. Set question counts for subjects above.</span>'}
+      `;
     }
-    if(matchBox) matchBox.style.display = isMatch ? 'block' : 'none';
-    document.getElementById('edit-statement-fields').style.display = isStmt ? 'block' : 'none';
-    document.getElementById('edit-passage-fields').style.display = isPassage ? 'block' : 'none';
-    document.getElementById('edit-standard-body-wrap').style.display = (isStmt || isPassage) ? 'none' : 'block';
-    document.getElementById('edit-standard-options-wrap').style.display = isPassage ? 'none' : 'block';
   }
 
+  function addCustomSubjectToSection(sIdx) {
+    const inputEl = document.getElementById(`custom_sub_input_${sIdx}`);
+    if(!inputEl) return;
+    let subName = inputEl.value.trim();
+    if(!subName) return alert('Please enter a valid subject name!');
+    
+    let exists = fltSectionsConfig[sIdx].subjects.some(s => s.name.toLowerCase() === subName.toLowerCase());
+    if(exists) return alert('Subject already exists in this section!');
+
+    fltSectionsConfig[sIdx].subjects.push({
+      name: subName,
+      topicsOpen: false,
+      selectedTopics: null,
+      enabled: true,
+      count: 0,
+      isCustom: true
+    });
+    inputEl.value = '';
+    renderFltBuilderUI();
+    alert(`✅ Custom subject "${subName}" added successfully!`);
+  }
+
+  function removeSubjectFromSection(sIdx, subIdx) {
+    let sub = fltSectionsConfig[sIdx].subjects[subIdx];
+    if(!confirm(`Remove "${sub.name}" from this section?`)) return;
+    fltSectionsConfig[sIdx].subjects.splice(subIdx, 1);
+    renderFltBuilderUI();
+  }
+
+  function toggleFltSectionEnabled(sIdx, isEnabled) {
+    fltSectionsConfig[sIdx].enabled = isEnabled;
+    renderFltBuilderUI();
+  }
+
+  function moveFltSection(sIdx, dir) {
+    let targetIdx = sIdx + dir;
+    if(targetIdx < 0 || targetIdx >= fltSectionsConfig.length) return;
+    let temp = fltSectionsConfig[sIdx];
+    fltSectionsConfig[sIdx] = fltSectionsConfig[targetIdx];
+    fltSectionsConfig[targetIdx] = temp;
+    renderFltBuilderUI();
+  }
+
+  function toggleFltSubjectCheck(sIdx, subIdx, isChecked) {
+    let sub = fltSectionsConfig[sIdx].subjects[subIdx];
+    sub.enabled = isChecked;
+    if(!isChecked) {
+      sub.count = 0;
+    }
+    renderFltBuilderUI();
+  }
+
+  function toggleFltTopicsDropdown(sIdx, subIdx) {
+    let sub = fltSectionsConfig[sIdx].subjects[subIdx];
+    sub.topicsOpen = !sub.topicsOpen;
+    renderFltBuilderUI();
+  }
+
+  function onFltTopicCheckboxChange(sIdx, subIdx, topicName, isChecked) {
+    let sub = fltSectionsConfig[sIdx].subjects[subIdx];
+    let subPool = questions.filter(q => q.subject.toLowerCase() === sub.name.toLowerCase());
+    let allTopics = [...new Set(subPool.map(q => q.topic).filter(Boolean))];
+    if(sub.selectedTopics === null) sub.selectedTopics = [...allTopics];
+    
+    if(isChecked) {
+      if(!sub.selectedTopics.includes(topicName)) sub.selectedTopics.push(topicName);
+    } else {
+      sub.selectedTopics = sub.selectedTopics.filter(t => t !== topicName);
+    }
+    renderFltBuilderUI();
+  }
+
+  function selectAllFltTopics(sIdx, subIdx, selectAll) {
+    let sub = fltSectionsConfig[sIdx].subjects[subIdx];
+    let subPool = questions.filter(q => q.subject.toLowerCase() === sub.name.toLowerCase());
+    let allTopics = [...new Set(subPool.map(q => q.topic).filter(Boolean))];
+    sub.selectedTopics = selectAll ? allTopics : [];
+    renderFltBuilderUI();
+  }
+
+  function updateFltSubCount(sIdx, subIdx, val) {
+    const parsed = parseInt(val);
+    fltSectionsConfig[sIdx].subjects[subIdx].count = isNaN(parsed) ? 0 : Math.max(0, parsed);
+    updateFltLiveTotalsAndSummary();
+  }
+
+  function updateFltLiveTotalsAndSummary() {
+    let totalConfigured = 0;
+    let summaryHtml = '';
+
+    fltSectionsConfig.forEach((sec, sIdx) => {
+      let secTotal = 0;
+      let secSummaryText = [];
+
+      sec.subjects.forEach((sub) => {
+        let isSubChecked = (sub.enabled !== false);
+        let subCount = parseInt(sub.count) || 0;
+        if(sec.enabled && isSubChecked && subCount > 0) {
+          secTotal += subCount;
+          secSummaryText.push(`${sub.name}: ${subCount} Qs`);
+        }
+      });
+
+      const secBadge = document.getElementById(`flt_sec_total_badge_${sIdx}`);
+      if(secBadge) secBadge.innerText = `${secTotal} Qs`;
+
+      totalConfigured += secTotal;
+      if(sec.enabled && secTotal > 0) {
+        summaryHtml += `<div style="margin-bottom:4px;"><strong style="color:#60a5fa;">${sec.title} (${secTotal} Qs):</strong> ${secSummaryText.join(' | ')}</div>`;
+      }
+    });
+
+    const totalEl = document.getElementById('fltTotalConfiguredCount');
+    if(totalEl) totalEl.innerText = totalConfigured;
+
+    const summaryBox = document.getElementById('fltConfigSummaryBox');
+    if(summaryBox) {
+      let testNameEl = document.getElementById('fltCustomTestName');
+      let testNameVal = (testNameEl && testNameEl.value.trim()) ? testNameEl.value.trim() : 'Custom Mock Test';
+      let durationEl = document.getElementById('fltTestDuration');
+      let durationVal = durationEl ? durationEl.value : '60';
+      let minusEl = document.getElementById('fltMinusMarking');
+      let minusVal = (minusEl && minusEl.selectedIndex >= 0) ? minusEl.options[minusEl.selectedIndex].text : '0 (No Negative)';
+      
+      summaryBox.innerHTML = `
+        <div><strong>Test Name:</strong> ${testNameVal} &nbsp;|&nbsp; <strong>Duration:</strong> ${durationVal} Min &nbsp;|&nbsp; <strong>Minus Marking:</strong> ${minusVal}</div>
+        <hr style="border-color:var(--border); margin:6px 0;">
+        ${summaryHtml || '<span style="color:var(--muted);">No questions configured yet. Set question counts for subjects above.</span>'}
+      `;
+    }
+  }
+
+  function resetFltBuilder() {
+    fltSectionsConfig = getDefaultFltConfig();
+    document.getElementById('fltCustomTestName').value = '';
+    renderFltBuilderUI();
+  }
+
+  function saveCurrentFltTemplate() {
+    let testName = document.getElementById('fltCustomTestName').value.trim();
+    if(!testName) return alert('Please enter a Custom Test Name to save as template!');
+    
+    let templateData = {
+      name: testName,
+      duration: document.getElementById('fltTestDuration').value,
+      minusMarking: document.getElementById('fltMinusMarking').value,
+      config: fltSectionsConfig
+    };
+
+    let templates = JSON.parse(localStorage.getItem('cg_flt_templates') || '[]');
+    let existingIdx = templates.findIndex(t => t.name.toLowerCase() === testName.toLowerCase());
+    if(existingIdx !== -1) {
+      templates[existingIdx] = templateData;
+    } else {
+      templates.push(templateData);
+    }
+    localStorage.setItem('cg_flt_templates', JSON.stringify(templates));
+    loadFltTemplatesDropdown();
+    alert(`💾 Template "${testName}" saved successfully!`);
+  }
+
+  function loadFltTemplatesDropdown() {
+    const sel = document.getElementById('fltSavedTemplatesSelect');
+    if(!sel) return;
+    let templates = JSON.parse(localStorage.getItem('cg_flt_templates') || '[]');
+    sel.innerHTML = '<option value="">-- Load Saved Test Structure Template --</option>' + templates.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+  }
+
+  function loadFltTemplate() {
+    const selVal = document.getElementById('fltSavedTemplatesSelect').value;
+    if(!selVal) return alert('Please select a template from dropdown first!');
+    let templates = JSON.parse(localStorage.getItem('cg_flt_templates') || '[]');
+    let found = templates.find(t => t.name === selVal);
+    if(found) {
+      document.getElementById('fltCustomTestName').value = found.name;
+      document.getElementById('fltTestDuration').value = found.duration || '60';
+      if(found.minusMarking !== undefined) document.getElementById('fltMinusMarking').value = found.minusMarking;
+      fltSectionsConfig = found.config;
+      renderFltBuilderUI();
+      alert(`📥 Template "${found.name}" loaded successfully!`);
+    }
+  }
+
+  function deleteFltTemplate() {
+    const selVal = document.getElementById('fltSavedTemplatesSelect').value;
+    if(!selVal) return alert('Please select a template to delete!');
+    if(!confirm(`Delete template "${selVal}"?`)) return;
+    let templates = JSON.parse(localStorage.getItem('cg_flt_templates') || '[]');
+    templates = templates.filter(t => t.name !== selVal);
+    localStorage.setItem('cg_flt_templates', JSON.stringify(templates));
+    loadFltTemplatesDropdown();
+    alert('🗑️ Template deleted successfully!');
+  }
+
+  // --- START CUSTOM FLT TEST & PLAYER LOGIC ---
+  function startCustomFltTest() {
+    let rawTestName = document.getElementById('fltCustomTestName').value.trim();
+    let durationMin = parseInt(document.getElementById('fltTestDuration').value) || 60;
+    fltCurrentNegativeMarking = parseFloat(document.getElementById('fltMinusMarking').value) || 0;
+
+    let history = JSON.parse(localStorage.getItem('cg_flt_results_history') || '[]');
+    let baseName = rawTestName || 'Custom Mock Test';
+    
+    let matchingCount = history.filter(h => h.testName.startsWith(baseName)).length;
+    fltActiveTestName = `${baseName} Mock ${matchingCount + 1}`;
+
+    let gatheredQuestions = [];
+    let seenQuestionIds = new Set();
+
+    fltSectionsConfig.forEach(sec => {
+      if(!sec.enabled) return;
+      
+      let sectionQuestions = [];
+      sec.subjects.forEach(sub => {
+        if(sub.enabled === false) return;
+        let reqCount = parseInt(sub.count) || 0;
+        if(reqCount <= 0) return;
+
+        let targetSubName = (sub.name || '').trim().toLowerCase();
+        let pool = questions.filter(q => (q.subject || '').trim().toLowerCase() === targetSubName);
+
+        if(sub.selectedTopics && sub.selectedTopics.length > 0) {
+          let activeTopLower = sub.selectedTopics.map(t => t.trim().toLowerCase());
+          pool = pool.filter(q => q.topic && activeTopLower.includes(q.topic.trim().toLowerCase()));
+        }
+
+        let unseenPool = pool.filter(q => !seenQuestionIds.has(q.id));
+        unseenPool.sort(() => Math.random() - 0.5);
+        let selectedSubQs = unseenPool.slice(0, reqCount);
+
+        selectedSubQs.forEach(q => {
+          seenQuestionIds.add(q.id);
+          sectionQuestions.push({
+            ...q,
+            fltSectionTitle: sec.title
+          });
+        });
+      });
+
+      sectionQuestions.sort(() => Math.random() - 0.5);
+      gatheredQuestions.push(...sectionQuestions);
+    });
+
+    if(gatheredQuestions.length === 0) return alert('Please configure question count for at least one subject/section!');
+
+    fltActiveTestList = gatheredQuestions;
+    fltActiveTestIdx = 0;
+    fltUserAnswers = {};
+    fltMarkedReview = {};
+    fltVisitedQs = {};
+    fltVisitedQs[0] = true;
+
+    document.getElementById('fltPlayerTestTitle').innerText = fltActiveTestName;
+    document.getElementById('fltFullPageTestWorkspace').style.display = 'block';
+
+    // Start Timer
+    fltSecondsLeft = durationMin * 60;
+    fltStartTime = Date.now();
+    if(fltTimerInterval) clearInterval(fltTimerInterval);
+    fltTimerInterval = setInterval(() => {
+      fltSecondsLeft--;
+      let m = Math.floor(fltSecondsLeft / 60);
+      let s = fltSecondsLeft % 60;
+      let timerBox = document.getElementById('fltPlayerTimerBox');
+      if(timerBox) timerBox.innerText = `⏱️ ${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+      if(fltSecondsLeft <= 0) {
+        clearInterval(fltTimerInterval);
+        alert('⏱️ Time Up! Submitting test automatically.');
+        submitFltTest();
+      }
+    }, 1000);
+
+    renderFltPlayerCard();
+    buildFltPaletteDrawer();
+  }
+
+  function renderFltPlayerCard() {
+    const q = fltActiveTestList[fltActiveTestIdx];
+    fltVisitedQs[fltActiveTestIdx] = true;
+
+    document.getElementById('fltPlayerQCounter').innerText = `Question ${fltActiveTestIdx + 1} of ${fltActiveTestList.length}`;
+    document.getElementById('fltPlayerSectionBadge').innerText = q.fltSectionTitle || 'Section';
+    document.getElementById('fltPlayerExamTag').innerText = q.exam || 'PYQ';
+
+    let bodyHtml = '';
+    const matchWrap = document.getElementById('fltPlayerMatchWrap');
+    matchWrap.innerHTML = '';
+
+    if(q.type === 'ar') {
+      let assertText = q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || '');
+      let reasonText = q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || '');
+      bodyHtml = `
+        <div style="margin-bottom:6px; text-align: left;">${q.arText || 'Direction - For the below Assertion and Reason, choose correct alternative-'}</div>
+        <div class="ar-block">
+          <div class="ar-item"><span class="ar-label">Assertion (A):</span> <span>${assertText}</span></div>
+          <div class="ar-item"><span class="ar-label">Reason (R):</span> <span>${reasonText}</span></div>
+        </div>
+      `;
+    } else if(q.type === 'statement') {
+      let introText = (q.stIntro && q.stIntro.trim() !== '' && q.stIntro !== 'undefined' && q.stIntro !== 'null') ? q.stIntro : (q.text && !q.text.includes('i.') && !q.text.includes('1.') ? q.text : 'Consider the following statements:');
+      bodyHtml = `<div style="margin-bottom:10px; text-align: left; font-weight: 600;">${introText}</div>`;
+
+      let stArr = q.statements;
+      if(Array.isArray(stArr) && stArr.length > 0) {
+        stArr.forEach((st, idx) => {
+          let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
+          let label = matchLabel ? matchLabel[1] : `${idx + 1}.`;
+          let cleanSt = matchLabel ? matchLabel[2] : st;
+          bodyHtml += `<div class="statement-preview-item"><span class="st-num">${label}</span><span class="st-text">${cleanSt}</span></div>`;
+        });
+      } else {
+        let lines = (q.text || '').split('\n').map(l => l.trim()).filter(Boolean);
+        let statementsList = lines.slice(1);
+        statementsList.forEach((st, idx) => {
+          bodyHtml += `<div class="statement-preview-item"><span class="st-num">${idx + 1}.</span><span class="st-text">${st}</span></div>`;
+        });
+      }
+
+      if(q.stConclusion && q.stConclusion.trim() !== '' && q.stConclusion !== 'undefined' && q.stConclusion !== 'null') {
+        bodyHtml += `<div style="margin-top:10px; text-align: left; font-weight: 600;">${q.stConclusion}</div>`;
+      }
+    } else if(q.isPassageSubQ) {
+      bodyHtml = `
+        <div style="background:rgba(59,130,246,0.12); padding:10px 14px; border-radius:10px; border:1px solid var(--border); margin-bottom:10px; text-align: left;">
+          <strong style="color:#60a5fa; font-size:0.9rem; text-align: left; display: block;">📖 Passage / Comprehension (Read for Q.${q.passageSubIdx} of ${q.passageTotal}):</strong>
+          <p style="margin-top:4px; line-height:1.45; font-size:0.92rem; text-align: left;">${q.passageText}</p>
+        </div>
+        <div style="font-weight:600; font-size:1rem; color:#f9fafb; margin-bottom:8px; text-align: left;">
+          Q${q.passageSubIdx}: ${q.text}
+        </div>
+      `;
+    } else if(q.type === 'match') {
+      let instructionText = q.text && q.text.trim() !== '' ? q.text : 'Match the following:';
+      bodyHtml = `<div style="margin-bottom:8px; text-align: left;"><strong>${instructionText}</strong></div>`;
+      let rows = q.matchRows;
+      if(typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(e){} }
+      if(rows) {
+        matchWrap.innerHTML = `
+          <div class="match-table-wrapper">
+            <table class="match-table">
+              <thead><tr><th>#</th><th>${q.matchHead1 || 'List I'}</th><th>Seq</th><th>${q.matchHead2 || 'List II'}</th></tr></thead>
+              <tbody>
+                ${rows.map(r => `<tr><td><strong>${r.c1}</strong></td><td>${r.c2}</td><td><strong>${r.c3}</strong></td><td>${r.c4}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    } else {
+      bodyHtml = `<div style="text-align: left; width: 100%;">${q.text || ''}</div>`;
+    }
+
+    document.getElementById('fltPlayerBody').innerHTML = bodyHtml;
+
+    let opts = q.options;
+    if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+    if(!opts || typeof opts !== 'object') {
+      opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+    }
+
+    const optContainer = document.getElementById('fltPlayerOpts');
+    optContainer.innerHTML = '';
+
+    ['A', 'B', 'C', 'D'].forEach(k => {
+      let isSel = (fltUserAnswers[fltActiveTestIdx] === k);
+      optContainer.innerHTML += `
+        <div class="test-opt ${isSel ? 'opt-correct' : ''}" onclick="handleFltPlayerOptionClick('${k}')" style="cursor:pointer;">
+          <div class="test-opt-label">
+            <span class="opt-letter">(${k})</span>
+            <span class="opt-text">${(opts && opts[k]) ? opts[k] : ''}</span>
+          </div>
+        </div>
+      `;
+    });
+
+    const nextBtn = document.getElementById('fltPlayerNextBtn');
+    if(fltActiveTestIdx === fltActiveTestList.length - 1) {
+      nextBtn.innerText = 'Submit Test';
+      nextBtn.className = 'btn btn-success';
+    } else {
+      nextBtn.innerText = 'Save & Next';
+      nextBtn.className = 'btn';
+    }
+
+    buildFltPaletteDrawer();
+  }
+
+  function handleFltPlayerOptionClick(k) {
+    if(fltUserAnswers[fltActiveTestIdx] === k) {
+      delete fltUserAnswers[fltActiveTestIdx];
+    } else {
+      fltUserAnswers[fltActiveTestIdx] = k;
+      delete fltMarkedReview[fltActiveTestIdx];
+    }
+    renderFltPlayerCard();
+  }
+
+  function markFltQForReview() {
+    fltMarkedReview[fltActiveTestIdx] = true;
+    delete fltUserAnswers[fltActiveTestIdx];
+    moveFltPlayerQ(1);
+  }
+
+  function moveFltPlayerQ(step) {
+    let nextIdx = fltActiveTestIdx + step;
+    if(nextIdx >= 0 && nextIdx < fltActiveTestList.length) {
+      fltActiveTestIdx = nextIdx;
+      renderFltPlayerCard();
+    } else if(nextIdx >= fltActiveTestList.length) {
+      if(confirm('Are you sure you want to submit the Custom FLT Test?')) {
+        submitFltTest();
+      }
+    }
+  }
+
+  function toggleFltPaletteDrawer() {
+    const drawer = document.getElementById('fltPaletteDrawer');
+    if(!drawer) return;
+    drawer.style.display = drawer.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function buildFltPaletteDrawer() {
+    const container = document.getElementById('fltPaletteSectionWiseContainer');
+    if(!container) return;
+
+    let groups = {};
+    fltActiveTestList.forEach((q, idx) => {
+      let secName = q.fltSectionTitle || 'Section';
+      if(!groups[secName]) groups[secName] = [];
+      groups[secName].push({ q, idx });
+    });
+
+    let html = '';
+    for(let secName in groups) {
+      html += `<div style="margin-bottom:8px;"><strong style="font-size:0.8rem; color:#38bdf8; display:block; margin-bottom:4px;">${secName}</strong><div style="display:flex; flex-wrap:wrap; gap:4px;">`;
+      groups[secName].forEach(item => {
+        let qIdx = item.idx;
+        let bg = '#334155';
+        
+        if(fltMarkedReview[qIdx]) {
+          bg = '#8b5cf6';
+        } else if(fltUserAnswers[qIdx]) {
+          bg = '#10b981';
+        } else if(fltVisitedQs[qIdx]) {
+          bg = '#ef4444';
+        }
+
+        if(qIdx === fltActiveTestIdx) {
+          bg = '#3b82f6';
+        }
+
+        html += `<button onclick="jumpToFltQ(${qIdx})" style="width:32px; height:32px; background:${bg}; color:#fff; border:none; border-radius:6px; font-weight:bold; font-size:0.78rem; cursor:pointer;">${qIdx+1}</button>`;
+      });
+      html += `</div></div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function jumpToFltQ(idx) {
+    fltActiveTestIdx = idx;
+    renderFltPlayerCard();
+    // Palette remains open until manually closed
+  }
+
+  function quitFltTest() {
+    if(confirm('Quit test? All progress will be lost.')) {
+      if(fltTimerInterval) clearInterval(fltTimerInterval);
+      document.getElementById('fltFullPageTestWorkspace').style.display = 'none';
+    }
+  }
+
+  function submitFltTest() {
+    if(fltTimerInterval) clearInterval(fltTimerInterval);
+    document.getElementById('fltFullPageTestWorkspace').style.display = 'none';
+
+    let total = fltActiveTestList.length;
+    let correct = 0;
+    let wrong = 0;
+    let unattempted = 0;
+    let wrongUnattemptedList = [];
+
+    for(let i = 0; i < total; i++) {
+      let chosen = fltUserAnswers[i];
+      let q = fltActiveTestList[i];
+      if(!chosen) {
+        unattempted++;
+        wrongUnattemptedList.push({ qNum: i+1, q: q, status: 'Unattempted', userAns: 'None' });
+      } else if(chosen === q.ans) {
+        correct++;
+      } else {
+        wrong++;
+        wrongUnattemptedList.push({ qNum: i+1, q: q, status: 'Incorrect', userAns: chosen });
+      }
+    }
+
+    lastSubmittedWrongUnattemptedList = wrongUnattemptedList;
+
+    let rawScore = (correct * 1) - (wrong * Math.abs(fltCurrentNegativeMarking));
+    let finalScore = Math.max(0, rawScore).toFixed(2);
+    let totalMarks = total * 1;
+    let timeTakenMin = Math.round((Date.now() - fltStartTime) / 60000);
+
+    let resultRecord = {
+      testName: fltActiveTestName,
+      date: new Date().toLocaleString(),
+      totalQuestions: total,
+      correct: correct,
+      wrong: wrong,
+      unattempted: unattempted,
+      obtainedMarks: finalScore,
+      totalMarks: totalMarks,
+      timeTaken: `${timeTakenMin} Min`,
+      wrongUnattemptedList: wrongUnattemptedList
+    };
+
+    let history = JSON.parse(localStorage.getItem('cg_flt_results_history') || '[]');
+    history.unshift(resultRecord);
+    localStorage.setItem('cg_flt_results_history', JSON.stringify(history));
+
+    document.getElementById('fltResultSummaryBox').innerHTML = `
+      <p style="font-size:1.05rem; margin-bottom:6px;"><strong>Test Name:</strong> ${resultRecord.testName}</p>
+      <p style="font-size:1.05rem; margin-bottom:6px;"><strong>Total Questions:</strong> ${total}</p>
+      <p style="font-size:1.05rem; color:var(--success); margin-bottom:6px;"><strong>Correct:</strong> ${correct} | <strong>Wrong:</strong> ${wrong}</p>
+      <p style="font-size:1.05rem; color:var(--warning); margin-bottom:6px;"><strong>Unattempted:</strong> ${unattempted}</p>
+      <p style="font-size:1.05rem; margin-bottom:6px;"><strong>Time Taken:</strong> ${resultRecord.timeTaken}</p>
+      <hr style="border-color:var(--border); margin:8px 0;">
+      <p style="font-size:1.2rem; font-weight:bold; color:#60a5fa;">Final Score: ${finalScore} / ${totalMarks}</p>
+    `;
+    document.getElementById('fltResultModal').style.display = 'block';
+  }
+
+  function downloadWrongUnattemptedPdf() {
+    if(!lastSubmittedWrongUnattemptedList || lastSubmittedWrongUnattemptedList.length === 0) {
+      return alert('No incorrect or unattempted questions to export for revision!');
+    }
+    generateRevisionPdf(lastSubmittedWrongUnattemptedList, fltActiveTestName);
+  }
+
+  function downloadWrongUnattemptedPdfFromHistory(idx) {
+    let history = JSON.parse(localStorage.getItem('cg_flt_results_history') || '[]');
+    let record = history[idx];
+    if(!record || !record.wrongUnattemptedList || record.wrongUnattemptedList.length === 0) {
+      return alert('No incorrect or unattempted questions found for this test!');
+    }
+    generateRevisionPdf(record.wrongUnattemptedList, record.testName);
+  }
+
+  function generateRevisionPdf(itemsList, testTitle) {
+    const title = testTitle || 'Custom Mock Test';
+    const incCount = itemsList.filter(it => it.status === 'Incorrect').length;
+    const unatCount = itemsList.filter(it => it.status !== 'Incorrect').length;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) + ' ' + now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+
+    let qCardsHtml = '';
+    itemsList.forEach((item, index) => {
+      let q = item.q || {};
+      let opts = q.options;
+      if(typeof opts === 'string') { try { opts = JSON.parse(opts); } catch(e){} }
+      if(!opts || typeof opts !== 'object') {
+        opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
+      }
+
+      let isWrong = (item.status === 'Incorrect');
+      let statusBadge = isWrong
+        ? '<span class="badge-pill badge-wrong">&#10060; Incorrect (Your Ans: ' + (item.userAns || 'None') + ')</span>'
+        : '<span class="badge-pill badge-unattempted">&#9888;&#65039; Unattempted</span>';
+
+      let examTag = (q.exam && q.exam.trim()) ? q.exam.trim() : 'PYQ';
+      let secTitle = q.fltSectionTitle || q.subject || 'General Section';
+      let subTitle = q.subject || '';
+      let topTitle = q.topic ? (' &rsaquo; ' + q.topic) : '';
+
+      // Build Question Body
+      let bodyHtml = '';
+      if(q.type === 'match') {
+        let instructionText = (q.text && q.text.trim()) ? q.text.trim() : 'Match the following:';
+        bodyHtml += '<div style="margin-bottom:8px; font-weight:600;">' + instructionText + '</div>';
+        let rows = q.matchRows;
+        if(typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(e){} }
+        if(Array.isArray(rows) && rows.length > 0) {
+          let h1 = q.matchHead1 || 'List I';
+          let h2 = q.matchHead2 || 'List II';
+          let rowsHtml = rows.map(r => 
+            '<tr>' +
+              '<td style="font-weight:700; text-align:center; width:12%;">' + (r.c1 || '') + '</td>' +
+              '<td style="width:38%;">' + (r.c2 || '') + '</td>' +
+              '<td style="font-weight:700; text-align:center; width:12%;">' + (r.c3 || '') + '</td>' +
+              '<td style="width:38%;">' + (r.c4 || '') + '</td>' +
+            '</tr>'
+          ).join('');
+
+          bodyHtml += 
+            '<div class="match-table-container">' +
+              '<table class="match-pdf-table">' +
+                '<thead>' +
+                  '<tr>' +
+                    '<th style="width:12%; text-align:center;">#</th>' +
+                    '<th style="width:38%;">' + h1 + '</th>' +
+                    '<th style="width:12%; text-align:center;">Code</th>' +
+                    '<th style="width:38%;">' + h2 + '</th>' +
+                  '</tr>' +
+                '</thead>' +
+                '<tbody>' + rowsHtml + '</tbody>' +
+              '</table>' +
+            '</div>';
+        }
+      } else if(q.type === 'statement') {
+        let intro = (q.stIntro && q.stIntro.trim()) ? q.stIntro.trim() : ((q.text && !q.text.includes('i.') && !q.text.includes('1.')) ? q.text : 'Consider the following statements:');
+        bodyHtml += '<div style="margin-bottom:8px; font-weight:600;">' + intro + '</div>';
+        let stArr = q.statements;
+        if(Array.isArray(stArr) && stArr.length > 0) {
+          stArr.forEach((st, idx) => {
+            let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
+            let label = matchLabel ? matchLabel[1] : (idx + 1) + '.';
+            let cleanSt = matchLabel ? matchLabel[2] : st;
+            bodyHtml += '<div class="statement-item"><span class="st-index">' + label + '</span><span>' + cleanSt + '</span></div>';
+          });
+        } else if(q.text) {
+          let lines = q.text.split('\n').map(l => l.trim()).filter(Boolean);
+          lines.slice(1).forEach((st, idx) => {
+            bodyHtml += '<div class="statement-item"><span class="st-index">' + (idx + 1) + '.</span><span>' + st + '</span></div>';
+          });
+        }
+        if(q.stConclusion && q.stConclusion.trim() && q.stConclusion !== 'undefined' && q.stConclusion !== 'null') {
+          bodyHtml += '<div style="margin-top:8px; font-weight:600;">' + q.stConclusion + '</div>';
+        }
+      } else if(q.type === 'ar') {
+        let assertText = (q.assertion !== undefined && q.assertion !== 'undefined') ? q.assertion : (q.Assertion || '');
+        let reasonText = (q.reason !== undefined && q.reason !== 'undefined') ? q.reason : (q.Reason || '');
+        bodyHtml += 
+          '<div style="margin-bottom:6px;">' + (q.arText || 'Direction - For the below Assertion and Reason, choose correct alternative:') + '</div>' +
+          '<div class="ar-block">' +
+            '<div class="ar-item"><span class="ar-label">Assertion (A):</span> <span>' + assertText + '</span></div>' +
+            '<div class="ar-item"><span class="ar-label">Reason (R):</span> <span>' + reasonText + '</span></div>' +
+          '</div>';
+      } else if(q.isPassageSubQ || (q.passageText && q.passageText.trim())) {
+        bodyHtml += 
+          '<div class="passage-block">' +
+            '<div class="passage-title">&#128214; Passage / Comprehension' + (q.passageSubIdx ? (' (Q.' + q.passageSubIdx + ' of ' + (q.passageTotal || '') + ')') : '') + ':</div>' +
+            '<div>' + (q.passageText || '') + '</div>' +
+          '</div>' +
+          '<div style="font-weight:600; margin-bottom:6px;">Q: ' + (q.text || '') + '</div>';
+      } else {
+        bodyHtml += '<div>' + (q.text || 'No question text provided.') + '</div>';
+      }
+
+      // Build Options HTML
+      let optionKeys = ['A', 'B', 'C', 'D'];
+      if(opts && opts.E) optionKeys.push('E');
+      let optionsHtml = optionKeys.map(k => {
+        let optVal = (opts && opts[k] !== undefined) ? opts[k] : '';
+        let isCorrectOpt = (q.ans === k);
+        let isUserWrongOpt = (isWrong && item.userAns === k);
+        let extraClass = '';
+        let iconSuffix = '';
+        if(isCorrectOpt) {
+          extraClass = 'opt-is-correct';
+          iconSuffix = ' <span style="color:#16a34a; font-weight:bold; margin-left:8px;">&#10003; [Correct Answer]</span>';
+        } else if(isUserWrongOpt) {
+          extraClass = 'opt-is-user-wrong';
+          iconSuffix = ' <span style="color:#dc2626; font-weight:bold; margin-left:8px;">&#10007; [Your Answer]</span>';
+        }
+        return (
+          '<div class="opt-row ' + extraClass + '">' +
+            '<div class="opt-letter">(' + k + ')</div>' +
+            '<div class="opt-text">' + optVal + iconSuffix + '</div>' +
+          '</div>'
+        );
+      }).join('');
+
+      let ncertInfo = '';
+      if(q.ncert_tag === 'true' || q.ncert_book) {
+        ncertInfo = '<div class="ncert-badge">&#128218; NCERT: ' + (q.ncert_book || '') + (q.ncert_class ? (' | Class ' + q.ncert_class) : '') + (q.ncert_chapter ? (' | ' + q.ncert_chapter) : '') + '</div>';
+      }
+
+      qCardsHtml += 
+        '<div class="q-card">' +
+          '<div class="q-meta-bar">' +
+            '<div class="meta-tags">' +
+              '<span class="q-num-tag">Q.' + (item.qNum || (index + 1)) + '</span>' +
+              '<span class="badge-pill badge-sec">' + secTitle + '</span>' +
+              '<span class="badge-pill badge-exam">&#127963; Exam: ' + examTag + '</span>' +
+              (subTitle ? ('<span class="badge-pill badge-sub">' + subTitle + topTitle + '</span>') : '') +
+            '</div>' +
+            '<div>' + statusBadge + '</div>' +
+          '</div>' +
+          '<div class="q-body">' + bodyHtml + '</div>' +
+          '<div class="options-grid">' + optionsHtml + '</div>' +
+          '<div class="ans-expl-container">' +
+            '<div class="ans-header">' +
+              '<span>&#9989; Correct Answer: Option (' + (q.ans || 'N/A') + ')</span>' +
+            '</div>' +
+            '<div class="expl-content"><strong>Explanation:</strong>\n' + (q.expl || 'Detailed explanation not available.') + '</div>' +
+            ncertInfo +
+          '</div>' +
+        '</div>';
+    });
+
+    let htmlContent = '<!DOCTYPE html>' +
+'<html lang="en">' +
+'<head>' +
+  '<meta charset="UTF-8">' +
+  '<title>' + title + ' - Revision PDF</title>' +
+  '<style>' +
+    '@page { margin: 12mm 10mm; size: A4; }' +
+    '* { box-sizing: border-box; }' +
+    'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 20px; color: #1e293b; background: #f8fafc; font-size: 13px; line-height: 1.5; }' +
+    '@media print {' +
+      'body { background: #fff; padding: 0; }' +
+      '.no-print { display: none !important; }' +
+      '.q-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #cbd5e1 !important; box-shadow: none !important; margin-bottom: 16px !important; }' +
+    '}' +
+    '.top-actions { position: sticky; top: 10px; z-index: 100; display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }' +
+    '.btn-action { background: #2563eb; color: #fff; border: none; padding: 9px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(37,99,235,0.25); font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }' +
+    '.btn-action:hover { background: #1d4ed8; }' +
+    '.header-banner { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%); color: #ffffff; padding: 20px 24px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(30, 58, 138, 0.15); }' +
+    '.header-banner h1 { margin: 0 0 6px 0; font-size: 22px; font-weight: 800; letter-spacing: -0.3px; }' +
+    '.header-sub { font-size: 13px; opacity: 0.92; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }' +
+    '.stats-strip { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }' +
+    '.stat-badge { background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(4px); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.25); }' +
+    '.q-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 18px; margin-bottom: 18px; box-shadow: 0 2px 4px rgba(0,0,0,0.03); page-break-inside: avoid; break-inside: avoid; }' +
+    '.q-meta-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 12px; }' +
+    '.q-num-tag { font-size: 14px; font-weight: 800; color: #1e40af; }' +
+    '.meta-tags { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }' +
+    '.badge-pill { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }' +
+    '.badge-exam { background: #fdf2f8; color: #9d174d; border: 1px solid #fbcfe8; }' +
+    '.badge-sec { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }' +
+    '.badge-sub { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }' +
+    '.badge-wrong { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }' +
+    '.badge-unattempted { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }' +
+    '.q-body { font-size: 13.5px; font-weight: 500; line-height: 1.55; color: #0f172a; margin-bottom: 14px; }' +
+    '.passage-block { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; font-size: 12.5px; line-height: 1.5; }' +
+    '.passage-title { font-weight: 700; color: #1d4ed8; margin-bottom: 4px; }' +
+    '.ar-block { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin: 10px 0; }' +
+    '.ar-item { margin-bottom: 6px; }' +
+    '.ar-label { font-weight: 700; color: #1e40af; margin-right: 6px; }' +
+    '.statement-item { display: flex; gap: 8px; margin-bottom: 6px; font-size: 13px; }' +
+    '.st-index { font-weight: 700; color: #2563eb; min-width: 20px; }' +
+    '.match-table-container { margin: 12px 0; overflow-x: auto; }' +
+    '.match-pdf-table { width: 100%; border-collapse: collapse; font-size: 12.5px; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; }' +
+    '.match-pdf-table th { background: #f1f5f9; color: #1e293b; padding: 8px 10px; border: 1px solid #cbd5e1; font-weight: 700; text-align: left; }' +
+    '.match-pdf-table td { padding: 7px 10px; border: 1px solid #cbd5e1; vertical-align: top; background: #ffffff; }' +
+    '.match-pdf-table tr:nth-child(even) td { background: #f8fafc; }' +
+    '.options-grid { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }' +
+    '.opt-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 12px; border-radius: 7px; border: 1px solid #e2e8f0; font-size: 13px; background: #ffffff; }' +
+    '.opt-letter { font-weight: 700; min-width: 26px; color: #475569; }' +
+    '.opt-text { flex: 1; word-break: break-word; }' +
+    '.opt-is-correct { background: #f0fdf4 !important; border: 1.5px solid #22c55e !important; color: #14532d !important; font-weight: 600; }' +
+    '.opt-is-correct .opt-letter { color: #15803d !important; }' +
+    '.opt-is-user-wrong { background: #fef2f2 !important; border: 1.5px solid #ef4444 !important; color: #7f1d1d !important; }' +
+    '.opt-is-user-wrong .opt-letter { color: #b91c1c !important; }' +
+    '.ans-expl-container { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }' +
+    '.ans-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 13px; font-weight: 700; color: #15803d; }' +
+    '.expl-content { font-size: 12.5px; color: #334155; line-height: 1.55; white-space: pre-wrap; }' +
+    '.ncert-badge { display: inline-block; margin-top: 8px; background: #fef3c7; color: #78350f; border: 1px solid #fde68a; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }' +
+    '.footer-note { text-align: center; color: #94a3b8; font-size: 11px; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e2e8f0; }' +
+  '</style>' +
+'</head>' +
+'<body>' +
+  '<div class="top-actions no-print">' +
+    '<button class="btn-action" onclick="window.print()">&#128438;&#65039; Print / Save as PDF</button>' +
+  '</div>' +
+  '<div class="header-banner">' +
+    '<h1>Crack CGPSC Admin Studio</h1>' +
+    '<div class="header-sub">' +
+      '<span><strong>Test:</strong> ' + title + '</span>' +
+      '<span>&bull;</span>' +
+      '<span><strong>Generated:</strong> ' + dateStr + '</span>' +
+    '</div>' +
+    '<div class="stats-strip">' +
+      '<div class="stat-badge">&#128221; Total Questions: ' + itemsList.length + '</div>' +
+      '<div class="stat-badge">&#10060; Incorrect: ' + incCount + '</div>' +
+      '<div class="stat-badge">&#9203; Unattempted: ' + unatCount + '</div>' +
+    '</div>' +
+  '</div>' +
+  qCardsHtml +
+  '<div class="footer-note">' +
+    'Crack CGPSC Admin Studio &bull; Revision &amp; Performance Review Document' +
+  '</div>' +
+'</body>' +
+'</html>';
+
+    let printWindow = window.open('', '_blank');
+    if(printWindow && printWindow.document) {
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        try { printWindow.print(); } catch(e){}
+      }, 500);
+    } else {
+      showPdfPrintOverlay(htmlContent);
+    }
+  }
+
+  function showPdfPrintOverlay(htmlContent) {
+    let existing = document.getElementById('pdfPrintOverlay');
+    if(existing) existing.remove();
+
+    let overlay = document.createElement('div');
+    overlay.id = 'pdfPrintOverlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100vw';
+    overlay.style.height = '100vh';
+    overlay.style.backgroundColor = '#ffffff';
+    overlay.style.zIndex = '99999';
+    overlay.style.display = 'flex';
+    overlay.style.flexDirection = 'column';
+
+    overlay.innerHTML = 
+      '<div style="background:#1e3a8a; color:#fff; padding:12px 18px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.2);">' +
+        '<strong style="font-size:1.05rem;">&#128196; Revision Sheet Preview</strong>' +
+        '<div style="display:flex; gap:10px;">' +
+          '<button class="btn" onclick="printPdfOverlayIframe()" style="background:#3b82f6; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-weight:600; cursor:pointer;">&#128438;&#65039; Print / Save PDF</button>' +
+          '<button class="btn btn-secondary" onclick="closePdfPrintOverlay()" style="background:#475569; color:#fff; border:none; padding:6px 14px; border-radius:6px; font-weight:600; cursor:pointer;">&#10005; Close</button>' +
+        '</div>' +
+      '</div>' +
+      '<iframe id="pdfPrintIframe" style="flex:1; border:none; width:100%; height:100%;"></iframe>';
+
+    document.body.appendChild(overlay);
+
+    let iframe = document.getElementById('pdfPrintIframe');
+    let doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(htmlContent);
+    doc.close();
+  }
+
+  function printPdfOverlayIframe() {
+    let iframe = document.getElementById('pdfPrintIframe');
+    if(iframe && iframe.contentWindow) {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }
+  }
+
+  function closePdfPrintOverlay() {
+    let overlay = document.getElementById('pdfPrintOverlay');
+    if(overlay) overlay.remove();
+  }
+
+  function closeFltResultModal() {
+    document.getElementById('fltResultModal').style.display = 'none';
+  }
+
+  function closeFltResultModalAndGoHistory() {
+    closeFltResultModal();
+    switchFltSubTab('history');
+  }
+
+  function renderFltResultsHistory() {
+    const list = document.getElementById('fltResultsHistoryList');
+    if(!list) return;
+    let history = JSON.parse(localStorage.getItem('cg_flt_results_history') || '[]');
+    if(history.length === 0) {
+      list.innerHTML = '<p style="color:var(--muted); font-size:0.88rem;">No test results recorded yet. Take a Custom FLT test to see performance summary here.</p>';
+      return;
+    }
+
+    list.innerHTML = history.map((res, idx) => `
+      <div style="background:var(--card-inner); border:1px solid var(--border); border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <strong style="color:#60a5fa; font-size:1.02rem; display:block; margin-bottom:2px;">${res.testName}</strong>
+          <span style="font-size:0.78rem; color:var(--muted);">${res.date} | Time: ${res.timeTaken}</span>
+          <div style="font-size:0.85rem; color:#cbd5e1; margin-top:6px;">
+            Correct: <span style="color:#34d399; font-weight:bold;">${res.correct}</span> | Wrong: <span style="color:#ef4444; font-weight:bold;">${res.wrong}</span> | Unattempted: <span style="color:#f59e0b; font-weight:bold;">${res.unattempted}</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <strong style="font-size:1.15rem; color:#38bdf8; display:block;">${res.obtainedMarks} / ${res.totalMarks}</strong>
+          <span style="font-size:0.75rem; color:var(--muted);">Final Score</span>
+          ${res.wrongUnattemptedList && res.wrongUnattemptedList.length > 0 ? `
+            <div style="margin-top:6px;">
+              <button class="btn btn-secondary btn-sm" onclick="downloadWrongUnattemptedPdfFromHistory(${idx})" style="background:#8b5cf6; font-size:0.75rem; padding:3px 8px;">📥 Revision PDF</button>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function clearAllResultsHistory() {
+    if(!confirm('Clear all test results history?')) return;
+    localStorage.removeItem('cg_flt_results_history');
+    renderFltResultsHistory();
+  }
+
+  // --- STANDARD QUESTION EDIT & LIVE PREVIEW CONTROLS ---
   function openLivePreviewModal() {
     const type = document.getElementById('feedType').value;
     let bodyHtml = '';
@@ -1794,7 +3489,13 @@
 
     try {
       const docRef = await db.collection("questions").add(newQ);
-      alert('✅ Question Saved to Firebase Firestore successfully! ID: ' + docRef.id);
+      
+      let addedWithId = { id: docRef.id, ...newQ };
+      questions.push(addedWithId);
+      localStorage.setItem('cg_admin_cached_questions', JSON.stringify(questions));
+      localStorage.setItem('cg_cached_questions', JSON.stringify(questions));
+
+      alert('✅ Question Saved to Firebase Firestore & Local Cache successfully! ID: ' + docRef.id);
       
       document.getElementById('unifiedQForm').reset();
       document.getElementById('feedType').value = 'standard';
@@ -1806,7 +3507,7 @@
       addPassageSubQuestionInput();
       updateFeedSubjectOptions();
       updateAdminDatalists();
-      fetchQuestionsFromFirestore();
+      processLoadedQuestions();
     } catch(err) {
       alert('Error saving to Firestore: ' + err.message);
     }
@@ -1879,37 +3580,26 @@
     userResponses = {};
     
     const player = document.getElementById('adminQuizPlayer');
-    player.innerHTML = `
-      <div class="q-header-bar">
-        <div class="q-header-left">
-          <button class="btn btn-secondary btn-sm" onclick="backToQuizConfig()" title="Back">⬅️ Back</button>
-          <span id="aqCounter" style="color:#60a5fa; font-weight:bold; font-size:1.02rem;">Q 1</span>
-          <span class="badge-exam-tag" id="aqExamBadge">PYQ</span>
-        </div>
-        <div class="q-header-right">
-          <button class="btn btn-secondary btn-sm" onclick="openEditModalForCurrentQ()" title="Edit Question">✏️ Edit</button>
-        </div>
-      </div>
-
-      <div class="formatted-text" id="aqBody"></div>
-      <div id="aqMatchWrap"></div>
-      <div id="aqOpts"></div>
-      <div id="aqExpl" class="expl-box" style="display:none;"></div>
-      
-      <div style="display:flex; justify-content:space-between; margin-top:15px;">
-        <button class="btn btn-secondary" onclick="moveAdminQuizQ(-1)">Previous</button>
-        <button class="btn" id="aqNextBtn" onclick="moveAdminQuizQ(1)">Next</button>
-      </div>
-    `;
-
-    document.getElementById('adminQuizConfigCard').style.display = 'none';
     player.style.display = 'block';
+    document.getElementById('adminQuizConfigCard').style.display = 'none';
+
+    const playView = document.getElementById('adminQuizPlayView');
+    const resultView = document.getElementById('adminQuizResultView');
+    if (playView) playView.style.display = 'block';
+    if (resultView) resultView.style.display = 'none';
+
     renderAdminQuizCard();
   }
 
   function backToQuizConfig() {
     document.getElementById('adminQuizConfigCard').style.display = 'block';
     document.getElementById('adminQuizPlayer').style.display = 'none';
+    const playView = document.getElementById('adminQuizPlayView');
+    const resultView = document.getElementById('adminQuizResultView');
+    if (playView) playView.style.display = 'block';
+    if (resultView) resultView.style.display = 'none';
+    userResponses = {};
+    adminQuizIdx = 0;
   }
 
   function cleanMatchSeq(val) {
@@ -1947,9 +3637,11 @@
         </div>
       `;
     } else if(q.type === 'statement') {
+      let introText = (q.stIntro && q.stIntro.trim() !== '' && q.stIntro !== 'undefined' && q.stIntro !== 'null') ? q.stIntro : (q.text && !q.text.includes('i.') && !q.text.includes('1.') ? q.text : 'Consider the following statements:');
+      bodyHtml = `<div style="margin-bottom:10px; text-align: left; font-weight: 600;">${introText}</div>`;
+
       let stArr = q.statements;
       if(Array.isArray(stArr) && stArr.length > 0) {
-        bodyHtml = `<div style="margin-bottom:10px; text-align: left;">${q.stIntro || 'Consider the following statements:'}</div>`;
         stArr.forEach((st, idx) => {
           let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
           let label = matchLabel ? matchLabel[1] : `${idx + 1}.`;
@@ -1958,14 +3650,14 @@
         });
       } else {
         let lines = (q.text || '').split('\n').map(l => l.trim()).filter(Boolean);
-        bodyHtml = `<div style="margin-bottom:10px; text-align: left;">${lines[0] || 'Consider the following statements:'}</div>`;
-        let statementsList = lines.slice(1, lines.length - (q.stConclusion ? 1 : 0));
+        let statementsList = lines.slice(1);
         statementsList.forEach((st, idx) => {
           bodyHtml += `<div class="statement-preview-item"><span class="st-num">${idx + 1}.</span><span class="st-text">${st}</span></div>`;
         });
       }
-      if(q.stConclusion && q.stConclusion.trim() !== '' && q.stConclusion !== 'undefined') {
-        bodyHtml += `<div style="margin-top:10px; text-align: left;">${q.stConclusion}</div>`;
+
+      if(q.stConclusion && q.stConclusion.trim() !== '' && q.stConclusion !== 'undefined' && q.stConclusion !== 'null') {
+        bodyHtml += `<div style="margin-top:10px; text-align: left; font-weight: 600;">${q.stConclusion}</div>`;
       }
     } else if(q.isPassageSubQ) {
       bodyHtml = `
@@ -1988,7 +3680,7 @@
             <table class="match-table">
               <thead><tr><th>#</th><th>${q.matchHead1 || 'List I'}</th><th>Seq</th><th>${q.matchHead2 || 'List II'}</th></tr></thead>
               <tbody>
-                ${rows.map(r => `<tr><td><strong>${r.c1}</strong></td><td>${r.c2}</td><td><strong>${cleanMatchSeq(r.c3)}</strong></td><td>${r.c4}</td></tr>`).join('')}
+                ${rows.map(r => `<tr><td><strong>${r.c1}</strong></td><td>${r.c2}</td><td><strong>${r.c3}</strong></td><td>${r.c4}</td></tr>`).join('')}
               </tbody>
             </table>
           </div>
@@ -2077,21 +3769,23 @@
     let score = (correct * 1) - (wrong * 0.333);
     score = score.toFixed(2);
 
-    const player = document.getElementById('adminQuizPlayer');
-    player.innerHTML = `
-      <h3>📊 Quiz Result & Performance Summary</h3>
-      <div style="background:var(--card-inner); padding:16px; border-radius:12px; border:1px solid var(--border); margin:15px 0;">
+    const playView = document.getElementById('adminQuizPlayView');
+    const resultView = document.getElementById('adminQuizResultView');
+    const summaryBox = document.getElementById('adminQuizResultSummaryBox');
+
+    if (summaryBox) {
+      summaryBox.innerHTML = `
         <p style="font-size:1.05rem; margin-bottom:8px;"><strong>Total Questions:</strong> ${total}</p>
         <p style="font-size:1.05rem; color:var(--success); margin-bottom:8px;"><strong>Correct Answers:</strong> ${correct}</p>
         <p style="font-size:1.05rem; color:var(--danger); margin-bottom:8px;"><strong>Wrong Answers:</strong> ${wrong}</p>
         <p style="font-size:1.05rem; color:var(--warning); margin-bottom:8px;"><strong>Unattempted:</strong> ${unattempted}</p>
         <hr style="border-color:var(--border); margin:12px 0;">
         <p style="font-size:1.2rem; font-weight:bold; color:#60a5fa;">Final Score (with 1/3rd Negative Marking): ${score}</p>
-      </div>
-      <div style="display:flex; gap:10px; justify-content:flex-end;">
-        <button class="btn btn-secondary" onclick="backToQuizConfig()">Back to Setup</button>
-      </div>
-    `;
+      `;
+    }
+
+    if (playView) playView.style.display = 'none';
+    if (resultView) resultView.style.display = 'block';
   }
 
   function openEditModalForCurrentQ() {
@@ -2171,8 +3865,8 @@
       }
     } else if(q.type === 'statement') {
       let introVal = q.stIntro;
-      if(!introVal || introVal.trim() === '') {
-        if(q.text && !q.text.includes('i.') && !q.text.includes('1.')) {
+      if(!introVal || introVal.trim() === '' || introVal === 'undefined') {
+        if(q.text && !q.text.includes('i.') && !q.text.includes('1.') && !q.text.includes('i)') && !q.text.includes('1)')) {
           introVal = q.text;
         } else {
           introVal = '';
@@ -2186,7 +3880,7 @@
       } else {
         document.getElementById('editStList').value = '';
       }
-      document.getElementById('editStConclusion').value = q.stConclusion || '';
+      document.getElementById('editStConclusion').value = (q.stConclusion && q.stConclusion !== 'undefined' && q.stConclusion !== 'null') ? q.stConclusion : '';
     } else if(q.type === 'passage') {
       document.getElementById('editPassageText').value = q.passageText || q.text || '';
     } else {
@@ -2285,9 +3979,25 @@
 
     try {
       await db.collection("questions").doc(qId).update(updated);
+      
+      let targetIdx = questions.findIndex(q => (q.id && q.id.toString() === qId.toString()) || (q.originalId && q.originalId.toString() === qId.toString()));
+      if(targetIdx !== -1) {
+        questions[targetIdx] = { ...questions[targetIdx], ...updated, id: qId };
+      } else {
+        questions.push({ id: qId, ...updated });
+      }
+      
+      localStorage.setItem('cg_admin_cached_questions', JSON.stringify(questions));
+      localStorage.setItem('cg_cached_questions', JSON.stringify(questions));
+
       closeEditModal();
-      alert('✅ Question Updated in Firestore Successfully!');
-      fetchQuestionsFromFirestore();
+      alert('✅ Question Updated in Firestore & Local Cache Successfully!');
+      processLoadedQuestions();
+      
+      if(adminQuizList.length > 0 && adminQuizIdx < adminQuizList.length) {
+        adminQuizList[adminQuizIdx] = { ...adminQuizList[adminQuizIdx], ...updated, id: qId };
+        renderAdminQuizCard();
+      }
     } catch(err) {
       alert("Error updating question in Firestore: " + err.message);
     }
@@ -2298,12 +4008,20 @@
     const qId = document.getElementById('editQId').value;
     try {
       await db.collection("questions").doc(qId).delete();
+      
+      questions = questions.filter(q => (q.id && q.id.toString() !== qId.toString()) && (q.originalId && q.originalId.toString() !== qId.toString()));
+      localStorage.setItem('cg_admin_cached_questions', JSON.stringify(questions));
+      localStorage.setItem('cg_cached_questions', JSON.stringify(questions));
+
       closeEditModal();
-      alert('🗑️ Question Deleted from Firestore!');
-      fetchQuestionsFromFirestore();
+      alert('🗑️ Question Deleted from Firestore & Local Cache!');
+      processLoadedQuestions();
+      
       if(adminQuizList.length > 0) {
+        adminQuizList = adminQuizList.filter(q => (q.id && q.id.toString() !== qId.toString()) && (q.originalId && q.originalId.toString() !== qId.toString()));
         if(adminQuizIdx >= adminQuizList.length) adminQuizIdx = adminQuizList.length - 1;
-        renderAdminQuizCard();
+        if(adminQuizList.length > 0) renderAdminQuizCard();
+        else backToQuizConfig();
       } else {
         backToQuizConfig();
       }
@@ -2315,7 +4033,7 @@
   if(localStorage.getItem('cg_admin_logged') === 'true') {
     document.getElementById('adminAuthCard').style.display = 'none';
     document.getElementById('adminPortalPanel').style.display = 'block';
-    document.getElementById('adminHeaderUser').style.display = 'inline-block';
+    document.getElementById('adminHeaderUser').style.display = 'flex';
     initAdminStudio();
   }
 </script>
