@@ -13,6 +13,24 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
+  <!-- MathJax for Mathematics & Reasoning Formulas and Symbols -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      startup: {
+        typeset: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
   <style>
     :root {
       --bg: #030712;
@@ -117,6 +135,8 @@
     
     .expl-box { background: rgba(37, 99, 235, 0.15); border-left: 4px solid var(--primary); padding: 12px; margin-top: 8px; border-radius: 8px; font-size: 0.92rem; line-height: 1.5; white-space: pre-wrap; text-align: left; }
     .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; padding: 20px; text-align: left; }
+    .lang-toggle-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(139, 92, 246, 0.22); border: 1px solid rgba(167, 139, 250, 0.5); color: #c4b5fd; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; user-select: none; }
+    .lang-toggle-btn:hover, .lang-toggle-btn:active { background: rgba(139, 92, 246, 0.4); border-color: #c084fc; color: #fff; transform: scale(1.03); }
   </style>
 </head>
 <body>
@@ -165,9 +185,9 @@
     <!-- Floating Header Navigation -->
     <div class="floating-header">
       <div class="nav-tabs">
-        <button class="nav-tab-btn active" onclick="switchAdminTab('feed')">📝 Feed Questions</button>
-        <button class="nav-tab-btn" onclick="switchAdminTab('quiz')">⚡ Quiz &amp; Edit</button>
-        <button class="nav-tab-btn" onclick="switchAdminTab('flt')">🚀 Custom FLT &amp; Results</button>
+        <button id="navTabBtnFeed" class="nav-tab-btn active" onclick="switchAdminTab('feed', this)">📝 Feed Questions</button>
+        <button id="navTabBtnQuiz" class="nav-tab-btn" onclick="switchAdminTab('quiz', this)">⚡ Quiz &amp; Edit</button>
+        <button id="navTabBtnFlt" class="nav-tab-btn" onclick="switchAdminTab('flt', this)">🚀 Custom FLT &amp; Results</button>
       </div>
     </div>
 
@@ -333,6 +353,107 @@
             </div>
           </div>
 
+          <!-- Diagram & Images Section (Question & Options) with Google Drive link auto-formatting -->
+          <div style="margin: 12px 0; background: var(--card-inner); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; color: #38bdf8; font-weight: bold; user-select: none;" onclick="toggleFeedImageContainer()">
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <span>🖼️</span> <span>Add Question &amp; Option Images (Google Drive / Web URL)</span>
+              </span>
+              <span id="feedImageToggleIcon" style="font-size: 0.85rem; background: rgba(56, 189, 248, 0.15); padding: 2px 8px; border-radius: 6px;">▼ Expand</span>
+            </div>
+            <div id="feedImageContainer" style="display: none; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px;">
+              <p style="font-size: 0.78rem; color: #93c5fd; margin-bottom: 8px;">💡 Google Drive share link paste karein (jaise: <code>https://drive.google.com/file/d/.../view</code>) — direct image preview automatically generate ho jayega. Storage usage: 0 MB!</p>
+              <label>Question Image / Diagram URL (Optional):</label>
+              <input type="text" id="feedQImage" placeholder="Paste Google Drive or direct image link..." oninput="previewFeedQImage(this.value)" autocomplete="off">
+              <div id="feedQImagePreview" style="display:none; margin-bottom:12px; text-align:center; background:rgba(0,0,0,0.4); padding:8px; border-radius:8px;">
+                <span style="font-size:0.75rem; color:#9ca3af; display:block; margin-bottom:4px;">Image Preview:</span>
+                <img id="feedQImagePreviewImg" src="" style="max-width:100%; max-height:220px; border-radius:6px; object-fit:contain;" alt="Question Diagram">
+              </div>
+              <label style="margin-top:6px;">Options Images (Optional):</label>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+                <div><label>Opt (A) Image URL</label><input type="text" id="feedOptAImage" placeholder="Opt A image URL..." autocomplete="off"></div>
+                <div><label>Opt (B) Image URL</label><input type="text" id="feedOptBImage" placeholder="Opt B image URL..." autocomplete="off"></div>
+                <div><label>Opt (C) Image URL</label><input type="text" id="feedOptCImage" placeholder="Opt C image URL..." autocomplete="off"></div>
+                <div><label>Opt (D) Image URL</label><input type="text" id="feedOptDImage" placeholder="Opt D image URL..." autocomplete="off"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bilingual / Hindi Feeding Section (Dynamic for All Question Types) -->
+          <div style="margin: 12px 0; background: var(--card-inner); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+            <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; color: #c084fc; font-weight: bold; user-select: none;" onclick="toggleFeedHindiContainer()">
+              <span style="display: flex; align-items: center; gap: 8px;">
+                <span>🌐</span> <span>Add Hindi Version (द्विभाषी / Bilingual Question)</span>
+              </span>
+              <span id="feedHindiToggleIcon" style="font-size: 0.85rem; background: rgba(192, 132, 252, 0.15); padding: 2px 8px; border-radius: 6px;">▼ Expand</span>
+            </div>
+            <div id="feedHindiContainer" style="display: none; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px;">
+              <p style="font-size: 0.78rem; color: #d8b4fe; margin-bottom: 8px;">💡 हिन्दी प्रश्न और विकल्प भरें। यह आपके ऊपर चुने हुए प्रश्न प्रकार (MCQ / अभिकथन-कारण / सुमेलित सूची / कथन / गद्यांश) के अनुसार स्वचालित रूप से बदलता है।</p>
+              
+              <!-- Hindi Type 1: Assertion & Reason -->
+              <div id="feed-hindi-ar-fields" style="display:none; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; margin-bottom:10px; border:1px solid rgba(192, 132, 252, 0.3);">
+                <label style="color:#d8b4fe;">निर्देश (Direction Text Hindi):</label>
+                <textarea id="feedHindiArText" rows="2" placeholder="निर्देश: नीचे दो कथन दिए गए हैं, एक को अभिकथन (A) और दूसरे को कारण (R) कहा गया है..." autocomplete="off" spellcheck="false"></textarea>
+                <label style="color:#d8b4fe;">अभिकथन (Assertion - A Hindi):</label>
+                <textarea id="feedHindiAssert" rows="2" placeholder="अभिकथन (A)..." autocomplete="off" spellcheck="false"></textarea>
+                <label style="color:#d8b4fe;">कारण (Reason - R Hindi):</label>
+                <textarea id="feedHindiReason" rows="2" placeholder="कारण (R)..." autocomplete="off" spellcheck="false"></textarea>
+              </div>
+
+              <!-- Hindi Type 2: Match the Following (Table) -->
+              <div id="feed-hindi-match-fields" style="display:none; background:rgba(0,0,0,0.3); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid rgba(192, 132, 252, 0.3);">
+                <h4 style="color:#c084fc; margin-bottom:10px;">📋 सुमेलित सूची तालिका (Hindi Match List Table)</h4>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+                  <div><label style="color:#d8b4fe;">Heading 1 (हिन्दी)</label><input type="text" id="feedHindiMatchHead1" value="सूची I" autocomplete="off"></div>
+                  <div><label style="color:#d8b4fe;">Heading 2 (हिन्दी)</label><input type="text" id="feedHindiMatchHead2" value="सूची II" autocomplete="off"></div>
+                </div>
+                <label style="margin-top:8px; color:#d8b4fe;">तालिका प्रविष्टियाँ (Table Rows Hindi):</label>
+                <div id="feedHindiMatchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+                <div style="display:flex; gap:8px;">
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="addHindiMatchRowInput()">+ Add Hindi Row</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="syncEnglishRowsToHindi()" style="background:#4b5563;">📋 Copy Row Count from English Table</button>
+                </div>
+              </div>
+
+              <!-- Hindi Type 3: Statement Question -->
+              <div id="feed-hindi-statement-fields" style="display:none; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; margin-bottom:10px; border:1px solid rgba(192, 132, 252, 0.3);">
+                <label style="color:#d8b4fe;">प्रारंभिक कथन (Intro Text Hindi):</label>
+                <textarea id="feedHindiStIntro" rows="2" placeholder="निम्नलिखित कथनों पर विचार कीजिए:" autocomplete="off" spellcheck="false"></textarea>
+                <label style="color:#d8b4fe;">कथन सूची (Statements Hindi - प्रत्येक पंक्ति में एक कथन):</label>
+                <textarea id="feedHindiStList" rows="3" placeholder="(1) कथन एक...&#10;(2) कथन दो..." autocomplete="off" spellcheck="false"></textarea>
+                <label style="color:#d8b4fe;">निष्कर्ष / प्रश्न वाक्य (Conclusion Text Hindi - ऐच्छिक):</label>
+                <textarea id="feedHindiStConclusion" rows="2" placeholder="उपर्युक्त कथनों में से कौन-सा/से सही है/हैं?" autocomplete="off" spellcheck="false"></textarea>
+              </div>
+
+              <!-- Hindi Type 4: Passage / Comprehension -->
+              <div id="feed-hindi-passage-fields" style="display:none; background:rgba(0,0,0,0.3); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid rgba(192, 132, 252, 0.3);">
+                <h4 style="color:#c084fc; margin-bottom:6px;">📖 गद्यांश / अनुच्छेद (Hindi Passage Text)</h4>
+                <label style="color:#d8b4fe;">हिन्दी गद्यांश पैराग्राफ:</label>
+                <textarea id="feedHindiPassageText" rows="4" placeholder="यहाँ हिन्दी गद्यांश लिखें..." autocomplete="off" spellcheck="false"></textarea>
+              </div>
+
+              <!-- Hindi Standard Question Body -->
+              <div id="feed-hindi-standard-body-wrap">
+                <label style="color:#d8b4fe;">हिन्दी प्रश्न विवरण (Hindi Question Body / Instruction):</label>
+                <textarea id="feedHindiText" rows="3" placeholder="यहाँ हिन्दी प्रश्न लिखें..." autocomplete="off" spellcheck="false"></textarea>
+              </div>
+
+              <!-- Hindi Options -->
+              <div id="feed-hindi-standard-options-wrap">
+                <label style="color:#d8b4fe; margin-top:8px;">हिन्दी विकल्प (Hindi Options):</label>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+                  <div><label>विकल्प (A) हिन्दी</label><input type="text" id="feedHindiA" placeholder="विकल्प A..." autocomplete="off" spellcheck="false"></div>
+                  <div><label>विकल्प (B) हिन्दी</label><input type="text" id="feedHindiB" placeholder="विकल्प B..." autocomplete="off" spellcheck="false"></div>
+                  <div><label>विकल्प (C) हिन्दी</label><input type="text" id="feedHindiC" placeholder="विकल्प C..." autocomplete="off" spellcheck="false"></div>
+                  <div><label>विकल्प (D) हिन्दी</label><input type="text" id="feedHindiD" placeholder="विकल्प D..." autocomplete="off" spellcheck="false"></div>
+                </div>
+              </div>
+
+              <label style="margin-top:8px; color:#d8b4fe;">हिन्दी व्याख्या (Hindi Explanation - Optional):</label>
+              <textarea id="feedHindiExpl" rows="2" placeholder="हिन्दी व्याख्या..." autocomplete="off" spellcheck="false"></textarea>
+            </div>
+          </div>
+
           <button type="submit" class="btn btn-success" style="width:100%; justify-content:center; margin-top:10px;">💾 Save Question to Firebase Firestore</button>
         </form>
       </div>
@@ -451,6 +572,7 @@
               <button class="btn btn-secondary btn-sm" onclick="backToQuizConfig()" title="Back">⬅️ Back</button>
               <span id="aqCounter" style="color:#60a5fa; font-weight:bold; font-size:1.02rem;">Q 1</span>
               <span class="badge-exam-tag" id="aqExamBadge">PYQ</span>
+              <button id="aqLangToggleBtn" class="lang-toggle-btn" onclick="toggleQuizLanguage()" style="display:none;" title="Switch English / Hindi">🌐 EN / हिन्दी</button>
             </div>
             <div class="q-header-right">
               <button class="btn btn-secondary btn-sm" onclick="openEditModalForCurrentQ()" title="Edit Question">✏️ Edit</button>
@@ -596,8 +718,11 @@
       <!-- Left Question View Box -->
       <div class="card" style="flex:1; min-width:280px; display:flex; flex-direction:column; justify-content:space-between; margin-bottom:0; min-height:420px; overflow-y:auto; max-height:80vh;">
         <div>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-            <strong id="fltPlayerQCounter" style="color:#38bdf8;">Question 1</strong>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <strong id="fltPlayerQCounter" style="color:#38bdf8;">Question 1</strong>
+              <button id="fltPlayerLangToggleBtn" class="lang-toggle-btn" onclick="toggleFltLanguage()" style="display:none;" title="Switch English / Hindi">🌐 EN / हिन्दी</button>
+            </div>
             <span id="fltPlayerExamTag" style="font-size:0.78rem; color:var(--muted);">PYQ</span>
           </div>
           <div class="formatted-text" id="fltPlayerBody"></div>
@@ -765,6 +890,99 @@
         <label>Correct Answer</label>
         <select id="editAns"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
         <label>Explanation</label><textarea id="editExpl" rows="2" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
+      </div>
+
+      <!-- Edit Diagram & Images Section -->
+      <div style="margin: 12px 0; background: var(--card-inner); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; color: #38bdf8; font-weight: bold; user-select: none;" onclick="toggleEditImageContainer()">
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <span>🖼️</span> <span>Edit Question &amp; Option Images (Drive / Web Link)</span>
+          </span>
+          <span id="editImageToggleIcon" style="font-size: 0.85rem; background: rgba(56, 189, 248, 0.15); padding: 2px 8px; border-radius: 6px;">▼ Expand</span>
+        </div>
+        <div id="editImageContainer" style="display: none; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px;">
+          <p style="font-size: 0.78rem; color: #93c5fd; margin-bottom: 8px;">💡 Google Drive direct share link auto-converted. Storage usage: 0 MB!</p>
+          <label>Question Image URL:</label>
+          <input type="text" id="editQImage" placeholder="Paste Drive link or image URL..." autocomplete="off">
+          <label style="margin-top:6px;">Options Images:</label>
+          <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+            <div><label>Opt A Image</label><input type="text" id="editOptAImage" placeholder="URL..." autocomplete="off"></div>
+            <div><label>Opt B Image</label><input type="text" id="editOptBImage" placeholder="URL..." autocomplete="off"></div>
+            <div><label>Opt C Image</label><input type="text" id="editOptCImage" placeholder="URL..." autocomplete="off"></div>
+            <div><label>Opt D Image</label><input type="text" id="editOptDImage" placeholder="URL..." autocomplete="off"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Hindi / Bilingual Section (Dynamic for All Question Types) -->
+      <div style="margin: 12px 0; background: var(--card-inner); padding: 12px; border-radius: 12px; border: 1px solid var(--border);">
+        <div style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; color: #c084fc; font-weight: bold; user-select: none;" onclick="toggleEditHindiContainer()">
+          <span style="display: flex; align-items: center; gap: 8px;">
+            <span>🌐</span> <span>Edit Hindi Version (द्विभाषी प्रश्न)</span>
+          </span>
+          <span id="editHindiToggleIcon" style="font-size: 0.85rem; background: rgba(192, 132, 252, 0.15); padding: 2px 8px; border-radius: 6px;">▼ Expand</span>
+        </div>
+        <div id="editHindiContainer" style="display: none; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px;">
+          <p style="font-size: 0.78rem; color: #d8b4fe; margin-bottom: 8px;">💡 हिन्दी प्रश्न और विकल्प भरें। यह चुने हुए प्रश्न प्रकार (MCQ / अभिकथन-कारण / सुमेलित सूची / कथन / गद्यांश) के अनुसार बदलता है।</p>
+
+          <!-- Edit Hindi Type 1: Assertion & Reason -->
+          <div id="edit-hindi-ar-fields" style="display:none; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; margin-bottom:10px; border:1px solid rgba(192, 132, 252, 0.3);">
+            <label style="color:#d8b4fe;">निर्देश (Direction Text Hindi):</label>
+            <textarea id="editHindiArText" rows="2" placeholder="निर्देश: नीचे दो कथन दिए गए हैं..." autocomplete="off" spellcheck="false"></textarea>
+            <label style="color:#d8b4fe;">अभिकथन (Assertion - A Hindi):</label>
+            <textarea id="editHindiAssert" rows="2" placeholder="अभिकथन (A)..." autocomplete="off" spellcheck="false"></textarea>
+            <label style="color:#d8b4fe;">कारण (Reason - R Hindi):</label>
+            <textarea id="editHindiReason" rows="2" placeholder="कारण (R)..." autocomplete="off" spellcheck="false"></textarea>
+          </div>
+
+          <!-- Edit Hindi Type 2: Match the Following (Table) -->
+          <div id="edit-hindi-match-fields" style="display:none; background:rgba(0,0,0,0.3); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid rgba(192, 132, 252, 0.3);">
+            <h4 style="color:#c084fc; margin-bottom:10px;">📋 सुमेलित सूची तालिका (Hindi Match List Table)</h4>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
+              <div><label style="color:#d8b4fe;">Heading 1 (हिन्दी)</label><input type="text" id="editHindiMatchHead1" value="सूची I" autocomplete="off"></div>
+              <div><label style="color:#d8b4fe;">Heading 2 (हिन्दी)</label><input type="text" id="editHindiMatchHead2" value="सूची II" autocomplete="off"></div>
+            </div>
+            <label style="margin-top:8px; color:#d8b4fe;">तालिका प्रविष्टियाँ (Table Rows Hindi):</label>
+            <div id="editHindiMatchRowsInputsList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addEditHindiMatchRowInput()">+ Add Hindi Row</button>
+          </div>
+
+          <!-- Edit Hindi Type 3: Statement Question -->
+          <div id="edit-hindi-statement-fields" style="display:none; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px; margin-bottom:10px; border:1px solid rgba(192, 132, 252, 0.3);">
+            <label style="color:#d8b4fe;">प्रारंभिक कथन (Intro Text Hindi):</label>
+            <textarea id="editHindiStIntro" rows="2" placeholder="निम्नलिखित कथनों पर विचार कीजिए:" autocomplete="off" spellcheck="false"></textarea>
+            <label style="color:#d8b4fe;">कथन सूची (Statements Hindi):</label>
+            <textarea id="editHindiStList" rows="3" placeholder="(1) कथन एक...&#10;(2) कथन दो..." autocomplete="off" spellcheck="false"></textarea>
+            <label style="color:#d8b4fe;">निष्कर्ष वाक्य (Conclusion Text Hindi):</label>
+            <textarea id="editHindiStConclusion" rows="2" placeholder="उपर्युक्त कथनों में से कौन-सा/से सही है/हैं?" autocomplete="off" spellcheck="false"></textarea>
+          </div>
+
+          <!-- Edit Hindi Type 4: Passage / Comprehension -->
+          <div id="edit-hindi-passage-fields" style="display:none; background:rgba(0,0,0,0.3); padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid rgba(192, 132, 252, 0.3);">
+            <h4 style="color:#c084fc; margin-bottom:6px;">📖 गद्यांश / अनुच्छेद (Hindi Passage Text)</h4>
+            <label style="color:#d8b4fe;">हिन्दी गद्यांश पैराग्राफ:</label>
+            <textarea id="editHindiPassageText" rows="4" placeholder="यहाँ हिन्दी गद्यांश लिखें..." autocomplete="off" spellcheck="false"></textarea>
+          </div>
+
+          <!-- Edit Hindi Standard Question Body -->
+          <div id="edit-hindi-standard-body-wrap">
+            <label style="color:#d8b4fe;">हिन्दी प्रश्न विवरण (Hindi Question Body):</label>
+            <textarea id="editHindiText" rows="3" placeholder="यहाँ हिन्दी प्रश्न लिखें..." autocomplete="off" spellcheck="false"></textarea>
+          </div>
+
+          <!-- Edit Hindi Options -->
+          <div id="edit-hindi-standard-options-wrap">
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+              <div><label>विकल्प A हिन्दी</label><input type="text" id="editHindiA" placeholder="विकल्प A..." autocomplete="off" spellcheck="false"></div>
+              <div><label>विकल्प B हिन्दी</label><input type="text" id="editHindiB" placeholder="विकल्प B..." autocomplete="off" spellcheck="false"></div>
+              <div><label>विकल्प C हिन्दी</label><input type="text" id="editHindiC" placeholder="विकल्प C..." autocomplete="off" spellcheck="false"></div>
+              <div><label>विकल्प D हिन्दी</label><input type="text" id="editHindiD" placeholder="विकल्प D..." autocomplete="off" spellcheck="false"></div>
+            </div>
+          </div>
+
+          <label style="margin-top:6px; color:#d8b4fe;">हिन्दी व्याख्या (Hindi Explanation):</label>
+          <textarea id="editHindiExpl" rows="2" placeholder="हिन्दी व्याख्या..." autocomplete="off" spellcheck="false"></textarea>
+        </div>
       </div>
       
       <div style="display:flex; justify-content:space-between; margin-top:15px;">
@@ -935,6 +1153,44 @@
     if (passage) passage.style.display = (type === 'passage') ? 'block' : 'none';
     if (bodyWrap) bodyWrap.style.display = (type === 'standard' || type === 'match') ? 'block' : 'none';
     if (optsWrap) optsWrap.style.display = (type === 'passage') ? 'none' : 'block';
+
+    // Synchronize Hindi fields visibility with selected question type
+    const hAr = document.getElementById('feed-hindi-ar-fields');
+    const hMatch = document.getElementById('feed-hindi-match-fields');
+    const hSt = document.getElementById('feed-hindi-statement-fields');
+    const hPassage = document.getElementById('feed-hindi-passage-fields');
+    const hBodyWrap = document.getElementById('feed-hindi-standard-body-wrap');
+    const hOptsWrap = document.getElementById('feed-hindi-standard-options-wrap');
+
+    if (hAr) hAr.style.display = (type === 'ar') ? 'block' : 'none';
+    if (hMatch) hMatch.style.display = (type === 'match') ? 'block' : 'none';
+    if (hSt) hSt.style.display = (type === 'statement') ? 'block' : 'none';
+    if (hPassage) hPassage.style.display = (type === 'passage') ? 'block' : 'none';
+    if (hBodyWrap) hBodyWrap.style.display = (type === 'standard' || type === 'match') ? 'block' : 'none';
+    if (hOptsWrap) hOptsWrap.style.display = (type === 'passage') ? 'none' : 'block';
+
+    // If AR type is selected, pre-fill standard AR options in Hindi if empty
+    if (type === 'ar') {
+      const hA = document.getElementById('feedHindiA');
+      const hB = document.getElementById('feedHindiB');
+      const hC = document.getElementById('feedHindiC');
+      const hD = document.getElementById('feedHindiD');
+      if (hA && !hA.value) hA.value = "(A) और (R) दोनों सही हैं, और (R), (A) की सही व्याख्या है";
+      if (hB && !hB.value) hB.value = "(A) और (R) दोनों सही हैं, परन्तु (R), (A) की सही व्याख्या नहीं है";
+      if (hC && !hC.value) hC.value = "(A) सही है, परन्तु (R) गलत है";
+      if (hD && !hD.value) hD.value = "(A) गलत है, परन्तु (R) सही है";
+
+      const hDir = document.getElementById('feedHindiArText');
+      if (hDir && !hDir.value) hDir.value = "निर्देश: नीचे दो कथन दिए गए हैं, एक को अभिकथन (A) और दूसरे को कारण (R) कहा गया है:";
+    }
+
+    // If Match type is selected, ensure Hindi rows exist
+    if (type === 'match') {
+      const hMatchContainer = document.getElementById('feedHindiMatchRowsInputsList');
+      if (hMatchContainer && hMatchContainer.children.length === 0) {
+        addHindiMatchRowInput(); addHindiMatchRowInput(); addHindiMatchRowInput(); addHindiMatchRowInput();
+      }
+    }
   }
 
   function toggleEditQTypeFields(type) {
@@ -951,6 +1207,73 @@
     if (passage) passage.style.display = (type === 'passage') ? 'block' : 'none';
     if (bodyWrap) bodyWrap.style.display = (type === 'standard' || type === 'match') ? 'block' : 'none';
     if (optsWrap) optsWrap.style.display = (type === 'passage') ? 'none' : 'block';
+
+    const hAr = document.getElementById('edit-hindi-ar-fields');
+    const hMatch = document.getElementById('edit-hindi-match-fields');
+    const hSt = document.getElementById('edit-hindi-statement-fields');
+    const hPassage = document.getElementById('edit-hindi-passage-fields');
+    const hBodyWrap = document.getElementById('edit-hindi-standard-body-wrap');
+    const hOptsWrap = document.getElementById('edit-hindi-standard-options-wrap');
+
+    if (hAr) hAr.style.display = (type === 'ar') ? 'block' : 'none';
+    if (hMatch) hMatch.style.display = (type === 'match') ? 'block' : 'none';
+    if (hSt) hSt.style.display = (type === 'statement') ? 'block' : 'none';
+    if (hPassage) hPassage.style.display = (type === 'passage') ? 'block' : 'none';
+    if (hBodyWrap) hBodyWrap.style.display = (type === 'standard' || type === 'match') ? 'block' : 'none';
+    if (hOptsWrap) hOptsWrap.style.display = (type === 'passage') ? 'none' : 'block';
+  }
+
+  function addHindiMatchRowInput(leftVal = '', rightVal = '') {
+    const container = document.getElementById('feedHindiMatchRowsInputsList');
+    if(!container) return;
+    const idx = container.children.length;
+    const romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+    const romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+    let lPlaceholder = romanLabels[idx] || `मद ${idx+1}`;
+    let rPlaceholder = romanVals[idx] || `विवरण ${idx+1}`;
+
+    const div = document.createElement('div');
+    div.className = 'hindi-match-row-item';
+    div.style.cssText = 'display: flex; gap: 8px; align-items: center; margin-bottom: 6px;';
+    div.innerHTML = `
+      <input type="text" class="match-hindi-left-input" value="${leftVal}" placeholder="${lPlaceholder}" style="margin-bottom:0; flex:1;" autocomplete="off">
+      <span style="color:var(--muted); font-weight:bold;">|</span>
+      <input type="text" class="match-hindi-right-input" value="${rightVal}" placeholder="${rPlaceholder}" style="margin-bottom:0; flex:1;" autocomplete="off">
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" style="padding: 10px 12px;">✕</button>
+    `;
+    container.appendChild(div);
+  }
+
+  function syncEnglishRowsToHindi() {
+    const enLeft = document.querySelectorAll('#matchRowsInputsList .match-left-input');
+    const container = document.getElementById('feedHindiMatchRowsInputsList');
+    if(!container) return;
+    container.innerHTML = '';
+    const count = Math.max(enLeft.length, 4);
+    for(let i = 0; i < count; i++) {
+      addHindiMatchRowInput();
+    }
+  }
+
+  function addEditHindiMatchRowInput(leftVal = '', rightVal = '') {
+    const container = document.getElementById('editHindiMatchRowsInputsList');
+    if(!container) return;
+    const idx = container.children.length;
+    const romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+    const romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+    let lPlaceholder = romanLabels[idx] || `मद ${idx+1}`;
+    let rPlaceholder = romanVals[idx] || `विवरण ${idx+1}`;
+
+    const div = document.createElement('div');
+    div.className = 'edit-hindi-match-row-item';
+    div.style.cssText = 'display: flex; gap: 8px; align-items: center; margin-bottom: 6px;';
+    div.innerHTML = `
+      <input type="text" class="match-hindi-left-input" value="${leftVal}" placeholder="${lPlaceholder}" style="margin-bottom:0; flex:1;" autocomplete="off">
+      <span style="color:var(--muted); font-weight:bold;">|</span>
+      <input type="text" class="match-hindi-right-input" value="${rightVal}" placeholder="${rPlaceholder}" style="margin-bottom:0; flex:1;" autocomplete="off">
+      <button type="button" class="btn btn-danger btn-sm" onclick="this.parentElement.remove()" style="padding: 10px 12px;">✕</button>
+    `;
+    container.appendChild(div);
   }
 
   function toggleNcertContainer() {
@@ -1001,6 +1324,109 @@
   let adminQuizIdx = 0;
   let userResponses = {};
   let lastSubmittedWrongUnattemptedList = [];
+  let quizQuestionLang = 'en';
+  let fltQuestionLang = 'en';
+
+  function toggleQuizLanguage() {
+    quizQuestionLang = (quizQuestionLang === 'hi') ? 'en' : 'hi';
+    renderAdminQuizCard();
+  }
+
+  function toggleFltLanguage() {
+    fltQuestionLang = (fltQuestionLang === 'hi') ? 'en' : 'hi';
+    renderFltPlayerCard();
+  }
+
+  // Google Drive & Image URL Formatter Helper
+  function formatImageUrl(url) {
+    if (!url || typeof url !== 'string') return '';
+    url = url.trim();
+    if (!url) return '';
+    const gDriveMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (gDriveMatch && gDriveMatch[1]) {
+      return 'https://lh3.googleusercontent.com/d/' + gDriveMatch[1];
+    }
+    return url;
+  }
+
+  function previewFeedQImage(val) {
+    const formatted = formatImageUrl(val);
+    const previewBox = document.getElementById('feedQImagePreview');
+    const previewImg = document.getElementById('feedQImagePreviewImg');
+    if (formatted) {
+      previewImg.src = formatted;
+      previewBox.style.display = 'block';
+    } else {
+      previewBox.style.display = 'none';
+    }
+  }
+
+  function toggleFeedImageContainer() {
+    const el = document.getElementById('feedImageContainer');
+    const icon = document.getElementById('feedImageToggleIcon');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      if (icon) icon.innerText = '▲ Collapse';
+    } else {
+      el.style.display = 'none';
+      if (icon) icon.innerText = '▼ Expand';
+    }
+  }
+
+  function toggleFeedHindiContainer() {
+    const el = document.getElementById('feedHindiContainer');
+    const icon = document.getElementById('feedHindiToggleIcon');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      if (icon) icon.innerText = '▲ Collapse';
+    } else {
+      el.style.display = 'none';
+      if (icon) icon.innerText = '▼ Expand';
+    }
+  }
+
+  function toggleEditImageContainer() {
+    const el = document.getElementById('editImageContainer');
+    const icon = document.getElementById('editImageToggleIcon');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      if (icon) icon.innerText = '▲ Collapse';
+    } else {
+      el.style.display = 'none';
+      if (icon) icon.innerText = '▼ Expand';
+    }
+  }
+
+  function toggleEditHindiContainer() {
+    const el = document.getElementById('editHindiContainer');
+    const icon = document.getElementById('editHindiToggleIcon');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      if (icon) icon.innerText = '▲ Collapse';
+    } else {
+      el.style.display = 'none';
+      if (icon) icon.innerText = '▼ Expand';
+    }
+  }
+
+  // MathJax Typesetter Helper
+  function triggerMathJax(elem) {
+    try {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        if (elem) {
+          window.MathJax.typesetPromise([elem]).catch(function(err) {
+            console.warn('MathJax error:', err);
+          });
+        } else {
+          window.MathJax.typesetPromise().catch(function(err) {
+            console.warn('MathJax error:', err);
+          });
+        }
+      }
+    } catch(err) {
+      console.warn('MathJax exception:', err);
+    }
+  }
 
   function saveCategoriesToStorage() {
     localStorage.setItem('cg_indian_subs', JSON.stringify(indianGsSubs));
@@ -1585,17 +2011,20 @@
   }
 
   function toggleHistoryFieldsForFeed() {
-    const sub = document.getElementById('feedSub').value;
-    const isHistory = sub.toLowerCase().includes('history');
-    document.getElementById('feedHistoryEraContainer').style.display = isHistory ? 'block' : 'none';
-    document.getElementById('feedTimelineWrap').style.display = isHistory ? 'block' : 'none';
-    document.getElementById('feedSubTimelineWrap').style.display = isHistory ? 'block' : 'none';
+    const sub = document.getElementById('feedSub') ? document.getElementById('feedSub').value : '';
+    const isHistory = (sub || '').toLowerCase().includes('history');
+    const eraCont = document.getElementById('feedHistoryEraContainer');
+    const timeWrap = document.getElementById('feedTimelineWrap');
+    const subTimeWrap = document.getElementById('feedSubTimelineWrap');
+    if(eraCont) eraCont.style.display = isHistory ? 'block' : 'none';
+    if(timeWrap) timeWrap.style.display = isHistory ? 'block' : 'none';
+    if(subTimeWrap) subTimeWrap.style.display = isHistory ? 'block' : 'none';
     updateAdminDatalists();
   }
 
   function toggleHistoryFieldsForQuiz() {
-    const sub = document.getElementById('quizSub').value;
-    const isHistory = sub.toLowerCase().includes('history');
+    const sub = document.getElementById('quizSub') ? document.getElementById('quizSub').value : '';
+    const isHistory = (sub || '').toLowerCase().includes('history');
     let eraContainer = document.getElementById('quizHistoryEraContainer');
     if(eraContainer) {
       eraContainer.style.display = isHistory ? 'block' : 'none';
@@ -1603,11 +2032,14 @@
   }
 
   function toggleHistoryFieldsForEdit() {
-    const sub = document.getElementById('editSub').value;
-    const isHistory = sub.toLowerCase().includes('history');
-    document.getElementById('editHistoryEraContainer').style.display = isHistory ? 'block' : 'none';
-    document.getElementById('editTimelineWrap').style.display = isHistory ? 'block' : 'none';
-    document.getElementById('editSubTimelineWrap').style.display = isHistory ? 'block' : 'none';
+    const sub = document.getElementById('editSub') ? document.getElementById('editSub').value : '';
+    const isHistory = (sub || '').toLowerCase().includes('history');
+    const eraCont = document.getElementById('editHistoryEraContainer');
+    const timeWrap = document.getElementById('editTimelineWrap');
+    const subTimeWrap = document.getElementById('editSubTimelineWrap');
+    if(eraCont) eraCont.style.display = isHistory ? 'block' : 'none';
+    if(timeWrap) timeWrap.style.display = isHistory ? 'block' : 'none';
+    if(subTimeWrap) subTimeWrap.style.display = isHistory ? 'block' : 'none';
   }
 
   function onFeedTopicInput() {
@@ -2291,20 +2723,28 @@
     document.getElementById('panelAdminPracExam').style.display = mode === 'exam' ? 'block' : 'none';
   }
 
-  function switchAdminTab(tab) {
+  function switchAdminTab(tab, btn) {
     document.querySelectorAll('.admin-tab-view').forEach(t => t.style.display = 'none');
     document.querySelectorAll('.nav-tab-btn').forEach(b => b.classList.remove('active'));
     
-    if(tab === 'feed') {
-      document.getElementById('adminTabFeed').style.display = 'block';
-      event.target.classList.add('active');
-    } else if(tab === 'quiz') {
-      document.getElementById('adminTabQuiz').style.display = 'block';
-      event.target.classList.add('active');
-    } else if(tab === 'flt') {
-      document.getElementById('adminTabFlt').style.display = 'block';
-      event.target.classList.add('active');
-      renderFltBuilderUI();
+    const activeBtn = btn || (window.event && window.event.target ? window.event.target.closest('.nav-tab-btn') : null) || document.getElementById(tab === 'feed' ? 'navTabBtnFeed' : (tab === 'quiz' ? 'navTabBtnQuiz' : 'navTabBtnFlt'));
+    if(activeBtn) activeBtn.classList.add('active');
+
+    try {
+      if(tab === 'feed') {
+        const feedTab = document.getElementById('adminTabFeed');
+        if(feedTab) feedTab.style.display = 'block';
+      } else if(tab === 'quiz') {
+        const quizTab = document.getElementById('adminTabQuiz');
+        if(quizTab) quizTab.style.display = 'block';
+        updateQuizSubjectOptions();
+      } else if(tab === 'flt') {
+        const fltTab = document.getElementById('adminTabFlt');
+        if(fltTab) fltTab.style.display = 'block';
+        renderFltBuilderUI();
+      }
+    } catch(err) {
+      console.error('Error switching tab:', err);
     }
   }
 
@@ -2335,7 +2775,7 @@
       let secTotal = 0;
 
       sec.subjects.forEach((sub, subIdx) => {
-        let subPool = questions.filter(q => q.subject.toLowerCase() === sub.name.toLowerCase());
+        let subPool = questions.filter(q => (q.subject || '').toLowerCase() === (sub.name || '').toLowerCase());
         let topicsList = [...new Set(subPool.map(q => q.topic).filter(Boolean))].sort();
         let availSubQs = subPool.length;
 
@@ -2496,7 +2936,7 @@
 
   function onFltTopicCheckboxChange(sIdx, subIdx, topicName, isChecked) {
     let sub = fltSectionsConfig[sIdx].subjects[subIdx];
-    let subPool = questions.filter(q => q.subject.toLowerCase() === sub.name.toLowerCase());
+    let subPool = questions.filter(q => (q.subject || '').toLowerCase() === (sub.name || '').toLowerCase());
     let allTopics = [...new Set(subPool.map(q => q.topic).filter(Boolean))];
     if(sub.selectedTopics === null) sub.selectedTopics = [...allTopics];
     
@@ -2510,7 +2950,7 @@
 
   function selectAllFltTopics(sIdx, subIdx, selectAll) {
     let sub = fltSectionsConfig[sIdx].subjects[subIdx];
-    let subPool = questions.filter(q => q.subject.toLowerCase() === sub.name.toLowerCase());
+    let subPool = questions.filter(q => (q.subject || '').toLowerCase() === (sub.name || '').toLowerCase());
     let allTopics = [...new Set(subPool.map(q => q.topic).filter(Boolean))];
     sub.selectedTopics = selectAll ? allTopics : [];
     renderFltBuilderUI();
@@ -2720,25 +3160,57 @@
     document.getElementById('fltPlayerSectionBadge').innerText = q.fltSectionTitle || 'Section';
     document.getElementById('fltPlayerExamTag').innerText = q.exam || 'PYQ';
 
+    // Bilingual Language Switcher setup
+    const hasHindi = !!(
+      q.hasHindi || 
+      (q.hindiText && q.hindiText.trim()) || 
+      (q.hindiAssertion && q.hindiAssertion.trim()) ||
+      (q.hindiStIntro && q.hindiStIntro.trim()) ||
+      (q.hindiMatchRows && q.hindiMatchRows.length) ||
+      (q.hindiOptions && (q.hindiOptions.A || q.hindiOptions.B))
+    );
+    const fltLangBtn = document.getElementById('fltPlayerLangToggleBtn');
+    if(fltLangBtn) {
+      if(hasHindi) {
+        fltLangBtn.style.display = 'inline-flex';
+        fltLangBtn.innerHTML = (fltQuestionLang === 'hi') 
+          ? '🌐 <strong>हिन्दी</strong> <span style="font-size:0.75rem; opacity:0.8; margin-left:3px;">(EN)</span>' 
+          : '🌐 <strong>EN</strong> <span style="font-size:0.75rem; opacity:0.8; margin-left:3px;">(हिन्दी)</span>';
+      } else {
+        fltLangBtn.style.display = 'none';
+      }
+    }
+    const isHi = (fltQuestionLang === 'hi' && hasHindi);
+
     let bodyHtml = '';
     const matchWrap = document.getElementById('fltPlayerMatchWrap');
     matchWrap.innerHTML = '';
 
     if(q.type === 'ar') {
-      let assertText = q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || '');
-      let reasonText = q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || '');
+      let assertText = isHi && q.hindiAssertion 
+        ? q.hindiAssertion 
+        : (q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || ''));
+      let reasonText = isHi && q.hindiReason 
+        ? q.hindiReason 
+        : (q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || ''));
+      let dirText = isHi && q.hindiArText 
+        ? q.hindiArText 
+        : (q.arText || (isHi ? 'निर्देश: नीचे दिए गए अभिकथन (A) और कारण (R) के लिए सही विकल्प चुनें:' : 'Direction - For the below Assertion and Reason, choose correct alternative-'));
+
       bodyHtml = `
-        <div style="margin-bottom:6px; text-align: left;">${q.arText || 'Direction - For the below Assertion and Reason, choose correct alternative-'}</div>
+        <div style="margin-bottom:6px; text-align: left;">${dirText}</div>
         <div class="ar-block">
-          <div class="ar-item"><span class="ar-label">Assertion (A):</span> <span>${assertText}</span></div>
-          <div class="ar-item"><span class="ar-label">Reason (R):</span> <span>${reasonText}</span></div>
+          <div class="ar-item"><span class="ar-label">${isHi ? 'अभिकथन (A):' : 'Assertion (A):'}</span> <span>${assertText}</span></div>
+          <div class="ar-item"><span class="ar-label">${isHi ? 'कारण (R):' : 'Reason (R):'}</span> <span>${reasonText}</span></div>
         </div>
       `;
     } else if(q.type === 'statement') {
-      let introText = (q.stIntro && q.stIntro.trim() !== '' && q.stIntro !== 'undefined' && q.stIntro !== 'null') ? q.stIntro : (q.text && !q.text.includes('i.') && !q.text.includes('1.') ? q.text : 'Consider the following statements:');
+      let introText = isHi && q.hindiStIntro 
+        ? q.hindiStIntro 
+        : ((q.stIntro && q.stIntro.trim() !== '' && q.stIntro !== 'undefined' && q.stIntro !== 'null') ? q.stIntro : (q.text && !q.text.includes('i.') && !q.text.includes('1.') ? q.text : (isHi ? 'निम्नलिखित कथनों पर विचार कीजिए:' : 'Consider the following statements:')));
       bodyHtml = `<div style="margin-bottom:10px; text-align: left; font-weight: 600;">${introText}</div>`;
 
-      let stArr = q.statements;
+      let stArr = isHi && Array.isArray(q.hindiStatements) && q.hindiStatements.length > 0 ? q.hindiStatements : q.statements;
       if(Array.isArray(stArr) && stArr.length > 0) {
         stArr.forEach((st, idx) => {
           let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
@@ -2754,29 +3226,34 @@
         });
       }
 
-      if(q.stConclusion && q.stConclusion.trim() !== '' && q.stConclusion !== 'undefined' && q.stConclusion !== 'null') {
-        bodyHtml += `<div style="margin-top:10px; text-align: left; font-weight: 600;">${q.stConclusion}</div>`;
+      let conclusionText = isHi && q.hindiStConclusion ? q.hindiStConclusion : q.stConclusion;
+      if(conclusionText && conclusionText.trim() !== '' && conclusionText !== 'undefined' && conclusionText !== 'null') {
+        bodyHtml += `<div style="margin-top:10px; text-align: left; font-weight: 600;">${conclusionText}</div>`;
       }
     } else if(q.isPassageSubQ) {
+      let pText = isHi && q.hindiPassageText ? q.hindiPassageText : q.passageText;
+      let qSubText = isHi && q.hindiText ? q.hindiText : q.text;
       bodyHtml = `
         <div style="background:rgba(59,130,246,0.12); padding:10px 14px; border-radius:10px; border:1px solid var(--border); margin-bottom:10px; text-align: left;">
-          <strong style="color:#60a5fa; font-size:0.9rem; text-align: left; display: block;">📖 Passage / Comprehension (Read for Q.${q.passageSubIdx} of ${q.passageTotal}):</strong>
-          <p style="margin-top:4px; line-height:1.45; font-size:0.92rem; text-align: left;">${q.passageText}</p>
+          <strong style="color:#60a5fa; font-size:0.9rem; text-align: left; display: block;">${isHi ? '📖 गद्यांश / अनुच्छेद' : '📖 Passage / Comprehension'} (Q.${q.passageSubIdx} of ${q.passageTotal}):</strong>
+          <p style="margin-top:4px; line-height:1.45; font-size:0.92rem; text-align: left;">${pText}</p>
         </div>
         <div style="font-weight:600; font-size:1rem; color:#f9fafb; margin-bottom:8px; text-align: left;">
-          Q${q.passageSubIdx}: ${q.text}
+          Q${q.passageSubIdx}: ${qSubText}
         </div>
       `;
     } else if(q.type === 'match') {
-      let instructionText = q.text && q.text.trim() !== '' ? q.text : 'Match the following:';
+      let instructionText = isHi && q.hindiText ? q.hindiText : (q.text && q.text.trim() !== '' ? q.text : (isHi ? 'निम्नलिखित का सुमेल कीजिए:' : 'Match the following:'));
       bodyHtml = `<div style="margin-bottom:8px; text-align: left;"><strong>${instructionText}</strong></div>`;
-      let rows = q.matchRows;
+      let head1 = isHi && q.hindiMatchHead1 ? q.hindiMatchHead1 : (q.matchHead1 || (isHi ? 'सूची I' : 'List I'));
+      let head2 = isHi && q.hindiMatchHead2 ? q.hindiMatchHead2 : (q.matchHead2 || (isHi ? 'सूची II' : 'List II'));
+      let rows = isHi && Array.isArray(q.hindiMatchRows) && q.hindiMatchRows.length > 0 ? q.hindiMatchRows : q.matchRows;
       if(typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(e){} }
       if(rows) {
         matchWrap.innerHTML = `
           <div class="match-table-wrapper">
             <table class="match-table">
-              <thead><tr><th>#</th><th>${q.matchHead1 || 'List I'}</th><th>Seq</th><th>${q.matchHead2 || 'List II'}</th></tr></thead>
+              <thead><tr><th>#</th><th>${head1}</th><th>Seq</th><th>${head2}</th></tr></thead>
               <tbody>
                 ${rows.map(r => `<tr><td><strong>${r.c1}</strong></td><td>${r.c2}</td><td><strong>${r.c3}</strong></td><td>${r.c4}</td></tr>`).join('')}
               </tbody>
@@ -2785,7 +3262,13 @@
         `;
       }
     } else {
-      bodyHtml = `<div style="text-align: left; width: 100%;">${q.text || ''}</div>`;
+      let textToShow = isHi && q.hindiText ? q.hindiText : (q.text || '');
+      bodyHtml = `<div style="text-align: left; width: 100%; font-size:1.02rem; line-height:1.5;">${textToShow}</div>`;
+    }
+
+    // Question diagram / image support
+    if(q.qImage) {
+      bodyHtml += `<div style="margin:12px 0; text-align:center;"><img src="${q.qImage}" style="max-width:100%; max-height:280px; border-radius:8px; border:1px solid var(--border); object-fit:contain; background:#000;" alt="Question Diagram" loading="lazy"></div>`;
     }
 
     document.getElementById('fltPlayerBody').innerHTML = bodyHtml;
@@ -2795,18 +3278,22 @@
     if(!opts || typeof opts !== 'object') {
       opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
     }
+    let hindiOpts = q.hindiOptions || {};
 
     const optContainer = document.getElementById('fltPlayerOpts');
     optContainer.innerHTML = '';
 
     ['A', 'B', 'C', 'D'].forEach(k => {
       let isSel = (fltUserAnswers[fltActiveTestIdx] === k);
+      let optText = (isHi && hindiOpts[k]) ? hindiOpts[k] : ((opts && opts[k]) ? opts[k] : '');
+      let optImg = (k === 'A' ? q.optAImage : (k === 'B' ? q.optBImage : (k === 'C' ? q.optCImage : q.optDImage)));
       optContainer.innerHTML += `
         <div class="test-opt ${isSel ? 'opt-correct' : ''}" onclick="handleFltPlayerOptionClick('${k}')" style="cursor:pointer;">
           <div class="test-opt-label">
             <span class="opt-letter">(${k})</span>
-            <span class="opt-text">${(opts && opts[k]) ? opts[k] : ''}</span>
+            <span class="opt-text">${optText}</span>
           </div>
+          ${optImg ? `<div style="margin-top:6px; padding-left:24px;"><img src="${optImg}" style="max-height:140px; max-width:100%; border-radius:6px; border:1px solid var(--border); object-fit:contain;" alt="Option ${k} Diagram" loading="lazy"></div>` : ''}
         </div>
       `;
     });
@@ -2821,6 +3308,7 @@
     }
 
     buildFltPaletteDrawer();
+    triggerMathJax(document.getElementById('fltFullPageTestWorkspace'));
   }
 
   function handleFltPlayerOptionClick(k) {
@@ -3374,21 +3862,116 @@
       bodyHtml = document.getElementById('feedText').value || 'No question body entered.';
     }
 
+    let qImg = formatImageUrl(document.getElementById('feedQImage').value);
+    if(qImg) {
+      bodyHtml += `<div style="margin:10px 0; text-align:center;"><img src="${qImg}" style="max-width:100%; max-height:220px; border-radius:8px; border:1px solid var(--border); object-fit:contain;" alt="Preview Diagram"></div>`;
+    }
+
     let opts = {
       A: document.getElementById('feedA').value || 'Opt A',
       B: document.getElementById('feedB').value || 'Opt B',
       C: document.getElementById('feedC').value || 'Opt C',
       D: document.getElementById('feedD').value || 'Opt D'
     };
+    let optImgs = {
+      A: formatImageUrl(document.getElementById('feedOptAImage').value),
+      B: formatImageUrl(document.getElementById('feedOptBImage').value),
+      C: formatImageUrl(document.getElementById('feedOptCImage').value),
+      D: formatImageUrl(document.getElementById('feedOptDImage').value)
+    };
     let ans = document.getElementById('feedAns').value;
+
+    let hasHindiLive = !!(
+      document.getElementById('feedHindiText').value.trim() ||
+      document.getElementById('feedHindiA').value.trim() ||
+      (type === 'ar' && (document.getElementById('feedHindiAssert').value.trim() || document.getElementById('feedHindiReason').value.trim())) ||
+      (type === 'statement' && (document.getElementById('feedHindiStIntro').value.trim() || document.getElementById('feedHindiStList').value.trim())) ||
+      (type === 'match' && document.getElementById('feedHindiMatchHead1').value.trim()) ||
+      (type === 'passage' && document.getElementById('feedHindiPassageText').value.trim())
+    );
+
+    let hindiSection = '';
+    if(hasHindiLive) {
+      let hBody = '';
+      if(type === 'ar') {
+        hBody = `
+          <div style="margin-bottom:6px;"><strong>${document.getElementById('feedHindiArText').value.trim() || 'निर्देश:'}</strong></div>
+          <div class="ar-block">
+            <div class="ar-item"><span class="ar-label">अभिकथन (A):</span> <span>${document.getElementById('feedHindiAssert').value.trim()}</span></div>
+            <div class="ar-item"><span class="ar-label">कारण (R):</span> <span>${document.getElementById('feedHindiReason').value.trim()}</span></div>
+          </div>
+        `;
+      } else if(type === 'statement') {
+        let hIntro = document.getElementById('feedHindiStIntro').value.trim() || 'निम्नलिखित कथनों पर विचार कीजिए:';
+        hBody = `<div style="font-weight:600; margin-bottom:6px;">${hIntro}</div>`;
+        let hStList = document.getElementById('feedHindiStList').value.trim().split('\n');
+        hStList.forEach((st, idx) => {
+          if(st.trim()) {
+            let m = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
+            let label = m ? m[1] : `(${idx+1})`;
+            let t = m ? m[2] : st;
+            hBody += `<div class="statement-preview-item"><span class="st-num">${label}</span><span class="st-text">${t}</span></div>`;
+          }
+        });
+        let hConc = document.getElementById('feedHindiStConclusion').value.trim();
+        if(hConc) hBody += `<div style="margin-top:6px; font-weight:600;">${hConc}</div>`;
+      } else if(type === 'match') {
+        let hHead1 = document.getElementById('feedHindiMatchHead1').value.trim() || 'सूची I';
+        let hHead2 = document.getElementById('feedHindiMatchHead2').value.trim() || 'सूची II';
+        let hLeft = document.querySelectorAll('#feedHindiMatchRowsInputsList .match-hindi-left-input');
+        let hRight = document.querySelectorAll('#feedHindiMatchRowsInputsList .match-hindi-right-input');
+        let romans = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
+        let serials = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
+        let tableRowsHtml = '';
+        hLeft.forEach((inp, idx) => {
+          let l = inp.value.trim();
+          let r = hRight[idx] ? hRight[idx].value.trim() : '';
+          tableRowsHtml += `<tr><td><strong>${serials[idx] || '('+(idx+1)+')'}</strong></td><td>${l}</td><td><strong>${romans[idx] || '('+(idx+1)+')'}</strong></td><td>${r}</td></tr>`;
+        });
+        hBody = `
+          <div style="font-weight:600; margin-bottom:6px;">${document.getElementById('feedHindiText').value.trim() || 'निम्नलिखित का सुमेल कीजिए:'}</div>
+          <div class="match-table-wrapper"><table class="match-table"><thead><tr><th>#</th><th>${hHead1}</th><th>Seq</th><th>${hHead2}</th></tr></thead><tbody>${tableRowsHtml}</tbody></table></div>
+        `;
+      } else if(type === 'passage') {
+        hBody = `<div style="background:rgba(59,130,246,0.1); padding:10px; border-radius:8px; margin-bottom:10px;"><strong>हिन्दी गद्यांश:</strong><br>${document.getElementById('feedHindiPassageText').value.trim()}</div>`;
+      } else {
+        hBody = `<div style="margin:6px 0; line-height:1.45;">${document.getElementById('feedHindiText').value.trim()}</div>`;
+      }
+
+      let hA = document.getElementById('feedHindiA').value.trim();
+      let hB = document.getElementById('feedHindiB').value.trim();
+      let hC = document.getElementById('feedHindiC').value.trim();
+      let hD = document.getElementById('feedHindiD').value.trim();
+      let hExpl = document.getElementById('feedHindiExpl').value.trim();
+
+      hindiSection = `
+        <div style="margin-top:14px; padding-top:12px; border-top:1px dashed var(--border); background:rgba(139,92,246,0.08); padding:10px; border-radius:8px;">
+          <strong style="color:#c084fc;">🌐 Hindi Version Preview (द्विभाषी पूर्वावलोकन):</strong>
+          ${hBody}
+          ${(hA || hB) ? `<div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:0.9rem; margin-top:6px;">
+            <div>(A) ${hA}</div><div>(B) ${hB}</div><div>(C) ${hC}</div><div>(D) ${hD}</div>
+          </div>` : ''}
+          ${hExpl ? `<div style="margin-top:6px; font-size:0.85rem; color:#cbd5e1;"><strong>व्याख्या:</strong> ${hExpl}</div>` : ''}
+        </div>
+      `;
+    }
 
     document.getElementById('livePreviewBox').innerHTML = `
       <div style="font-weight:bold; color:#60a5fa; margin-bottom:8px; text-align: left;">Subject: ${document.getElementById('feedSub').value}</div>
       <div class="formatted-text">${bodyHtml}</div>
-      ${type !== 'passage' ? ['A','B','C','D'].map(k=>`<div class="test-opt ${k===ans?'opt-correct':''}"><span style="font-weight:bold; color:#38bdf8;">(${k})</span> <span>${opts[k]}</span></div>`).join('') : ''}
+      ${type !== 'passage' ? ['A','B','C','D'].map(k=>`
+        <div class="test-opt ${k===ans?'opt-correct':''}">
+          <div class="test-opt-label">
+            <span class="opt-letter">(${k})</span>
+            <span class="opt-text">${opts[k]}</span>
+          </div>
+          ${optImgs[k] ? `<div style="margin-top:6px; padding-left:24px;"><img src="${optImgs[k]}" style="max-height:100px; max-width:100%; border-radius:6px;" alt="Opt ${k} Image"></div>` : ''}
+        </div>`).join('') : ''}
       <div style="margin-top:10px; font-size:0.85rem; color:var(--muted); text-align: left;"><strong>Explanation:</strong>\n${document.getElementById('feedExpl').value || 'N/A'}</div>
+      ${hindiSection}
     `;
     document.getElementById('livePreviewModal').style.display = 'block';
+    triggerMathJax(document.getElementById('livePreviewBox'));
   }
 
   function closeLivePreviewModal() {
@@ -3398,7 +3981,7 @@
   async function handleAdminQuestionSubmit(e) {
     e.preventDefault();
     let sub = document.getElementById('feedSub').value;
-    let isHistory = sub.toLowerCase().includes('history');
+    let isHistory = (sub || '').toLowerCase().includes('history');
     let type = document.getElementById('feedType').value;
     let opts = {
       A: document.getElementById('feedA').value.trim(),
@@ -3408,6 +3991,27 @@
     };
 
     let ncertChecked = document.getElementById('feedNcertCheck').checked;
+
+    let qImageVal = formatImageUrl(document.getElementById('feedQImage').value);
+    let optAImageVal = formatImageUrl(document.getElementById('feedOptAImage').value);
+    let optBImageVal = formatImageUrl(document.getElementById('feedOptBImage').value);
+    let optCImageVal = formatImageUrl(document.getElementById('feedOptCImage').value);
+    let optDImageVal = formatImageUrl(document.getElementById('feedOptDImage').value);
+
+    let hindiTextVal = document.getElementById('feedHindiText').value.trim();
+    let hindiAVal = document.getElementById('feedHindiA').value.trim();
+    let hindiBVal = document.getElementById('feedHindiB').value.trim();
+    let hindiCVal = document.getElementById('feedHindiC').value.trim();
+    let hindiDVal = document.getElementById('feedHindiD').value.trim();
+    let hindiExplVal = document.getElementById('feedHindiExpl').value.trim();
+
+    let hasHindiVal = !!(
+      hindiTextVal || hindiAVal ||
+      (type === 'ar' && (document.getElementById('feedHindiAssert').value.trim() || document.getElementById('feedHindiReason').value.trim())) ||
+      (type === 'statement' && (document.getElementById('feedHindiStIntro').value.trim() || document.getElementById('feedHindiStList').value.trim())) ||
+      (type === 'match' && document.getElementById('feedHindiMatchHead1').value.trim()) ||
+      (type === 'passage' && document.getElementById('feedHindiPassageText').value.trim())
+    );
 
     let newQ = {
       subject: sub,
@@ -3426,6 +4030,15 @@
       optionA: opts.A, optionB: opts.B, optionC: opts.C, optionD: opts.D,
       ans: document.getElementById('feedAns').value,
       expl: document.getElementById('feedExpl').value.trim(),
+      qImage: qImageVal,
+      optAImage: optAImageVal,
+      optBImage: optBImageVal,
+      optCImage: optCImageVal,
+      optDImage: optDImageVal,
+      hasHindi: hasHindiVal,
+      hindiText: hindiTextVal,
+      hindiOptions: { A: hindiAVal, B: hindiBVal, C: hindiCVal, D: hindiDVal },
+      hindiExpl: hindiExplVal,
       ncert_tag: ncertChecked ? "true" : "false",
       ncert_book: ncertChecked ? document.getElementById('feedNcertBook').value : "",
       ncert_class: ncertChecked ? document.getElementById('feedNcertClass').value : "",
@@ -3437,8 +4050,8 @@
     if(type === 'match') {
       newQ.matchHead1 = document.getElementById('feedMatchHead1').value.trim() || 'List I';
       newQ.matchHead2 = document.getElementById('feedMatchHead2').value.trim() || 'List II';
-      const leftInputs = document.querySelectorAll('.match-left-input');
-      const rightInputs = document.querySelectorAll('.match-right-input');
+      const leftInputs = document.querySelectorAll('#matchRowsInputsList .match-left-input');
+      const rightInputs = document.querySelectorAll('#matchRowsInputsList .match-right-input');
       let rows = [];
       let romanLabels = ['(a)', '(b)', '(c)', '(d)', '(e)', '(f)'];
       let romanVals = ['(i)', '(ii)', '(iii)', '(iv)', '(v)', '(vi)'];
@@ -3450,6 +4063,20 @@
         }
       });
       newQ.matchRows = rows;
+
+      newQ.hindiMatchHead1 = document.getElementById('feedHindiMatchHead1').value.trim() || 'सूची I';
+      newQ.hindiMatchHead2 = document.getElementById('feedHindiMatchHead2').value.trim() || 'सूची II';
+      const hLeftInputs = document.querySelectorAll('#feedHindiMatchRowsInputsList .match-hindi-left-input');
+      const hRightInputs = document.querySelectorAll('#feedHindiMatchRowsInputsList .match-hindi-right-input');
+      let hRows = [];
+      hLeftInputs.forEach((inp, idx) => {
+        let lVal = inp.value.trim();
+        let rVal = hRightInputs[idx] ? hRightInputs[idx].value.trim() : '';
+        if(lVal || rVal) {
+          hRows.push({ c1: romanLabels[idx] || `(${idx+1})`, c2: lVal, c3: romanVals[idx] || `(${idx+1})`, c4: rVal });
+        }
+      });
+      newQ.hindiMatchRows = hRows;
     } else if(type === 'statement') {
       let introVal = document.getElementById('feedStIntro').value.trim();
       let stArr = document.getElementById('feedStList').value.trim().split('\n').filter(s => s.trim() !== '');
@@ -3459,9 +4086,14 @@
       newQ.statements = stArr;
       newQ.stConclusion = conclusionVal;
       newQ.text = introVal;
+
+      newQ.hindiStIntro = document.getElementById('feedHindiStIntro').value.trim();
+      newQ.hindiStatements = document.getElementById('feedHindiStList').value.trim().split('\n').filter(s => s.trim() !== '');
+      newQ.hindiStConclusion = document.getElementById('feedHindiStConclusion').value.trim();
     } else if(type === 'passage') {
       newQ.passageText = document.getElementById('feedPassageText').value.trim();
       newQ.text = newQ.passageText;
+      newQ.hindiPassageText = document.getElementById('feedHindiPassageText').value.trim();
       
       let subQs = [];
       let subQElements = document.querySelectorAll('.passage-subq-item');
@@ -3485,6 +4117,9 @@
       newQ.passageQuestions = subQs;
     } else if(type === 'ar') {
       newQ.text = `Direction: ${newQ.arText}\nAssertion: ${newQ.assertion}\nReason: ${newQ.reason}`;
+      newQ.hindiArText = document.getElementById('feedHindiArText').value.trim();
+      newQ.hindiAssertion = document.getElementById('feedHindiAssert').value.trim();
+      newQ.hindiReason = document.getElementById('feedHindiReason').value.trim();
     }
 
     try {
@@ -3501,6 +4136,14 @@
       document.getElementById('feedType').value = 'standard';
       toggleQTypeFields('standard');
       document.getElementById('feedNcertContainer').style.display = 'none';
+      document.getElementById('feedImageContainer').style.display = 'none';
+      document.getElementById('feedQImagePreview').style.display = 'none';
+      document.getElementById('feedHindiContainer').style.display = 'none';
+      let fImgIcon = document.getElementById('feedImageToggleIcon');
+      if(fImgIcon) fImgIcon.innerText = '▼ Expand';
+      let fHiIcon = document.getElementById('feedHindiToggleIcon');
+      if(fHiIcon) fHiIcon.innerText = '▼ Expand';
+
       document.getElementById('matchRowsInputsList').innerHTML = '';
       document.getElementById('passageSubQuestionsList').innerHTML = '';
       addMatchRowInput(); addMatchRowInput(); addMatchRowInput(); addMatchRowInput();
@@ -3613,6 +4256,28 @@
     document.getElementById('aqCounter').innerText = `Question ${adminQuizIdx + 1} of ${adminQuizList.length}`;
     document.getElementById('aqExamBadge').innerText = q.exam || 'PYQ';
 
+    // Bilingual Language Switcher setup
+    const hasHindi = !!(
+      q.hasHindi || 
+      (q.hindiText && q.hindiText.trim()) || 
+      (q.hindiAssertion && q.hindiAssertion.trim()) ||
+      (q.hindiStIntro && q.hindiStIntro.trim()) ||
+      (q.hindiMatchRows && q.hindiMatchRows.length) ||
+      (q.hindiOptions && (q.hindiOptions.A || q.hindiOptions.B))
+    );
+    const aqLangBtn = document.getElementById('aqLangToggleBtn');
+    if(aqLangBtn) {
+      if(hasHindi) {
+        aqLangBtn.style.display = 'inline-flex';
+        aqLangBtn.innerHTML = (quizQuestionLang === 'hi') 
+          ? '🌐 <strong>हिन्दी</strong> <span style="font-size:0.75rem; opacity:0.8; margin-left:3px;">(EN)</span>' 
+          : '🌐 <strong>EN</strong> <span style="font-size:0.75rem; opacity:0.8; margin-left:3px;">(हिन्दी)</span>';
+      } else {
+        aqLangBtn.style.display = 'none';
+      }
+    }
+    const isHi = (quizQuestionLang === 'hi' && hasHindi);
+
     const nextBtn = document.getElementById('aqNextBtn');
     if(adminQuizIdx === adminQuizList.length - 1) {
       nextBtn.innerText = 'Finish';
@@ -3627,20 +4292,30 @@
     matchWrap.innerHTML = '';
 
     if(q.type === 'ar') {
-      let assertText = q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || '');
-      let reasonText = q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || '');
+      let assertText = isHi && q.hindiAssertion 
+        ? q.hindiAssertion 
+        : (q.assertion !== undefined && q.assertion !== "undefined" ? q.assertion : (q.Assertion || ''));
+      let reasonText = isHi && q.hindiReason 
+        ? q.hindiReason 
+        : (q.reason !== undefined && q.reason !== "undefined" ? q.reason : (q.Reason || ''));
+      let dirText = isHi && q.hindiArText 
+        ? q.hindiArText 
+        : (q.arText || (isHi ? 'निर्देश: नीचे दिए गए अभिकथन (A) और कारण (R) के लिए सही विकल्प चुनें:' : 'Direction - For the below Assertion and Reason, choose correct alternative-'));
+
       bodyHtml = `
-        <div style="margin-bottom:6px; text-align: left;">${q.arText || 'Direction - For the below Assertion and Reason, choose correct alternative-'}</div>
+        <div style="margin-bottom:6px; text-align: left;">${dirText}</div>
         <div class="ar-block">
-          <div class="ar-item"><span class="ar-label">Assertion (A):</span> <span>${assertText}</span></div>
-          <div class="ar-item"><span class="ar-label">Reason (R):</span> <span>${reasonText}</span></div>
+          <div class="ar-item"><span class="ar-label">${isHi ? 'अभिकथन (A):' : 'Assertion (A):'}</span> <span>${assertText}</span></div>
+          <div class="ar-item"><span class="ar-label">${isHi ? 'कारण (R):' : 'Reason (R):'}</span> <span>${reasonText}</span></div>
         </div>
       `;
     } else if(q.type === 'statement') {
-      let introText = (q.stIntro && q.stIntro.trim() !== '' && q.stIntro !== 'undefined' && q.stIntro !== 'null') ? q.stIntro : (q.text && !q.text.includes('i.') && !q.text.includes('1.') ? q.text : 'Consider the following statements:');
+      let introText = isHi && q.hindiStIntro 
+        ? q.hindiStIntro 
+        : ((q.stIntro && q.stIntro.trim() !== '' && q.stIntro !== 'undefined' && q.stIntro !== 'null') ? q.stIntro : (q.text && !q.text.includes('i.') && !q.text.includes('1.') ? q.text : (isHi ? 'निम्नलिखित कथनों पर विचार कीजिए:' : 'Consider the following statements:')));
       bodyHtml = `<div style="margin-bottom:10px; text-align: left; font-weight: 600;">${introText}</div>`;
 
-      let stArr = q.statements;
+      let stArr = isHi && Array.isArray(q.hindiStatements) && q.hindiStatements.length > 0 ? q.hindiStatements : q.statements;
       if(Array.isArray(stArr) && stArr.length > 0) {
         stArr.forEach((st, idx) => {
           let matchLabel = st.match(/^(\([a-zA-Z0-9]+\)|[a-zA-Z0-9]+[\.\)])\s*(.*)/);
@@ -3656,29 +4331,34 @@
         });
       }
 
-      if(q.stConclusion && q.stConclusion.trim() !== '' && q.stConclusion !== 'undefined' && q.stConclusion !== 'null') {
-        bodyHtml += `<div style="margin-top:10px; text-align: left; font-weight: 600;">${q.stConclusion}</div>`;
+      let conclusionText = isHi && q.hindiStConclusion ? q.hindiStConclusion : q.stConclusion;
+      if(conclusionText && conclusionText.trim() !== '' && conclusionText !== 'undefined' && conclusionText !== 'null') {
+        bodyHtml += `<div style="margin-top:10px; text-align: left; font-weight: 600;">${conclusionText}</div>`;
       }
     } else if(q.isPassageSubQ) {
+      let pText = isHi && q.hindiPassageText ? q.hindiPassageText : q.passageText;
+      let qSubText = isHi && q.hindiText ? q.hindiText : q.text;
       bodyHtml = `
         <div style="background:rgba(59,130,246,0.12); padding:10px 14px; border-radius:10px; border:1px solid var(--border); margin-bottom:10px; text-align: left;">
-          <strong style="color:#60a5fa; font-size:0.9rem; text-align: left; display: block;">📖 Passage / Comprehension (Read for Q.${q.passageSubIdx} of ${q.passageTotal}):</strong>
-          <p style="margin-top:4px; line-height:1.45; font-size:0.92rem; text-align: left;">${q.passageText}</p>
+          <strong style="color:#60a5fa; font-size:0.9rem; text-align: left; display: block;">${isHi ? '📖 गद्यांश / अनुच्छेद' : '📖 Passage / Comprehension'} (Q.${q.passageSubIdx} of ${q.passageTotal}):</strong>
+          <p style="margin-top:4px; line-height:1.45; font-size:0.92rem; text-align: left;">${pText}</p>
         </div>
         <div style="font-weight:600; font-size:1rem; color:#f9fafb; margin-bottom:8px; text-align: left;">
-          Q${q.passageSubIdx}: ${q.text}
+          Q${q.passageSubIdx}: ${qSubText}
         </div>
       `;
     } else if(q.type === 'match') {
-      let instructionText = q.text && q.text.trim() !== '' ? q.text : 'Match the following:';
+      let instructionText = isHi && q.hindiText ? q.hindiText : (q.text && q.text.trim() !== '' ? q.text : (isHi ? 'निम्नलिखित का सुमेल कीजिए:' : 'Match the following:'));
       bodyHtml = `<div style="margin-bottom:8px; text-align: left;"><strong>${instructionText}</strong></div>`;
-      let rows = q.matchRows;
+      let head1 = isHi && q.hindiMatchHead1 ? q.hindiMatchHead1 : (q.matchHead1 || (isHi ? 'सूची I' : 'List I'));
+      let head2 = isHi && q.hindiMatchHead2 ? q.hindiMatchHead2 : (q.matchHead2 || (isHi ? 'सूची II' : 'List II'));
+      let rows = isHi && Array.isArray(q.hindiMatchRows) && q.hindiMatchRows.length > 0 ? q.hindiMatchRows : q.matchRows;
       if(typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(e){} }
       if(rows) {
         matchWrap.innerHTML = `
           <div class="match-table-wrapper">
             <table class="match-table">
-              <thead><tr><th>#</th><th>${q.matchHead1 || 'List I'}</th><th>Seq</th><th>${q.matchHead2 || 'List II'}</th></tr></thead>
+              <thead><tr><th>#</th><th>${head1}</th><th>Seq</th><th>${head2}</th></tr></thead>
               <tbody>
                 ${rows.map(r => `<tr><td><strong>${r.c1}</strong></td><td>${r.c2}</td><td><strong>${r.c3}</strong></td><td>${r.c4}</td></tr>`).join('')}
               </tbody>
@@ -3687,7 +4367,13 @@
         `;
       }
     } else {
-      bodyHtml = `<div style="text-align: left; width: 100%;">${q.text || ''}</div>`;
+      let textToShow = isHi && q.hindiText ? q.hindiText : (q.text || '');
+      bodyHtml = `<div style="text-align: left; width: 100%; font-size:1.02rem; line-height:1.5;">${textToShow}</div>`;
+    }
+
+    // Question diagram / image support
+    if(q.qImage) {
+      bodyHtml += `<div style="margin:12px 0; text-align:center;"><img src="${q.qImage}" style="max-width:100%; max-height:280px; border-radius:8px; border:1px solid var(--border); object-fit:contain; background:#000;" alt="Question Diagram" loading="lazy"></div>`;
     }
 
     document.getElementById('aqBody').innerHTML = bodyHtml;
@@ -3697,6 +4383,7 @@
     if(!opts || typeof opts !== 'object') {
       opts = { A: q.optionA || '', B: q.optionB || '', C: q.optionC || '', D: q.optionD || '' };
     }
+    let hindiOpts = q.hindiOptions || {};
 
     const optContainer = document.getElementById('aqOpts');
     const explBox = document.getElementById('aqExpl');
@@ -3710,20 +4397,26 @@
         if(k === q.ans) extraClass = 'opt-correct';
         else if(k === chosen) extraClass = 'opt-wrong';
       }
+      let optText = (isHi && hindiOpts[k]) ? hindiOpts[k] : ((opts && opts[k]) ? opts[k] : '');
+      let optImg = (k === 'A' ? q.optAImage : (k === 'B' ? q.optBImage : (k === 'C' ? q.optCImage : q.optDImage)));
       optContainer.innerHTML += `
         <div class="test-opt ${extraClass}" onclick="handleAdminQuizClick('${k}')">
           <div class="test-opt-label">
             <span class="opt-letter">(${k})</span>
-            <span class="opt-text">${(opts && opts[k]) ? opts[k] : ''}</span>
+            <span class="opt-text">${optText}</span>
           </div>
+          ${optImg ? `<div style="margin-top:6px; padding-left:24px;"><img src="${optImg}" style="max-height:140px; max-width:100%; border-radius:6px; border:1px solid var(--border); object-fit:contain;" alt="Option ${k} Diagram" loading="lazy"></div>` : ''}
         </div>
       `;
     });
 
     if(chosen) {
       explBox.style.display = 'block';
-      explBox.innerHTML = `<strong>Explanation:</strong>\n${q.expl || 'Verified correct.'}`;
+      let explText = (isHi && q.hindiExpl) ? q.hindiExpl : (q.expl || 'Verified correct.');
+      explBox.innerHTML = `<strong>Explanation / व्याख्या:</strong>\n${explText}`;
     }
+
+    triggerMathJax(document.getElementById('adminQuizPlayer'));
   }
 
   function handleAdminQuizClick(k) {
@@ -3792,10 +4485,10 @@
     const q = adminQuizList[adminQuizIdx];
     if(!q) return;
     document.getElementById('editQId').value = q.originalId || q.id;
-    document.getElementById('editSub').value = q.subject;
+    document.getElementById('editSub').value = q.subject || '';
     
     toggleHistoryFieldsForEdit();
-    if(q.subject.toLowerCase().includes('history')) {
+    if(q.subject && q.subject.toLowerCase().includes('history')) {
       document.getElementById('editEra').value = q.era || 'Ancient';
       document.getElementById('editTimelineYear').value = q.timeline_year || '';
       document.getElementById('editSubTimelineYear').value = q.sub_timeline_year || '';
@@ -3895,6 +4588,75 @@
     document.getElementById('editAns').value = q.ans || 'A';
     document.getElementById('editExpl').value = q.expl || '';
 
+    // Populate Images
+    document.getElementById('editQImage').value = q.qImage || '';
+    document.getElementById('editOptAImage').value = q.optAImage || '';
+    document.getElementById('editOptBImage').value = q.optBImage || '';
+    document.getElementById('editOptCImage').value = q.optCImage || '';
+    document.getElementById('editOptDImage').value = q.optDImage || '';
+
+    // Populate Hindi / Bilingual
+    document.getElementById('editHindiText').value = q.hindiText || '';
+    let hindiOpts = q.hindiOptions || {};
+    document.getElementById('editHindiA').value = hindiOpts.A || '';
+    document.getElementById('editHindiB').value = hindiOpts.B || '';
+    document.getElementById('editHindiC').value = hindiOpts.C || '';
+    document.getElementById('editHindiD').value = hindiOpts.D || '';
+    document.getElementById('editHindiExpl').value = q.hindiExpl || '';
+
+    // Populate type specific Hindi fields
+    if(document.getElementById('editHindiArText')) document.getElementById('editHindiArText').value = q.hindiArText || '';
+    if(document.getElementById('editHindiAssert')) document.getElementById('editHindiAssert').value = q.hindiAssertion || '';
+    if(document.getElementById('editHindiReason')) document.getElementById('editHindiReason').value = q.hindiReason || '';
+
+    if(document.getElementById('editHindiStIntro')) document.getElementById('editHindiStIntro').value = q.hindiStIntro || '';
+    if(document.getElementById('editHindiStList')) {
+      let hStArr = q.hindiStatements;
+      if(Array.isArray(hStArr) && hStArr.length > 0) {
+        document.getElementById('editHindiStList').value = hStArr.join('\n');
+      } else {
+        document.getElementById('editHindiStList').value = '';
+      }
+    }
+    if(document.getElementById('editHindiStConclusion')) document.getElementById('editHindiStConclusion').value = q.hindiStConclusion || '';
+
+    if(document.getElementById('editHindiMatchHead1')) document.getElementById('editHindiMatchHead1').value = q.hindiMatchHead1 || 'सूची I';
+    if(document.getElementById('editHindiMatchHead2')) document.getElementById('editHindiMatchHead2').value = q.hindiMatchHead2 || 'सूची II';
+
+    const hRowContainer = document.getElementById('editHindiMatchRowsInputsList');
+    if(hRowContainer) {
+      hRowContainer.innerHTML = '';
+      let hRows = q.hindiMatchRows;
+      if(typeof hRows === 'string') { try { hRows = JSON.parse(hRows); } catch(e){} }
+      if(Array.isArray(hRows) && hRows.length > 0) {
+        hRows.forEach(r => {
+          addEditHindiMatchRowInput(r.c2 || '', r.c4 || '');
+        });
+      } else {
+        addEditHindiMatchRowInput(); addEditHindiMatchRowInput(); addEditHindiMatchRowInput(); addEditHindiMatchRowInput();
+      }
+    }
+
+    if(document.getElementById('editHindiPassageText')) document.getElementById('editHindiPassageText').value = q.hindiPassageText || '';
+
+    // Open collapsibles if content exists
+    let hasImgs = !!(q.qImage || q.optAImage || q.optBImage || q.optCImage || q.optDImage);
+    document.getElementById('editImageContainer').style.display = hasImgs ? 'block' : 'none';
+    let editImgIcon = document.getElementById('editImageToggleIcon');
+    if(editImgIcon) editImgIcon.innerText = hasImgs ? '▲ Collapse' : '▼ Expand';
+
+    let hasHi = !!(
+      q.hasHindi || 
+      (q.hindiText && q.hindiText.trim()) || 
+      (q.hindiAssertion && q.hindiAssertion.trim()) ||
+      (q.hindiStIntro && q.hindiStIntro.trim()) ||
+      (q.hindiMatchRows && q.hindiMatchRows.length) ||
+      hindiOpts.A
+    );
+    document.getElementById('editHindiContainer').style.display = hasHi ? 'block' : 'none';
+    let editHiIcon = document.getElementById('editHindiToggleIcon');
+    if(editHiIcon) editHiIcon.innerText = hasHi ? '▲ Collapse' : '▼ Expand';
+
     document.getElementById('editQuestionModal').style.display = 'block';
   }
 
@@ -3906,7 +4668,7 @@
     e.preventDefault();
     const qId = document.getElementById('editQId').value;
     let sub = document.getElementById('editSub').value;
-    let isHistory = sub.toLowerCase().includes('history');
+    let isHistory = (sub || '').toLowerCase().includes('history');
     let type = document.getElementById('editType').value;
     let opts = {
       A: document.getElementById('editA').value.trim(),
@@ -3916,6 +4678,27 @@
     };
 
     let ncertChecked = document.getElementById('editNcertCheck').checked;
+
+    let qImageVal = formatImageUrl(document.getElementById('editQImage').value);
+    let optAImageVal = formatImageUrl(document.getElementById('editOptAImage').value);
+    let optBImageVal = formatImageUrl(document.getElementById('editOptBImage').value);
+    let optCImageVal = formatImageUrl(document.getElementById('editOptCImage').value);
+    let optDImageVal = formatImageUrl(document.getElementById('editOptDImage').value);
+
+    let hindiTextVal = document.getElementById('editHindiText').value.trim();
+    let hindiAVal = document.getElementById('editHindiA').value.trim();
+    let hindiBVal = document.getElementById('editHindiB').value.trim();
+    let hindiCVal = document.getElementById('editHindiC').value.trim();
+    let hindiDVal = document.getElementById('editHindiD').value.trim();
+    let hindiExplVal = document.getElementById('editHindiExpl').value.trim();
+
+    let hasHindiVal = !!(
+      hindiTextVal || hindiAVal ||
+      (type === 'ar' && (document.getElementById('editHindiAssert').value.trim() || document.getElementById('editHindiReason').value.trim())) ||
+      (type === 'statement' && (document.getElementById('editHindiStIntro').value.trim() || document.getElementById('editHindiStList').value.trim())) ||
+      (type === 'match' && document.getElementById('editHindiMatchHead1').value.trim()) ||
+      (type === 'passage' && document.getElementById('editHindiPassageText').value.trim())
+    );
 
     let updated = {
       subject: sub,
@@ -3930,6 +4713,15 @@
       optionA: opts.A, optionB: opts.B, optionC: opts.C, optionD: opts.D,
       ans: document.getElementById('editAns').value,
       expl: document.getElementById('editExpl').value.trim(),
+      qImage: qImageVal,
+      optAImage: optAImageVal,
+      optBImage: optBImageVal,
+      optCImage: optCImageVal,
+      optDImage: optDImageVal,
+      hasHindi: hasHindiVal,
+      hindiText: hindiTextVal,
+      hindiOptions: { A: hindiAVal, B: hindiBVal, C: hindiCVal, D: hindiDVal },
+      hindiExpl: hindiExplVal,
       ncert_tag: ncertChecked ? "true" : "false",
       ncert_book: ncertChecked ? document.getElementById('editNcertBook').value : "",
       ncert_class: ncertChecked ? document.getElementById('editNcertClass').value : "",
@@ -3942,6 +4734,10 @@
       updated.assertion = document.getElementById('editAssert').value.trim();
       updated.reason = document.getElementById('editReason').value.trim();
       updated.text = `Direction: ${updated.arText}\nAssertion: ${updated.assertion}\nReason: ${updated.reason}`;
+
+      updated.hindiArText = document.getElementById('editHindiArText').value.trim();
+      updated.hindiAssertion = document.getElementById('editHindiAssert').value.trim();
+      updated.hindiReason = document.getElementById('editHindiReason').value.trim();
     } else if(type === 'match') {
       updated.matchHead1 = document.getElementById('editMatchHead1').value.trim() || 'List I';
       updated.matchHead2 = document.getElementById('editMatchHead2').value.trim() || 'List II';
@@ -3960,6 +4756,20 @@
       updated.matchRows = rows;
       let bodyText = document.getElementById('editText').value.trim();
       updated.text = bodyText !== '' ? bodyText : 'Match the following:';
+
+      updated.hindiMatchHead1 = document.getElementById('editHindiMatchHead1').value.trim() || 'सूची I';
+      updated.hindiMatchHead2 = document.getElementById('editHindiMatchHead2').value.trim() || 'सूची II';
+      const hLeftInputs = document.querySelectorAll('#editHindiMatchRowsInputsList .match-hindi-left-input');
+      const hRightInputs = document.querySelectorAll('#editHindiMatchRowsInputsList .match-hindi-right-input');
+      let hRows = [];
+      hLeftInputs.forEach((inp, idx) => {
+        let lVal = inp.value.trim();
+        let rVal = hRightInputs[idx] ? hRightInputs[idx].value.trim() : '';
+        if(lVal || rVal) {
+          hRows.push({ c1: romanLabels[idx] || `(${idx+1})`, c2: lVal, c3: romanVals[idx] || `(${idx+1})`, c4: rVal });
+        }
+      });
+      updated.hindiMatchRows = hRows;
     } else if(type === 'statement') {
       let stIntro = document.getElementById('editStIntro').value.trim();
       let stListVal = document.getElementById('editStList').value.trim();
@@ -3970,9 +4780,14 @@
       updated.statements = stArr;
       updated.stConclusion = stConclusion;
       updated.text = stIntro;
+
+      updated.hindiStIntro = document.getElementById('editHindiStIntro').value.trim();
+      updated.hindiStatements = document.getElementById('editHindiStList').value.trim().split('\n').filter(s => s.trim() !== '');
+      updated.hindiStConclusion = document.getElementById('editHindiStConclusion').value.trim();
     } else if(type === 'passage') {
       updated.passageText = document.getElementById('editPassageText').value.trim();
       updated.text = updated.passageText;
+      updated.hindiPassageText = document.getElementById('editHindiPassageText').value.trim();
     } else {
       updated.text = document.getElementById('editText').value.trim();
     }
